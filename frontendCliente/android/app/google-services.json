@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "52128548777",
+    "project_id": "los-acabaos-domotica",
+    "storage_bucket": "los-acabaos-domotica.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:52128548777:android:1bc992f755fb6ca9aae6b8",
+        "android_client_info": {
+          "package_name": "com.losacabaos.domoticacliente"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "52128548777-4vhc3tqm4a90h0k8aeviju09q45uq3bq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.losacabaos.domoticacliente",
+            "certificate_hash": "b47df0ba14db0d611dee4fa02ae6376b188c1760"
+          }
+        },
+        {
+          "client_id": "52128548777-uekcbs3tf8a5ecbkend0658tihn3st8k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBovvjsA8Zo441vEiMC39qBRMvhucOTXO0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "52128548777-uekcbs3tf8a5ecbkend0658tihn3st8k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
