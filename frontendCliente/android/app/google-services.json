@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "52128548777-4qmggcarv7gjjtlt5m863krp1cnss2rd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.losacabaos.domoticacliente",
+            "certificate_hash": "3adf8b92db6b2dbfa548c93dbd7c487a1641f437"
+          }
+        },
+        {
           "client_id": "52128548777-4vhc3tqm4a90h0k8aeviju09q45uq3bq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -17,24 +17,24 @@ class AuthService{
   PublishSubject loading = PublishSubject();
 
   AuthService(){
-    user = _auth.currentUser as Stream<User>;
+    user = _auth.authStateChanges().asBroadcastStream();
     profile = user.switchMap((User u) {
       if(u != null){
-        return _db.collection('user').doc(u.uid).snapshots().map((snap) => snap.data());
+        return _db.collection('users').doc(u.uid).snapshots().map((snap) => snap.data()).asBroadcastStream();
       }
       else{
-        return Stream.empty();
+        return Stream.empty().asBroadcastStream();
       }
     });
   }
 
-  void createFirebaseApp() async {
-    if(Firebase.apps.isEmpty)
-      firebaseApp = await Firebase.initializeApp();
-  }
+  // void createFirebaseApp() async {
+  //   if(Firebase.apps.isEmpty)
+  //     firebaseApp = await Firebase.initializeApp();
+  // }
 
   Future<User> googleSignIn() async{
-    createFirebaseApp();
+    // createFirebaseApp();
     loading.add(true);
     GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     GoogleSignInAuthentication googleAuth = await googleUser.authentication;
@@ -53,7 +53,7 @@ class AuthService{
   }
 
   void updateUserData(User user) async{
-    DocumentReference ref = _db.collection('user').doc(user.uid);
+    DocumentReference ref = _db.collection('users').doc(user.uid);
 
     return ref.set({
       'uid': user.uid,
