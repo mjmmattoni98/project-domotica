@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 
 import 'models/models.dart';
@@ -31,6 +33,7 @@ class AuthenticationRepository {
 
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   /// Stream of [User] which will emit the current user when
   /// the authentication state changes.
@@ -71,7 +74,8 @@ class AuthenticationRepository {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      await _firebaseAuth.signInWithCredential(credential);
+      firebase_auth.User user = (await _firebaseAuth.signInWithCredential(credential)).user;
+      updateUserData(user);
     } on Exception {
       throw LogInWithGoogleFailure();
     }
@@ -86,10 +90,11 @@ class AuthenticationRepository {
   }) async {
     assert(email != null && password != null);
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(
+      firebase_auth.User user = (await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
-      );
+      )).user;
+      updateUserData(user);
     } on Exception {
       throw LogInWithEmailAndPasswordFailure();
     }
@@ -108,6 +113,18 @@ class AuthenticationRepository {
     } on Exception {
       throw LogOutFailure();
     }
+  }
+
+  void updateUserData(firebase_auth.User user) async{
+    DocumentReference ref = _db.collection('users').doc(user.uid);
+
+    return ref.set({
+      'uid': user.uid,
+      'email': user.email,
+      'photoUrl': user.photoURL,
+      'displayName': user.displayName,
+      'lastSeen': DateTime.now()
+    }, SetOptions(merge: true));
   }
 }
 

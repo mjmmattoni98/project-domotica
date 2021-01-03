@@ -7,7 +7,6 @@ import 'package:rxdart/rxdart.dart';
 
 
 class AuthService{
-  FirebaseApp firebaseApp;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -27,11 +26,6 @@ class AuthService{
       }
     });
   }
-
-  // void createFirebaseApp() async {
-  //   if(Firebase.apps.isEmpty)
-  //     firebaseApp = await Firebase.initializeApp();
-  // }
 
   Future<User> googleSignIn() async{
     // createFirebaseApp();

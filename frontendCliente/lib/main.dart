@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 // import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 // import 'Habitacion.dart';
-// import 'auth.dart';
+import 'auth.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
