@@ -13,7 +13,7 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(20.0),
         child: BlocProvider(
           create: (_) => LoginCubit(context.read<AuthenticationRepository>()),
           child: LoginForm(),

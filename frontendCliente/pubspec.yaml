@@ -41,6 +41,8 @@ dependencies:
   pedantic: ^1.9.0
   authentication_repository:
     path: packages/authentication_repository
+  room_repository:
+    path: packages/room_repository
 
   cloud_firestore: ^0.14.4
 

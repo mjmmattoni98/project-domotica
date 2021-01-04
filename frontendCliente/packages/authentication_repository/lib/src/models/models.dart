@@ -15,7 +15,7 @@ class User extends Equatable {
     @required this.photo,
   })  : assert(email != null),
         assert(id != null);
-  
+
   /// The current user's email address.
   final String email;
 
