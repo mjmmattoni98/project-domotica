@@ -19,7 +19,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget{
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: _prefferedHeight,
+        height: _prefferedHeight,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         gradient: LinearGradient(

@@ -22,7 +22,78 @@ class HomePage extends StatelessWidget {
         gradientEnd: Colors.black87,
         gradientMid: Colors.black54,
       ),
-      //body:
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+          child: Column(
+          children: <Widget>[
+          Expanded(
+            child:
+              Card(
+                elevation: 10,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                child: InkWell(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.fitWidth,
+                              image: NetworkImage("https://media.discordapp.net/attachments/502530393740673025/796006411527913482/hagomasquealex.jpg?width=524&height=468") //https://i.pinimg.com/736x/d1/2c/93/d12c9376d6fe2a9d33f2d1840ffae02c.jpg
+                            // https://image.flaticon.com/icons/png/512/1375/1375683.png
+                          )
+                      ),
+                      
+                      child: Container(
+
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.all(15.0),
+                        child: Text(
+                          "HABITACIONES",
+                          style: TextStyle(
+                            shadows: <Shadow>[
+                              Shadow(
+                                color: Colors.white,
+                                blurRadius: 50.0
+                              )
+                            ],
+                            color: Colors.black,
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 3.0
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  onTap: (){
+
+                  },
+                ),
+              ),
+            ),
+          Expanded(
+            child:Card(
+              elevation: 10,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+              //shadowColor: Colors.black87,
+
+              child: InkWell(
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.fill,
+                      image: NetworkImage("")
+                    )
+                  ),
+                  child: Center(
+                    child: Text("DISPOSITIVOS INACTIVOS"),
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      ))
         /*ListView.builder(itemCount: ,
         )*/
         /*Align(

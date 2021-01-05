@@ -1,0 +1,1 @@
+export 'view/listado_habitaciones_page.dart';
