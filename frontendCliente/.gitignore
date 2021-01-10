@@ -31,9 +31,10 @@
 .pub/
 /build/
 
-#Firebase related
 google-services.json
-# Web related
+
+#Firebase related
+
 lib/generated_plugin_registrant.dart
 
 # Symbolication related

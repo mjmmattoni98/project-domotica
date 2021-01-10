@@ -58,7 +58,7 @@ class AuthenticationRepository {
         email: email,
         password: password,
       );
-    } on Exception {
+    } on Exception catch (e){
       throw SignUpFailure();
     }
   }
@@ -76,7 +76,7 @@ class AuthenticationRepository {
       );
       firebase_auth.User user = (await _firebaseAuth.signInWithCredential(credential)).user;
       updateUserData(user);
-    } on Exception {
+    } on Exception catch (e){
       throw LogInWithGoogleFailure();
     }
   }
@@ -95,7 +95,7 @@ class AuthenticationRepository {
         password: password,
       )).user;
       updateUserData(user);
-    } on Exception {
+    } on Exception catch (e){
       throw LogInWithEmailAndPasswordFailure();
     }
   }
@@ -110,7 +110,7 @@ class AuthenticationRepository {
         _firebaseAuth.signOut(),
         _googleSignIn.signOut(),
       ]);
-    } on Exception {
+    } on Exception catch (e){
       throw LogOutFailure();
     }
   }
