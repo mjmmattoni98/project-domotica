@@ -28,6 +28,11 @@ class RoomRepository{
         .map((document) => Room.fromJson(document.data()))
         .toList());
   }
+  Future<void> changeName(Room habitacion, String nombreNuevo){
+    return _firestore.collection('habitacion').doc(habitacion.id).update({
+      "nombre": nombreNuevo
+    });
+  }
 
   /*Future<Stream<Room>> getRoom() async {
     Stream<Map<String, dynamic>> ref = _firestore.collection('habitacion').doc('hBueqmdbXEIyIr8Uwjqz').snapshots().map((snap) => snap.data());

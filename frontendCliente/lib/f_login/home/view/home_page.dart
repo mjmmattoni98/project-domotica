@@ -46,7 +46,7 @@ class HomePageView extends StatelessWidget{
           children: <Widget>[
           Expanded(
             child: _ListarHabitacionWidget().build(context)
-            ),
+          ),
           Expanded(
             child: _DispositivosInactivosWidget().build(context)
           )

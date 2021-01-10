@@ -24,6 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  focused_menu: ^1.0.2
   equatable: ^1.2.3
   firebase_core: ^0.5.3
   firebase_analytics: ^1.0.4

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontendCliente/Widgets/home_app_bar.dart';
 import 'package:frontendCliente/Widgets/list_view_widget.dart';
+import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_bloc.dart';
 import 'package:frontendCliente/f_login/authentication/authentication.dart';
 import 'package:provider/provider.dart';
 
@@ -23,12 +24,13 @@ class ListaHabitacionesPage extends StatefulWidget{
 
 class _ListaHabitacionesPageState extends State<ListaHabitacionesPage>{
 
-  List<Room> _ListaHabitaciones;
+  //final HabitacionBloc habitacionBloc = HabitacionBloc()
 
   @override
   void initState(){
     super.initState();
-    _ListaHabitaciones = [];
+    
+    //_ListaHabitaciones = [];
   }
 
 
