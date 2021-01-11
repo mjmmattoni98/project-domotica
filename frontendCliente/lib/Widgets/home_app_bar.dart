@@ -52,6 +52,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget{
                   Text(
                     title,
                     style: TextStyle(
+                      fontFamily: "Raleway",
                       shadows: <Shadow>[
                         Shadow(
                           color: Colors.black,

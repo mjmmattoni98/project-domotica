@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_bloc.dart';
+import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_event.dart';
+import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_state.dart';
 import 'package:frontendCliente/f_habitaciones/habitaciones/view/listado_habitaciones_page.dart';
 import 'package:frontendCliente/f_login/authentication/authentication.dart';
 import 'package:frontendCliente/f_login/home/home.dart';
@@ -8,7 +13,6 @@ import 'package:room_repository/room_repository.dart';
 
 class HomePage extends StatelessWidget {
 
-  final RoomRepository roomRepository = RoomRepository();
 
   static Route route() {
     return MaterialPageRoute<void>(builder: (_) => HomePage());
@@ -16,23 +20,23 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
+    return BlocProvider(create: (context) => HabitacionBloc(RoomRepository()),
+        child: HomePageView());
+     /*RepositoryProvider.value(
       value: roomRepository,
-      child: HomePageView().build(context),
+      child: HomePageView().build(context),*/
       // child: BlocProvider(
       //   create: (_) => AuthenticationBloc(
       //     authenticationRepository: authenticationRepository,
       //   ),
       //   child: AppView(),
       // ),
-    );
   }
 }
 class HomePageView extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: HomeAppBar(
         title: "HOME",
@@ -40,20 +44,34 @@ class HomePageView extends StatelessWidget{
         gradientEnd: Colors.black87,
         gradientMid: Colors.black54,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-          child: Column(
-          children: <Widget>[
-          Expanded(
-            child: _ListarHabitacionWidget().build(context)
-          ),
-          Expanded(
-            child: _DispositivosInactivosWidget().build(context)
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white38,
+              Colors.black54
+            ]
           )
-        ],
-      ))
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+            child: Column(
+            children: <Widget>[
+            Expanded(
+              child: _ListarHabitacionWidget().build(context)
+            ),
+            Expanded(
+              child: _DispositivosInactivosWidget().build(context)
+            )
+          ],
+        )),
+      )
     );
   }
+
+
 }
 
 /*ListView.builder(itemCount: ,
@@ -77,47 +95,66 @@ class HomePageView extends StatelessWidget{
 class _ListarHabitacionWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 10,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      child: InkWell(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20.0),
-          child: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    fit: BoxFit.fitWidth,
-                    image: NetworkImage("https://media.discordapp.net/attachments/502530393740673025/796006411527913482/hagomasquealex.jpg?width=524&height=468") //https://i.pinimg.com/736x/d1/2c/93/d12c9376d6fe2a9d33f2d1840ffae02c.jpg
-                  // https://image.flaticon.com/icons/png/512/1375/1375683.png
-                )
-            ),
+    return BlocBuilder<HabitacionBloc, HabitacionState>(
+      builder: (_, state) => Card(
+        elevation: 10,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        child: InkWell(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20.0),
             child: Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(15.0),
-              child: Text(
-                "HABITACIONES",
-                style: TextStyle(
-                    shadows: <Shadow>[
-                      Shadow(
-                          color: Colors.white,
-                          blurRadius: 50.0
-                      )
-                    ],
-                    color: Colors.black,
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 3.0
+              foregroundDecoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.white12,
+                        Colors.black12,
+                      ]
+                  )
+              ),
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.fitWidth,
+                      image: NetworkImage("https://media.discordapp.net/attachments/502530393740673025/796006411527913482/hagomasquealex.jpg?width=524&height=468") //https://i.pinimg.com/736x/d1/2c/93/d12c9376d6fe2a9d33f2d1840ffae02c.jpg
+                    // https://image.flaticon.com/icons/png/512/1375/1375683.png
+                  )
+              ),
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(15.0),
+                child: Text(
+                  "HABITACIONES",
+                  style: TextStyle(
+                      fontFamily: "Raleway",
+                      shadows: <Shadow>[
+                        Shadow(
+                            color: Colors.white,
+                            blurRadius: 50.0
+                        )
+                      ],
+                      color: Colors.black,
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 3.0
+                  ),
                 ),
               ),
             ),
           ),
+          onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => BlocProvider.value(
+                  value: BlocProvider.of<HabitacionBloc>(context),
+                child: new ListaHabitacionesPage(),
+              ),
+            ));
+          },
         ),
-        onTap: (){
-          Navigator.of(context).push<void>(ListaHabitacionesPage.route());
-        },
       ),
     );
   }
+
 }
 
 class _DispositivosInactivosWidget extends StatelessWidget{
@@ -132,6 +169,16 @@ class _DispositivosInactivosWidget extends StatelessWidget{
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20.0),
           child: Container(
+            foregroundDecoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.white12,
+                      Colors.black12,
+                    ]
+                )
+            ),
             decoration: BoxDecoration(
                 image: DecorationImage(
                     fit: BoxFit.fitHeight,
@@ -147,6 +194,7 @@ class _DispositivosInactivosWidget extends StatelessWidget{
               child: Text(
                 "DISPOSITIVOS INACTIVOS",
                 style: TextStyle(
+                    fontFamily: "Raleway",
                     shadows: <Shadow>[
                       Shadow(
                           color: Colors.white,
@@ -155,7 +203,7 @@ class _DispositivosInactivosWidget extends StatelessWidget{
                     ],
                     color: Colors.black,
                     fontSize: 25.0,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.bold,
                     letterSpacing: 1.0
                 ),
               ),
@@ -168,5 +216,7 @@ class _DispositivosInactivosWidget extends StatelessWidget{
       ),
     );
   }
+
+
 
 }

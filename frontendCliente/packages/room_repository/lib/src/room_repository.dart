@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 import '../room_repository.dart';
 
@@ -32,6 +33,14 @@ class RoomRepository{
     return _firestore.collection('habitacion').doc(habitacion.id).update({
       "nombre": nombreNuevo
     });
+  }
+
+  Future<List<Room>> getRoomListAct() async {
+    return await _firestore.collection('habitacion')
+        .snapshots()
+        .map((snapShot) => snapShot.docs
+        .map((document) => Room.fromJson(document.data()))
+        .toList()).first;
   }
 
   /*Future<Stream<Room>> getRoom() async {
