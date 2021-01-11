@@ -109,13 +109,13 @@ export const devicesStates = functions.firestore
 
       const dataHabitacion = refHabitacion.data();
 
-      let payload: admin.messaging.MessagingPayload;
-
+      
       if(dataHabitacion === undefined){
         console.log("La habitacion no existe");
         return null;
       }
 
+      let payload: admin.messaging.MessagingPayload;
       if (after.estado.toLowerCase() === "disconnected") {
         payload = {
           notification: {
@@ -167,9 +167,71 @@ async function activaAlarmaSiHay(idHabitacion: string): Promise<void> {
             doc.ref.update({estado: "ON"});
           }
         })
+      }).catch(err => {
+        console.log("Algo ha salido mal al activar las alarmas ", err);
       });
   }
+};
 
-}
+export const constrolarConexionHub = functions.pubsub.schedule('every 2 min').onRun(async (context) => {
+  const refHubs = await db.collection('hub').get()
+    .then(snapshot => {
+      if(snapshot.empty){
+        console.log("Error accediendo a los hub");
+        return;
+      }
+      snapshot.forEach(async doc => {
+        const data = doc.data();
+        
+        const querySnapshotTokens = await db
+          .collection('users')
+          .doc(data.uid)
+          .collection('tokens')
+          .get();
+
+        const tokens = querySnapshotTokens.docs.map(snap => snap.id);
+        let consultasNuevas: number = 0; 
+        if (data.estado.toLowerCase() === "pong"){
+          if(data.consultas > 0){
+            const payload: admin.messaging.MessagingPayload = {
+              notification: {
+                title: 'Conexion HUB restablecida',
+                body: `Se ha recuperado la conexión con el HUB`,
+                click_action: 'FLUTTER_NOTIFICATION_CLICK'
+              }
+            };
+            fcm.sendToDevice(tokens, payload, {
+              // Required for background/quit data-only messages on iOS
+              //contentAvailable: true,
+              // Required for background/quit data-only messages on Android
+              priority: "high",
+            });
+          }
+        } 
+        else{
+          if(data.consultas == 0){
+            const payload: admin.messaging.MessagingPayload = {
+              notification: {
+                title: 'Conexion HUB perdida',
+                body: `Se ha perdido la conexión con el HUB`,
+                click_action: 'FLUTTER_NOTIFICATION_CLICK'
+              }
+            };
+            fcm.sendToDevice(tokens, payload, {
+              // Required for background/quit data-only messages on iOS
+              //contentAvailable: true,
+              // Required for background/quit data-only messages on Android
+              priority: "high",
+            });
+          }
+          consultasNuevas = data.consultas + 1;
+        }
+        doc.ref.update({estado: "PING", consultas: consultasNuevas});
+      })
+    })
+    .catch(err => {
+      console.log("Ha habido un error al comprobar la conexion del hub ", err);
+    })
+});
 
 
