@@ -1,10 +1,10 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontendCliente/f_login/authentication/authentication.dart';
-import 'package:frontendCliente/home/home.dart';
-import 'package:frontendCliente/f_login/login/login.dart';
-import 'package:frontendCliente/f_login/splash/splash.dart';
+import 'package:frontendhub/f_login/authentication/authentication.dart';
+import 'package:frontendhub/f_home/home.dart';
+import 'package:frontendhub/f_login/login/login.dart';
+import 'package:frontendhub/f_login/splash/splash.dart';
 
 class App extends StatelessWidget {
   const App({
@@ -51,13 +51,13 @@ class _AppViewState extends State<AppView> {
               case AuthenticationStatus.authenticated:
                 _navigator.pushAndRemoveUntil<void>(
                   HomePage.route(),
-                  (route) => false,
+                      (route) => false,
                 );
                 break;
               case AuthenticationStatus.unauthenticated:
                 _navigator.pushAndRemoveUntil<void>(
                   LoginPage.route(),
-                  (route) => false,
+                      (route) => false,
                 );
                 break;
               default:

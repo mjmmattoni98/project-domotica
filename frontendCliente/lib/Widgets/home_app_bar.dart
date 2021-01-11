@@ -2,10 +2,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:frontendCliente/f_login/authentication/authentication.dart';
-//import 'package:authentication_repository/authentication_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget{
@@ -20,14 +17,12 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget{
       assert(gradientBegin != null),
       assert(gradientMid != null);
 
-
   @override
   Widget build(BuildContext context) {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final user = auth.currentUser;
 
     //final User user = firebase_auth.User as User;
-
 
     //final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
       return Container(
