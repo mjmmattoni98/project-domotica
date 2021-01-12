@@ -49,6 +49,16 @@ class HabitacionBloc
     List<Room> lista =  await roomRepository.getRoomListAct();
     return HabitacionesCargadas(lista);
   }
+
+  Future<HabitacionState> crearHabitaciones(List<Room> habitaciones, String nombre) async{
+    for(var i = 0; i < habitaciones.length; i++){
+      if(habitaciones[i].nombre.toLowerCase() == nombre.toLowerCase()){
+        return ListaError("REPEATED_ELEMENT");
+      }
+    }
+    await roomRepository.createRoom(nombre);
+    return HabitacionAnadida("Habitacion añadida correctamente");
+  }
 }
 
 
