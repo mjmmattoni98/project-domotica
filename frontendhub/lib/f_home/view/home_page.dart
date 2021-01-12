@@ -14,9 +14,17 @@ class HomePage extends StatelessWidget {
     final defaultURL = "https://drive.google.com/uc?id=19hiUSohFDHZTi0k6QZeipLbzNHC0juLX";
     final textTheme = Theme.of(context).textTheme;
     final hub = context.select((AuthenticationBloc bloc) => bloc.state.hub);
+    bool isSwitched = false;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
+        // leading: Switch(
+        //   value: isSwitched,
+        //   onChanged: (value) => {
+        //     isSwitched = value;
+        //   },
+        //   activeColor: Colors.green,
+        // ),
         actions: <Widget>[
           FlatButton(
             key: const Key('homePage_avatar_profile_user'),

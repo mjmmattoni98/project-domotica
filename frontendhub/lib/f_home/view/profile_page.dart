@@ -36,14 +36,14 @@ class ProfilePage extends StatelessWidget {
           IconButton(
             // key: const Key('homePage_logout_iconButton'),
             icon: const Icon(Icons.clear_rounded),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.of(context).pop(),
           )
         ],
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          const SizedBox(height: 15.0),
+          const SizedBox(height: 40.0),
           _AyudaYComentariosButton(),
           const SizedBox(height: 8.0),
           _AcercaDeButton(),

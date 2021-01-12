@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-/// {@template user}
-/// User model
+/// {@template hub}
+/// Hub model
 ///
-/// [User.empty] represents an unauthenticated user.
+/// [Hub.empty] represents an unauthenticated hub.
 /// {@endtemplate}
 class Hub extends Equatable {
-  /// {@macro user}
+  /// {@macro hub}
   const Hub({
     @required this.email,
     @required this.id,
@@ -36,7 +36,7 @@ class Hub extends Equatable {
   /// Url for the current user's photo.
   final String photo;
 
-  /// Empty user which represents an unauthenticated user.
+  /// Empty hub which represents an unauthenticated hub.
   static const empty = Hub(email: '', id: '', name: null, consultas: -1, estado: null, photo: null);
 
   @override

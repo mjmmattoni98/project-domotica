@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
@@ -54,10 +55,11 @@ class AuthenticationRepository {
   }) async {
     assert(email != null && password != null);
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
+      User user = (await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
-      );
+      )).user;
+      updateHubData(user);
     } on Exception catch (e){
       throw SignUpFailure();
     }
@@ -115,6 +117,16 @@ class AuthenticationRepository {
     }
   }
 
+  Future<void> updateStateHub(String uid){
+    DocumentReference ref = _db.collection('hub').doc(uid);
+
+    return ref.update({
+      'estado': "pong"
+    }).then((value) => print("Actualizado el estado del hub"))
+        .catchError((error) => print("Error al intentar actualizar el estado del hub: $error"));
+        
+  }
+
   void updateHubData(User user) async{
     DocumentReference ref = _db.collection('hub').doc(user.uid);
 
@@ -123,7 +135,9 @@ class AuthenticationRepository {
       'email': user.email,
       'consultas': 0,
       'estado': "pong"
-    }, SetOptions(merge: true));
+    }, SetOptions(merge: true))
+    .then((value) => print("Hub updated"))
+    .catchError((error) => print("Failed while updating hub: $error"));
   }
 }
 
