@@ -5,8 +5,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:frontendCliente/app.dart';
-import 'package:frontendCliente/simple_bloc_observer.dart';
+import 'package:frontendhub/app.dart';
+import 'package:frontendhub/simple_bloc_observer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,3 +15,4 @@ void main() async {
   Bloc.observer = SimpleBlocObserver();
   runApp(App(authenticationRepository: AuthenticationRepository()));
 }
+

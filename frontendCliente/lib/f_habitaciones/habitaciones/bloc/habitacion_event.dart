@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:room_repository/room_repository.dart';
 
