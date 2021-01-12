@@ -60,18 +60,13 @@ extension on TipoDispositivo{
 class Device extends Equatable {
   /// {@macro device}
   Device({
-    @required this.email,
     @required this.idDevice,
     @required this.uid,
     @required this.name,
     @required this.tipo,
     this.estado = Estado.INACTIVE
-  })  : assert(email != null),
-        assert(idDevice != null),
+  })  : assert(idDevice != null),
         assert(uid != null);
-
-  /// The current user's email address.
-  final String email;
 
   /// The current user's id.
   final String uid;
@@ -97,6 +92,55 @@ class Device extends Equatable {
     return this;
   }
 
+  static TipoDispositivo stringToTipo(String tipo){
+    var tipoDispositivo;
+    switch(tipo){
+      case "alarma":
+        tipoDispositivo = TipoDispositivo.ALARMA;
+        break;
+      case "movimiento":
+        tipoDispositivo = TipoDispositivo.DETECTOR_DE_MOVIMIENTO;
+        break;
+      case "apertura":
+        tipoDispositivo = TipoDispositivo.SENSOR_DE_APERTURA;
+        break;
+      default:
+        tipoDispositivo = null;
+        break;
+    }
+    return tipoDispositivo;
+  }
+
+  static Estado stringToEstado(String estado){
+    var tipoEstado;
+    switch(estado){
+      case "open":
+      case "motion_detected":
+      case "on":
+        tipoEstado = Estado.ACTIVE;
+        break;
+      case "close":
+      case "no_motion":
+      case "off":
+        tipoEstado = Estado.INACTIVE;
+        break;
+      case "disconnected":
+        tipoEstado = Estado.DISCONNECTED;
+        break;
+      default:
+        tipoEstado = null;
+        break;
+    }
+    return tipoEstado;
+  }
+
+  Device.fromJson(Map<String, dynamic> parsedJson, String id)
+    : uid = parsedJson['uid'],
+      idDevice = id,
+      name = parsedJson['name'],
+      tipo = stringToTipo(parsedJson['tipo'].toLowerCase()),
+      estado = stringToEstado(parsedJson['estado'].toLowerCase());
+
   @override
-  List<Object> get props => [email, uid, idDevice, name, estado, tipo];
+  List<Object> get props => [uid, idDevice, name, estado, tipo];
 }

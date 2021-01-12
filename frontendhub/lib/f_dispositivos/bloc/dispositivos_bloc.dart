@@ -16,33 +16,51 @@ class DispositivosBloc
     @required DeviceRepository deviceRepository,
   })  : assert(deviceRepository != null),
         _deviceRepository = deviceRepository,
-        super(const DispositivosState.unknown()) {
-    _hubSubscription = _deviceRepository.hub.listen(
-          (user) => add(AuthenticationUserChanged(user)),
-    );
-  }
+        super(const DispositivosInitial()) ;
 
   final DeviceRepository _deviceRepository;
-  StreamSubscription<Hub> _hubSubscription;
 
   @override
-  Stream<DispositivosState> mapEventToState(DispositivosEvent event) async* {
-    if (event is AuthenticationUserChanged) {
-      yield _mapAuthenticationUserChangedToState(event);
-    } else if (event is AuthenticationLogoutRequested) {
-      unawaited(_deviceRepository.logOut());
+  Stream<DispositivosState> mapEventToState(DispositivosEvent event) async*{
+    String uid = await _deviceRepository.hubUid.single;
+    if(event is CambiarNombreDispositivo){
+      try{
+        yield DispositivosCargando();
+        final List<Device> dispositivos = await _deviceRepository.getDevices(uid);
+        final DispositivosState estadoGenerado = await cambiarNombreDispositivo(dispositivos, event.nuevoNombre, event.device.name, uid);
+        yield estadoGenerado;
+      }on Error{
+        yield DispositivosError("INTERNET_CONNECTION");
+      }
+    }else if(event is ActualizarListarDispositivos){
+      yield DispositivosCargando();
+      final DispositivosState estadoGenerado = await listarDispositivos(uid);
+      yield estadoGenerado;
     }
   }
 
-  @override
-  Future<void> close() {
-    _hubSubscription?.cancel();
-    return super.close();
+  Future<DispositivosState> cambiarNombreDispositivo(List<Device> dispositivos, String nuevoNombre, String antiguoNombre, String uid) async {
+    for(var i = 0; i < dispositivos.length; i++){
+      if(dispositivos[i].name.toLowerCase() == nuevoNombre.toLowerCase()){
+        return DispositivosError("REPEATED_ELEMENT");
+      }
+    }
+    await _deviceRepository.updateDeviceName(uid, antiguoNombre, nuevoNombre);
+    return DispositivoModificado("Dispositivo modificado con éxito");
   }
 
-  DispositivosState _mapAuthenticationUserChangedToState(AuthenticationUserChanged event) {
-    return event.hub != Hub.empty
-        ? DispositivosState.authenticated(event.hub)
-        : const DispositivosState.unauthenticated();
+  Future<DispositivosState> listarDispositivos(String uid) async {
+    List<Device> lista =  await _deviceRepository.getDevices(uid);
+    return DispositivosCargados(lista);
+  }
+
+  Future<DispositivosState> crearDispositivo(List<Device> dispositivos, String nombre) async{
+    for(var i = 0; i < dispositivos.length; i++){
+      if(dispositivos[i].name.toLowerCase() == nombre.toLowerCase()){
+        return DispositivosError("REPEATED_ELEMENT");
+      }
+    }
+    await _deviceRepository.createDevice(nombre);
+    return DispositivoAnyadido("Dispositivo añadido correctamente");
   }
 }

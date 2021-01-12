@@ -17,10 +17,10 @@ class AuthenticationBloc
   })  : assert(authenticationRepository != null),
         _authenticationRepository = authenticationRepository,
         super(const AuthenticationState.unknown()) {
-    _hubSubscription = _authenticationRepository.hub.listen(
-          (user) => add(AuthenticationUserChanged(user)),
-    );
-  }
+          _hubSubscription = _authenticationRepository.hub.listen(
+            (user) => add(AuthenticationUserChanged(user)),
+          );
+        }
 
   final AuthenticationRepository _authenticationRepository;
   StreamSubscription<Hub> _hubSubscription;

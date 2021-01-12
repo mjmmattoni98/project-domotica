@@ -1,19 +1,29 @@
 part of 'dispositivos_bloc.dart';
 
-abstract class DispositivosEvent extends Equatable {
+abstract class DispositivosEvent extends Equatable{
   const DispositivosEvent();
+}
 
+class ActualizarListarDispositivos extends DispositivosEvent{
   @override
   List<Object> get props => [];
 }
 
-class AuthenticationUserChanged extends DispositivosEvent {
-  const AuthenticationUserChanged(this.hub);
+class RemoveDispositivo extends DispositivosEvent{
+  final Device device;
 
-  final Hub hub;
+  const RemoveDispositivo(this.device);
 
   @override
-  List<Object> get props => [hub];
+  List<Object> get props => [device];
 }
 
-class AuthenticationLogoutRequested extends DispositivosEvent {}
+class CambiarNombreDispositivo extends DispositivosEvent{
+  final Device device;
+  final String nuevoNombre;
+
+  const CambiarNombreDispositivo(this.device, this.nuevoNombre);
+
+  @override
+  List<Object> get props => [device, nuevoNombre];
+}
