@@ -1,3 +1,6 @@
+
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +8,7 @@ import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:frontendCliente/Widgets/floating_button.dart';
 import 'package:frontendCliente/Widgets/home_app_bar.dart';
+import 'package:frontendCliente/Widgets/menu_widget.dart';
 import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_bloc.dart';
 import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_event.dart';
 import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_state.dart';
@@ -20,20 +24,12 @@ class ListaHabitacionesPage extends StatelessWidget{
   }
 }
 class _ListaHabitacionesPageState{
+  bool showBottomMenu = false;
   TextEditingController controladorNombre = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    var threshold = 100;
     return Scaffold(
-      //floatingActionButtonAnimator: FancyFab(),
-      floatingActionButton: FancyFab(),
-      /*floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: new FloatingActionButton(
-        onPressed: (){
-
-        },
-        tooltip: 'La vida',
-        child: new Icon(Icons.add),
-      ),*/
       appBar: HomeAppBar(
         //user: user,
         title: "HABITACIONES",
@@ -41,38 +37,60 @@ class _ListaHabitacionesPageState{
         gradientEnd: Colors.black87,
         gradientMid: Colors.black54,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Colors.white38,
-                  Colors.black54
-                ]
-            )
-        ),child:
-          BlocBuilder<HabitacionBloc, HabitacionState>(
-            builder: (context, state){
-              if(state is HabitacionCargando){
-                return buildCargando();
-              }else if(state is HabitacionesCargadas){
-                print("Cargada");
-                return buildListado(context, state.habitaciones);
-              }
-              else if(state is HabitacionesInitial){
-                print("INITIAL");
-                listadoInicial(context);
-              }else if(state is HabitacionModificada){
-                listadoInicial(context);
-              }else if(state is ListaError){
-                print("ERROR PRIM");
-                listadoInicial(context);
-              }
-              print("Liada loko");
-              return buildCargando();
-            }
+      body: GestureDetector(
+        onPanEnd: (details){
+          if(details.velocity.pixelsPerSecond.dy > threshold){
+            showBottomMenu = false;
+          }
+          else if(details.velocity.pixelsPerSecond.dy < -threshold){
+            showBottomMenu = true;
+          }
+        },
+        child: Stack(
+          children: <Widget> [
+
+            Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.white38,
+                      Colors.black54
+                    ]
+                )
+            ),child:
+              BlocBuilder<HabitacionBloc, HabitacionState>(
+                builder: (context, state){
+                  if(state is HabitacionCargando){
+                    return buildCargando();
+                  }else if(state is HabitacionesCargadas){
+                    print("Cargada");
+                    print(MediaQuery.of(context).size.height);
+                    return buildListado(context, state.habitaciones);
+                  }
+                  else if(state is HabitacionesInitial){
+                    print("INITIAL");
+                    listadoInicial(context);
+                  }else if(state is HabitacionModificada){
+                    listadoInicial(context);
+                  }else if(state is ListaError){
+                    print("ERROR PRIM");
+                    listadoInicial(context);
+                  }
+                  print("Liada loko");
+                  return buildCargando();
+                }
+              ),
           ),
+            Positioned(
+                child: MenuWidget(),
+              left: 0.0,
+              bottom: (showBottomMenu)?0:-(MediaQuery.of(context).size.height/3),
+            ),
+
+          ]
+        ),
       ),
     );
   }
@@ -84,7 +102,7 @@ class _ListaHabitacionesPageState{
   Widget buildListado(BuildContext context, List<Room> habitaciones){
     return Column(
       children: [
-        Expanded(
+        Flexible(
           child: ListView.builder(
               addAutomaticKeepAlives: true,
               physics: BouncingScrollPhysics( parent: AlwaysScrollableScrollPhysics() ),
@@ -142,8 +160,15 @@ class _ListaHabitacionesPageState{
     return showDialog(context: context, builder: (_){
       return AlertDialog(
         elevation: 10.0,
-        title: Text("Nuevo nombre para esta habitacion"),
+        title: Text("Nuevo nombre para esta habitacion",
+          style: TextStyle(fontFamily: "Raleway"),
+          textAlign: TextAlign.center,
+        ),
         content: TextField(
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontFamily: "Raleway",
+          ),
           controller: controller,
         ),
         actions: <Widget>[

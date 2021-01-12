@@ -42,6 +42,14 @@ class RoomRepository{
         .map((document) => Room.fromJson(document.data()))
         .toList()).first;
   }
+  
+  Future<void> createRoom(String nombre){
+    return _firestore.collection('habitacion').add({
+      "nombre": nombre,
+      "uid": _user.uid,
+      "dispositivos": "",
+    });
+  }
 
   /*Future<Stream<Room>> getRoom() async {
     Stream<Map<String, dynamic>> ref = _firestore.collection('habitacion').doc('hBueqmdbXEIyIr8Uwjqz').snapshots().map((snap) => snap.data());
