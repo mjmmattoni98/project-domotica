@@ -36,12 +36,13 @@ class HabitacionBloc
   }
 
   Future<HabitacionState> cambiarNombreHabitacion(List<Room> habitaciones, String nuevoNombre, Room habitacion) async {
-    //for(var i = 0; i < habitaciones.length)
-    habitaciones.forEach((element) { if(element.nombre.toLowerCase() == nuevoNombre){ return ListaError("REPEATED_ELEMENT"); } });
+    for(var i = 0; i < habitaciones.length; i++){
+      if(habitaciones[i].nombre.toLowerCase() == nuevoNombre.toLowerCase()){
+        return ListaError("REPEATED_ELEMENT");
+      }
+    }
     await roomRepository.changeName(habitacion, nuevoNombre);
     return HabitacionModificada("Habitacion modificada con éxito");
-    //f.timeout(Duration(seconds: 20));
-    //return HabitacionInitial();
   }
 
   Future<HabitacionState> listarHabitaciones() async {

@@ -30,6 +30,8 @@ class HabitacionCargando extends HabitacionState{
   List<Object> get props => [];
 
 }
+
+
 class HabitacionBorrada extends HabitacionState{
   final String mensaje;
 
