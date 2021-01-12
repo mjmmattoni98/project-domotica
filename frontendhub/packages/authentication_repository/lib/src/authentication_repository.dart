@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,22 +26,22 @@ class LogOutFailure implements Exception {}
 class AuthenticationRepository {
   /// {@macro authentication_repository}
   AuthenticationRepository({
-    firebase_auth.FirebaseAuth firebaseAuth,
+    FirebaseAuth firebaseAuth,
     GoogleSignIn googleSignIn,
-  })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
+  })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
 
-  final firebase_auth.FirebaseAuth _firebaseAuth;
+  final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  /// Stream of [User] which will emit the current user when
+  /// Stream of [Hub] which will emit the current user when
   /// the authentication state changes.
   ///
-  /// Emits [User.empty] if the user is not authenticated.
-  Stream<User> get user {
+  /// Emits [Hub.empty] if the user is not authenticated.
+  Stream<Hub> get hub {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
-      return firebaseUser == null ? User.empty : firebaseUser.toUser;
+      return firebaseUser == null ? Hub.empty : firebaseUser.toHub;
     });
   }
 
@@ -70,12 +70,12 @@ class AuthenticationRepository {
     try {
       final googleUser = await _googleSignIn.signIn();
       final googleAuth = await googleUser.authentication;
-      final credential = firebase_auth.GoogleAuthProvider.credential(
+      final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      firebase_auth.User user = (await _firebaseAuth.signInWithCredential(credential)).user;
-      updateUserData(user);
+      User user = (await _firebaseAuth.signInWithCredential(credential)).user;
+      updateHubData(user);
     } on Exception catch (e){
       throw LogInWithGoogleFailure();
     }
@@ -90,11 +90,11 @@ class AuthenticationRepository {
   }) async {
     assert(email != null && password != null);
     try {
-      firebase_auth.User user = (await _firebaseAuth.signInWithEmailAndPassword(
+      User user = (await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       )).user;
-      updateUserData(user);
+      updateHubData(user);
     } on Exception catch (e){
       throw LogInWithEmailAndPasswordFailure();
     }
@@ -115,21 +115,20 @@ class AuthenticationRepository {
     }
   }
 
-  void updateUserData(firebase_auth.User user) async{
-    DocumentReference ref = _db.collection('users').doc(user.uid);
+  void updateHubData(User user) async{
+    DocumentReference ref = _db.collection('hub').doc(user.uid);
 
     return ref.set({
       'uid': user.uid,
       'email': user.email,
-      'photoUrl': user.photoURL,
-      'displayName': user.displayName,
-      'lastSeen': DateTime.now()
+      'consultas': 0,
+      'estado': "pong"
     }, SetOptions(merge: true));
   }
 }
 
-extension on firebase_auth.User {
-  User get toUser {
-    return User(id: uid, email: email, name: displayName, photo: photoURL);
+extension on User {
+  Hub get toHub {
+    return Hub(id: uid, email: email, name: displayName, consultas: 0, estado : "pong", photo: photoURL);
   }
 }

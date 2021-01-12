@@ -6,13 +6,15 @@ import 'package:meta/meta.dart';
 ///
 /// [User.empty] represents an unauthenticated user.
 /// {@endtemplate}
-class User extends Equatable {
+class Hub extends Equatable {
   /// {@macro user}
-  const User({
+  const Hub({
     @required this.email,
     @required this.id,
+    @required this.consultas,
     @required this.name,
-    @required this.photo,
+    @required this.estado,
+    @required this.photo
   })  : assert(email != null),
         assert(id != null);
 
@@ -25,12 +27,18 @@ class User extends Equatable {
   /// The current user's name (display name).
   final String name;
 
+  /// The current hub's inquiries.
+  final int consultas;
+
+  /// The current hub's state.
+  final String estado;
+
   /// Url for the current user's photo.
   final String photo;
 
   /// Empty user which represents an unauthenticated user.
-  static const empty = User(email: '', id: '', name: null, photo: null);
+  static const empty = Hub(email: '', id: '', name: null, consultas: -1, estado: null, photo: null);
 
   @override
-  List<Object> get props => [email, id, name, photo];
+  List<Object> get props => [email, id, consultas, name, estado, photo];
 }

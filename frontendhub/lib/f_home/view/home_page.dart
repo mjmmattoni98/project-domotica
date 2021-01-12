@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontendhub/f_home/view/profile_page.dart';
 import 'package:frontendhub/f_login/authentication/authentication.dart';
 import 'package:frontendhub/f_home/home.dart';
 
@@ -10,18 +11,26 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final defaultURL = "https://drive.google.com/uc?id=19hiUSohFDHZTi0k6QZeipLbzNHC0juLX";
     final textTheme = Theme.of(context).textTheme;
-    final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
+    final hub = context.select((AuthenticationBloc bloc) => bloc.state.hub);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
         actions: <Widget>[
-          IconButton(
-            key: const Key('homePage_logout_iconButton'),
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () => context
-                .read<AuthenticationBloc>()
-                .add(AuthenticationLogoutRequested()),
+          FlatButton(
+            key: const Key('homePage_avatar_profile_user'),
+            child: CircleAvatar(
+                radius: 22.0,
+                child: ClipOval(
+                    child: new SizedBox(
+                      width: 100.0,
+                      height: 100.0,
+                      child: Image.network(hub.photo ?? defaultURL, fit: BoxFit.fill),
+                    )
+                )
+            ),
+            onPressed: () => Navigator.of(context).push<void>(ProfilePage.route()),
           )
         ],
       ),
@@ -36,15 +45,12 @@ class HomePage extends StatelessWidget {
                     child: new SizedBox(
                       width: 100.0,
                       height: 100.0,
-                      child: new Image.network(user.photo, fit: BoxFit.fill),
+                      child: Image.network(hub.photo ?? defaultURL, fit: BoxFit.fill),
                     )
                 )
-              //backgroundImage: NetworkImage(user.photo),
             ),
             const SizedBox(height: 4.0),
-            Text(user.email, style: textTheme.headline6),
-            const SizedBox(height: 4.0),
-            Text(user.name ?? '', style: textTheme.headline5),
+            Text(hub.email ?? "", style: textTheme.headline6),
           ],
         ),
       ),
