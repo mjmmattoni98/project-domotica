@@ -4,7 +4,7 @@ module.exports = {
     node: true,
   },
   extends: [
-    "eslint:recommended",
+    //    "eslint:recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",
@@ -23,6 +23,17 @@ module.exports = {
     "import",
   ],
   rules: {
-    quotes: ["error", "double"],
+    quotes: ["off"],
+    semi: ["off"],
+    indent: ["off"],
+    "comma-dangle": ["off"],
+    "space-before-blocks": ["off"],
+    "keyword-spacing": ["off"],
+    "no-trailing-spaces": ["off"],
+    "require-jsdoc": ["off"],
+    "max-len": ["off"],
+    "brace-style": ["off"],
+    "quote-props": ["off"],
+    "arrow-parens": ["off"],
   },
-};
+}

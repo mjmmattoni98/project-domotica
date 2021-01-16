@@ -46,8 +46,6 @@ extension on TipoDispositivo{
       case Estado.DISCONNECTED:
         nombreEstado = "disconnected";
         break;
-      default:
-        break;
     }
     return nombreEstado;
   }
