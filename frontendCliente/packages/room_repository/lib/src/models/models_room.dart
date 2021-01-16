@@ -8,33 +8,24 @@ class Room extends Equatable{
 
   final String id;
   final String nombre;
-  //final List<Device> dispositivos;
+  final String dispositivos;
 
   const Room({
     @required this.id,
     @required this.nombre,
-    //@required this.dispositivos
+    @required this.dispositivos
   }) : assert(id != null),
-    assert(nombre != null);
-    //assert(dispositivos != null);
+    assert(nombre != null),
+    assert(dispositivos != null);
 
-  static const empty = Room(id: '', nombre: '', /*dispositivos: <Device>[]*/);
+  static const empty = Room(id: '', nombre: '', dispositivos: "");
 
   @override
   // TODO: implement props
-  List<Object> get props => [id, nombre/*, dispositivos*/];
+  List<Object> get props => [id, nombre, dispositivos];
 
   Room.fromJson(Map<String, dynamic> parsedJSON)
       : nombre = parsedJSON['nombre'],
+        dispositivos = parsedJSON['dispositivos'],
         id = parsedJSON['id'];
-
-  /*static Room fromSnapshot(DocumentSnapshot snapshot){
-    return Room(
-      snapshot.data['id'],
-      snapshot.data['nombre'],
-      snapshot.data().
-
-
-    );
-  }*/
 }

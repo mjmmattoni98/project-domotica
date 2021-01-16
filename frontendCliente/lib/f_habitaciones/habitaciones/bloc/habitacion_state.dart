@@ -81,3 +81,13 @@ class ListaError extends HabitacionState{
   List<Object> get props => [mensaje];
 
 }
+
+class HabitacionConDispositivos extends HabitacionState{
+  final bool confirmacion;
+
+  HabitacionConDispositivos(this.confirmacion);
+  @override
+  // TODO: implement props
+  List<Object> get props => [confirmacion];
+
+}

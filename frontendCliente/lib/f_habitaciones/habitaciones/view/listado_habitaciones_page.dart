@@ -1,6 +1,8 @@
 
 
 
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +16,7 @@ import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_even
 import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_state.dart';
 import 'package:room_repository/room_repository.dart';
 
-class ListaHabitacionesPage extends StatelessWidget{
+class ListaHabitacionesPage extends StatefulWidget{
   static Route route() {
     return MaterialPageRoute<void>(builder: (_) => ListaHabitacionesPage());
   }
@@ -22,12 +24,20 @@ class ListaHabitacionesPage extends StatelessWidget{
   Widget build(BuildContext context) {
     return _ListaHabitacionesPageState().build(context);
   }
+
+  @override
+  State<StatefulWidget> createState() {
+    return _ListaHabitacionesPageState();
+  }
+
 }
-class _ListaHabitacionesPageState{
+class _ListaHabitacionesPageState extends State<ListaHabitacionesPage>{
   bool showBottomMenu = false;
   TextEditingController controladorNombre = TextEditingController();
   @override
   Widget build(BuildContext context) {
+
+    double height = MediaQuery.of(context).size.height;
     var threshold = 100;
     return Scaffold(
       appBar: HomeAppBar(
@@ -40,56 +50,63 @@ class _ListaHabitacionesPageState{
       body: GestureDetector(
         onPanEnd: (details){
           if(details.velocity.pixelsPerSecond.dy > threshold){
-            showBottomMenu = false;
+            this.setState(() {
+              showBottomMenu = false;
+            });
           }
           else if(details.velocity.pixelsPerSecond.dy < -threshold){
-            showBottomMenu = true;
+            this.setState(() {
+              showBottomMenu = true;
+            });
           }
         },
         child: Stack(
-          children: <Widget> [
-
-            Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.white38,
-                      Colors.black54
-                    ]
-                )
-            ),child:
+            children: <Widget> [
+              Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Colors.white38,
+                          Colors.black54
+                        ]
+                    )
+                ),child:
               BlocBuilder<HabitacionBloc, HabitacionState>(
-                builder: (context, state){
-                  if(state is HabitacionCargando){
+                  builder: (context, state){
+                    //context.
+                    //buildPage(context);
+                    if(state is HabitacionCargando){
+                      return buildCargando();
+                    }else if(state is HabitacionesCargadas){
+                      print("Cargada");
+                      return buildListado(context, state.habitaciones);
+                    }
+                    else if(state is HabitacionesInitial){
+                      print("INITIAL");
+                      listadoInicial(context);
+                    }else if(state is HabitacionModificada){
+                      listadoInicial(context);
+                    }else if(state is ListaError){
+                      print("ERROR PRIM");
+                      listadoInicial(context);
+                    }
+                    print("Liada loko");
                     return buildCargando();
-                  }else if(state is HabitacionesCargadas){
-                    print("Cargada");
-                    print(MediaQuery.of(context).size.height);
-                    return buildListado(context, state.habitaciones);
                   }
-                  else if(state is HabitacionesInitial){
-                    print("INITIAL");
-                    listadoInicial(context);
-                  }else if(state is HabitacionModificada){
-                    listadoInicial(context);
-                  }else if(state is ListaError){
-                    print("ERROR PRIM");
-                    listadoInicial(context);
-                  }
-                  print("Liada loko");
-                  return buildCargando();
-                }
               ),
-          ),
-            Positioned(
-                child: MenuWidget(),
-              left: 0.0,
-              bottom: (showBottomMenu)?0:-(MediaQuery.of(context).size.height/3),
-            ),
+              ),
 
-          ]
+
+              AnimatedPositioned(
+                curve: Curves.fastLinearToSlowEaseIn,
+                duration: Duration(milliseconds: 800),
+                child: MenuWidget(),
+                left: 0.0,
+                bottom: (showBottomMenu)?0:-(height/3),
+              ),
+            ]
         ),
       ),
     );
@@ -135,7 +152,7 @@ class _ListaHabitacionesPageState{
                           ),
                         ),
                         onTap: (){
-                          
+
                         },
                       ),
                     ),
@@ -148,12 +165,16 @@ class _ListaHabitacionesPageState{
     );
   }
   void listadoInicial(BuildContext context){
-      context.bloc<HabitacionBloc>().add(ActualizarListarHabitaciones());
+    context.bloc<HabitacionBloc>().add(ActualizarListarHabitaciones());
   }
   void modificarHabitacion(BuildContext context, Room habitacion){
     if(controladorNombre.text != ""){
       context.bloc<HabitacionBloc>().add(CambiarNombreHabitacion(habitacion, controladorNombre.text));
     }
+  }
+
+  void anadirHabitacion(BuildContext context, String habitacion){
+
   }
 
   createAlertDialog(BuildContext context, Room habitacion, TextEditingController controller){
@@ -174,7 +195,7 @@ class _ListaHabitacionesPageState{
         actions: <Widget>[
           MaterialButton(
             elevation: 10.0,
-            child: Text("Submit"),
+            child: Text("Cambiar"),
             onPressed: (){
               modificarHabitacion(context, habitacion);
               Navigator.pop(context);

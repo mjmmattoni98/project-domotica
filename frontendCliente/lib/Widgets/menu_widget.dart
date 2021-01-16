@@ -9,8 +9,7 @@ class  MenuWidget extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
       child: Container(
-
-        color: Colors.black54,
+        color: Colors.black87,
         width: width,
         height: height/3 + 55,
         child: Column(
@@ -30,16 +29,49 @@ class  MenuWidget extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-            SizedBox(
-              width: double.infinity,
-              child: MaterialButton(
-                color: Colors.black54,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text("Hola loko"),
-                ),
+
+            Container(
+              padding: EdgeInsets.only(left: width/9, right: width/9, top: height/19),
+              child: Column(
+                children: [
+                  Container(
+                    color: Colors.white,
+                    child: TextField(
+                      cursorColor: Colors.black87,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontFamily: "Raleway"
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  MaterialButton(
+                    onPressed: (){
+                      //anadirHabitacion(context, "Nueva habitacion");
+                    },
+                    elevation: 10.0,
+
+                    color: Colors.black54,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        "Añadir",
+                        style: TextStyle(
+                            fontFamily: "Raleway",
+                            color: Colors.white70
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+
+
+
 
           ],
         ),

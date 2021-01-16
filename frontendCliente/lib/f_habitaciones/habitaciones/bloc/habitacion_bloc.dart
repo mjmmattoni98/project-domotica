@@ -13,31 +13,36 @@ class HabitacionBloc
   final RoomRepository roomRepository;
 
   HabitacionBloc(this.roomRepository) : super(HabitacionesInitial());
+
   HabitacionState get initialState => HabitacionesInitial();
 
 
-
   @override
-  Stream<HabitacionState> mapEventToState(HabitacionEvent event) async*{
-    if(event is CambiarNombreHabitacion){
-      try{
+  Stream<HabitacionState> mapEventToState(HabitacionEvent event) async* {
+    if (event is CambiarNombreHabitacion) {
+      try {
         yield HabitacionCargando();
         final List<Room> list = await roomRepository.getRoomListAct();
-        final HabitacionState estadoGenerado = await cambiarNombreHabitacion(list, event.nuevoNombre, event.habitacion);
+        final HabitacionState estadoGenerado = await cambiarNombreHabitacion(
+            list, event.nuevoNombre, event.habitacion);
         yield estadoGenerado;
-      }on Error{
+      } on Error {
         yield ListaError("INTERNET_CONNECTION");
       }
-    }else if(event is ActualizarListarHabitaciones){
+    } else if (event is ActualizarListarHabitaciones) {
       yield HabitacionCargando();
       final HabitacionState estadoGenerado = await listarHabitaciones();
-      yield estadoGenerado;/*HabitacionesInitial(roomRepository.getRoomListAct());*/
+      yield estadoGenerado; /*HabitacionesInitial(roomRepository.getRoomListAct());*/
+    } else if (event is RemoveHabitacion) {
+      yield HabitacionCargando();
+      //final HabitacionState
     }
   }
 
-  Future<HabitacionState> cambiarNombreHabitacion(List<Room> habitaciones, String nuevoNombre, Room habitacion) async {
-    for(var i = 0; i < habitaciones.length; i++){
-      if(habitaciones[i].nombre.toLowerCase() == nuevoNombre.toLowerCase()){
+  Future<HabitacionState> cambiarNombreHabitacion(List<Room> habitaciones,
+      String nuevoNombre, Room habitacion) async {
+    for (var i = 0; i < habitaciones.length; i++) {
+      if (habitaciones[i].nombre.toLowerCase() == nuevoNombre.toLowerCase()) {
         return ListaError("REPEATED_ELEMENT");
       }
     }
@@ -46,20 +51,39 @@ class HabitacionBloc
   }
 
   Future<HabitacionState> listarHabitaciones() async {
-    List<Room> lista =  await roomRepository.getRoomListAct();
+    List<Room> lista = await roomRepository.getRoomListAct();
     return HabitacionesCargadas(lista);
   }
 
-  Future<HabitacionState> crearHabitaciones(List<Room> habitaciones, String nombre) async{
-    for(var i = 0; i < habitaciones.length; i++){
-      if(habitaciones[i].nombre.toLowerCase() == nombre.toLowerCase()){
+  Future<HabitacionState> crearHabitaciones(List<Room> habitaciones,
+      String nombre) async {
+    for (var i = 0; i < habitaciones
+        .length; i++) { // Comprobamos si la habitacion que queremos crear
+      if (habitaciones[i].nombre.toLowerCase() ==
+          nombre.toLowerCase()) { // ya existe
         return ListaError("REPEATED_ELEMENT");
       }
     }
     await roomRepository.createRoom(nombre);
     return HabitacionAnadida("Habitacion añadida correctamente");
   }
+
+  Future<HabitacionState> eliminarHabitacion(List<Room> habitaciones,
+      Room habitacion) async {
+    if (!habitaciones.contains(habitacion)) {
+      return ListaError("HABITACION_NO_EXISTENTE");
+    }
+
+    /*for(var i = 0; i < habitaciones.length; i++){
+      if(habitaciones[i].nombre.toLowerCase() == habitacion.nombre.toLowerCase()){
+        return ListaError("REPEATED_ELEMENT");
+      }
+    }*/
+    if (habitacion.dispositivos == "") {
+      return HabitacionConDispositivos(false);
+    }
+
+    await roomRepository.deleteRoom(habitacion);
+    return HabitacionBorrada("Habitacion borrada correctamente");
+  }
 }
-
-
-

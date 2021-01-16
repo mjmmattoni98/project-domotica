@@ -51,6 +51,10 @@ class RoomRepository{
     });
   }
 
+  Future<void> deleteRoom(Room habitacion){
+    return _firestore.collection('habitacion').doc(habitacion.id).delete();
+  }
+
   /*Future<Stream<Room>> getRoom() async {
     Stream<Map<String, dynamic>> ref = _firestore.collection('habitacion').doc('hBueqmdbXEIyIr8Uwjqz').snapshots().map((snap) => snap.data());
     return Stream.value(Room.fromJson(await ref.single));
