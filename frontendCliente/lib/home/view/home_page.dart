@@ -18,9 +18,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (context) => HabitacionBloc(RoomRepository()),
-        child: HomePageView());
+    return HomePageView();
      /*RepositoryProvider.value(
       value: roomRepository,
       child: HomePageView().build(context),*/
@@ -94,8 +92,7 @@ class HomePageView extends StatelessWidget{
 class _ListarHabitacionWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HabitacionBloc, HabitacionState>(
-      builder: (_, state) => Card(
+    return Card(
         elevation: 10,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
         child: InkWell(
@@ -143,16 +140,13 @@ class _ListarHabitacionWidget extends StatelessWidget{
             ),
           ),
           onTap: (){
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => BlocProvider.value(
-                  value: BlocProvider.of<HabitacionBloc>(context),
-                child: new ListaHabitacionesPage(),
-              ),
-            ));
+            Navigator.push(
+              context,
+              MaterialPageRoute<void>(builder: (context) => ListaHabitacionesPage())
+            );
           },
         ),
-      ),
-    );
+      );
   }
 
 }

@@ -29,7 +29,9 @@ class RoomRepository{
         .map((document) => Room.fromJson(document.data()))
         .toList());
   }
+
   Future<void> changeName(Room habitacion, String nombreNuevo){
+    print("Id habitacion changeName: " + habitacion.id);
     return _firestore.collection('habitacion').doc(habitacion.id).update({
       "nombre": nombreNuevo
     });
@@ -48,7 +50,10 @@ class RoomRepository{
       "nombre": nombre,
       "uid": _user.uid,
       "dispositivos": "",
-    });
+      "id": "",
+    }).then((value) => value.update({
+      "id": value.id,
+    }));
   }
 
   Future<void> deleteRoom(Room habitacion){

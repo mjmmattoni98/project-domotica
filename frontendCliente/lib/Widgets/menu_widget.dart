@@ -1,9 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+typedef NombreCallback = void Function(String nombre);
+
 class  MenuWidget extends StatelessWidget {
+  const MenuWidget({this.callback});
+  final NombreCallback callback;
+
   @override
   Widget build(BuildContext context) {
+    TextEditingController controladorAnadir = TextEditingController();
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return ClipRRect(
@@ -37,6 +43,7 @@ class  MenuWidget extends StatelessWidget {
                   Container(
                     color: Colors.white,
                     child: TextField(
+                      controller: controladorAnadir,
                       cursorColor: Colors.black87,
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -50,7 +57,7 @@ class  MenuWidget extends StatelessWidget {
                   ),
                   MaterialButton(
                     onPressed: (){
-                      //anadirHabitacion(context, "Nueva habitacion");
+                      callback(controladorAnadir.value.text);
                     },
                     elevation: 10.0,
 

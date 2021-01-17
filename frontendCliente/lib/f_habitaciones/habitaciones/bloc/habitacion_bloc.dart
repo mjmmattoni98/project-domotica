@@ -16,26 +16,29 @@ class HabitacionBloc
 
   HabitacionState get initialState => HabitacionesInitial();
 
-
   @override
   Stream<HabitacionState> mapEventToState(HabitacionEvent event) async* {
-    if (event is CambiarNombreHabitacion) {
-      try {
-        yield HabitacionCargando();
-        final List<Room> list = await roomRepository.getRoomListAct();
-        final HabitacionState estadoGenerado = await cambiarNombreHabitacion(
-            list, event.nuevoNombre, event.habitacion);
-        yield estadoGenerado;
-      } on Error {
-        yield ListaError("INTERNET_CONNECTION");
-      }
-    } else if (event is ActualizarListarHabitaciones) {
+    if (event is CambiarNombreHabitacion){
+      yield HabitacionCargando();
+      final List<Room> list = await roomRepository.getRoomListAct();
+      final HabitacionState estadoGenerado = await cambiarNombreHabitacion(
+          list, event.nuevoNombre, event.habitacion);
+      yield estadoGenerado;
+    } else if (event is ActualizarListarHabitaciones){
       yield HabitacionCargando();
       final HabitacionState estadoGenerado = await listarHabitaciones();
-      yield estadoGenerado; /*HabitacionesInitial(roomRepository.getRoomListAct());*/
-    } else if (event is RemoveHabitacion) {
+      yield estadoGenerado;
+    } else if(event is AnadirHabitacion){
       yield HabitacionCargando();
-      //final HabitacionState
+      final List<Room> list = await roomRepository.getRoomListAct();
+      final HabitacionState estadoGenerado = await crearHabitacion(list, event.nombre);
+      yield estadoGenerado;
+    } else if(event is EliminarHabitacion){
+      print("Eliminar Habitacion evento");
+      yield HabitacionCargando();
+      final List<Room> list = await roomRepository.getRoomListAct();
+      final HabitacionState estadoGenerado = await eliminarHabitacion(list, event.habitacion, event.confirmacion);
+      yield estadoGenerado;
     }
   }
 
@@ -55,13 +58,16 @@ class HabitacionBloc
     return HabitacionesCargadas(lista);
   }
 
-  Future<HabitacionState> crearHabitaciones(List<Room> habitaciones,
+  Future<HabitacionState> crearHabitacion(List<Room> habitaciones,
       String nombre) async {
+    if(nombre == ""){
+      return ListaError("Debe haber un nombre para la habitación");
+    }
     for (var i = 0; i < habitaciones
         .length; i++) { // Comprobamos si la habitacion que queremos crear
       if (habitaciones[i].nombre.toLowerCase() ==
           nombre.toLowerCase()) { // ya existe
-        return ListaError("REPEATED_ELEMENT");
+        return ListaError("Esta habitación ya existe");
       }
     }
     await roomRepository.createRoom(nombre);
@@ -69,21 +75,32 @@ class HabitacionBloc
   }
 
   Future<HabitacionState> eliminarHabitacion(List<Room> habitaciones,
-      Room habitacion) async {
-    if (!habitaciones.contains(habitacion)) {
+      Room habitacion, bool confirmacion) async{
+    print(habitacion.nombre);
+    print(habitacion.dispositivos);
+
+    bool existe = false;
+    for (var i = 0; i < habitaciones.length; i++) { // Comprobamos si la habitacion que queremos crear
+      if(habitaciones[i].nombre.toLowerCase() == habitacion.nombre.toLowerCase()){
+        existe = true;
+      }
+    }
+
+    if(existe){ // la habitacion existe
+      if(habitacion.dispositivos != "" && confirmacion) { // tiene dispositivos y se confirma su eliminacion
+        await roomRepository.deleteRoom(habitacion);
+        print("ta guapo eh");
+        return HabitacionEliminada("Habitación borrada correctamente");
+      }else if(habitacion.dispositivos != "" && !confirmacion) { // tiene dispositivos pero aun no se ha
+        print("Que pasa prim");// confirmado su eliminacion
+        return HabitacionConDispositivos();
+      }else if(habitacion.dispositivos == "" || habitacion.dispositivos == null) { // la habitacion no tiene dispositivos
+        print("Ta guapo no?");
+        await roomRepository.deleteRoom(habitacion);
+        return HabitacionEliminada("La habitación se ha borrado correctamente");
+      }
+    }else { // no existe esa habitacion
       return ListaError("HABITACION_NO_EXISTENTE");
     }
-
-    /*for(var i = 0; i < habitaciones.length; i++){
-      if(habitaciones[i].nombre.toLowerCase() == habitacion.nombre.toLowerCase()){
-        return ListaError("REPEATED_ELEMENT");
-      }
-    }*/
-    if (habitacion.dispositivos == "") {
-      return HabitacionConDispositivos(false);
-    }
-
-    await roomRepository.deleteRoom(habitacion);
-    return HabitacionBorrada("Habitacion borrada correctamente");
   }
 }

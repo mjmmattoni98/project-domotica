@@ -13,15 +13,28 @@ class ActualizarListarHabitaciones extends HabitacionEvent{
 
 }
 
-class RemoveHabitacion extends HabitacionEvent{
+class EliminarHabitacion extends HabitacionEvent{
   final Room habitacion;
+  final bool confirmacion;
 
-  const RemoveHabitacion(this.habitacion);
+  const EliminarHabitacion(this.habitacion, this.confirmacion);
 
   @override
-  List<Object> get props => [habitacion];
+  List<Object> get props => [habitacion, confirmacion];
 
 }
+
+class AnadirHabitacion extends HabitacionEvent{
+  final String nombre;
+
+  AnadirHabitacion(this.nombre);
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [nombre];
+
+}
+
 
 class CambiarNombreHabitacion extends HabitacionEvent{
   final Room habitacion;

@@ -15,6 +15,15 @@ class HabitacionesInitial extends HabitacionState{
   List<Object> get props => [];
 }
 
+class EsperandoConfirmacion extends HabitacionState{
+  final Room habitacion;
+  final bool confimado;
+  const EsperandoConfirmacion(this.confimado, this.habitacion);
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [confimado];
+}
 
 class HabitacionesCargadas extends HabitacionState{
   final List<Room> habitaciones;
@@ -32,10 +41,10 @@ class HabitacionCargando extends HabitacionState{
 }
 
 
-class HabitacionBorrada extends HabitacionState{
+class HabitacionEliminada extends HabitacionState{
   final String mensaje;
 
-  const HabitacionBorrada(this.mensaje);
+  const HabitacionEliminada(this.mensaje);
 
   @override
   // TODO: implement props
@@ -64,15 +73,6 @@ class HabitacionModificada extends HabitacionState{
 
 }
 
-/*
-class ListaCargando extends HabitacionState{
-  const ListaCargando();
-  @override
-  // TODO: implement props
-  List<Object> get props => [];
-
-}*/
-
 class ListaError extends HabitacionState{
   final String mensaje;
   const ListaError(this.mensaje);
@@ -83,11 +83,8 @@ class ListaError extends HabitacionState{
 }
 
 class HabitacionConDispositivos extends HabitacionState{
-  final bool confirmacion;
-
-  HabitacionConDispositivos(this.confirmacion);
+  HabitacionConDispositivos();
   @override
   // TODO: implement props
-  List<Object> get props => [confirmacion];
-
+  List<Object> get props => [];
 }
