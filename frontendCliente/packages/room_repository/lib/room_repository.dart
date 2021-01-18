@@ -2,4 +2,3 @@ library room_repository;
 
 export 'src/room_repository.dart';
 export 'src/models/models_room.dart';
-export 'src/models/models_device.dart';

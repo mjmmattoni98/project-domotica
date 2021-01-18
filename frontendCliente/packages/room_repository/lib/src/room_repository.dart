@@ -23,7 +23,7 @@ class RoomRepository{
     return _firestore.collection("room").snapshots().map((snapshot) => return snapshot.docs.map((doc) => Room.fromSnapshot))
     _firestore.collection('rooms').doc(currUser.uid);*/
   Stream<List<Room>> getRoomList() {
-    return _firestore.collection('habitacion')
+    return _firestore.collection('habitaciones')
         .snapshots()
         .map((snapShot) => snapShot.docs
         .map((document) => Room.fromJson(document.data()))
@@ -31,14 +31,13 @@ class RoomRepository{
   }
 
   Future<void> changeName(Room habitacion, String nombreNuevo){
-    print("Id habitacion changeName: " + habitacion.id);
-    return _firestore.collection('habitacion').doc(habitacion.id).update({
+    return _firestore.collection('habitaciones').doc(habitacion.id).update({
       "nombre": nombreNuevo
     });
   }
 
   Future<List<Room>> getRoomListAct() async {
-    return await _firestore.collection('habitacion')
+    return await _firestore.collection('habitaciones')
         .snapshots()
         .map((snapShot) => snapShot.docs
         .map((document) => Room.fromJson(document.data()))
@@ -46,7 +45,7 @@ class RoomRepository{
   }
   
   Future<void> createRoom(String nombre){
-    return _firestore.collection('habitacion').add({
+    return _firestore.collection('habitaciones').add({
       "nombre": nombre,
       "uid": _user.uid,
       "dispositivos": "",
@@ -57,7 +56,7 @@ class RoomRepository{
   }
 
   Future<void> deleteRoom(Room habitacion){
-    return _firestore.collection('habitacion').doc(habitacion.id).delete();
+    return _firestore.collection('habitaciones').doc(habitacion.id).delete();
   }
 
   /*Future<Stream<Room>> getRoom() async {

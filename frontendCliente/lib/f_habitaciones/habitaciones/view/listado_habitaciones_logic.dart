@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:frontendCliente/Widgets/confirmacion_alert.dart';
+import 'package:frontendCliente/f_dispositivos/dispositivos/view/dispositivos_asignados_page.dart';
 import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_bloc.dart';
 import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_event.dart';
 import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_state.dart';
@@ -125,7 +126,12 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                           blurSize: 2.0,
 
                           animateMenuItems: true,
-                          onPressed: (){},
+                          onPressed: (){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute<void>(builder: (context) => DispositivosAsignadosPage(habitaciones[index]))
+                            );
+                          },
                           menuItems: <FocusedMenuItem>[
                             FocusedMenuItem(title: Text("Cambiar nombre", style: TextStyle(fontFamily: "Raleway"),), onPressed: (){
                               createAlertDialog(context, habitaciones[index], controladorNombre);
@@ -139,7 +145,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                           ),
                         ),
                         onTap: (){
-                        },
+                          },
                       ),
                     ),
                   ),

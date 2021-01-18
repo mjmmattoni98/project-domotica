@@ -58,6 +58,7 @@ class  MenuWidget extends StatelessWidget {
                   MaterialButton(
                     onPressed: (){
                       callback(controladorAnadir.value.text);
+                      controladorAnadir.clear();
                     },
                     elevation: 10.0,
 
