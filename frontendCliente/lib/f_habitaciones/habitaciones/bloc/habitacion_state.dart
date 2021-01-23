@@ -70,7 +70,6 @@ class HabitacionModificada extends HabitacionState{
   @override
   // TODO: implement props
   List<Object> get props => [mensaje];
-
 }
 
 class ListaError extends HabitacionState{

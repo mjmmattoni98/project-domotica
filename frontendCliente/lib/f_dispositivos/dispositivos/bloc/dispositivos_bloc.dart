@@ -33,7 +33,7 @@ class DispositivoBloc extends Bloc<DispositivoEvent, DispositivoState>{
   }
 
 
-  Future<void> desasignarDispositivo(Room habitacion, Device dispositivo) async{
+  Future<DispositivoState> desasignarDispositivo(Room habitacion, Device dispositivo) async{
     List<String> lDispositivos = _deviceConverter.convertDispositivos2List(habitacion.dispositivos);
     lDispositivos.forEach((item) {
       if(item == dispositivo.id){ // hemos encontrado nuestro dispositivo a desasignar

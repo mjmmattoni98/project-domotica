@@ -26,7 +26,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    var threshold = 100;
+    var threshold = 25;
     return BlocListener<HabitacionBloc, HabitacionState>(
         listener: (context, state){
           if(state is ListaError){

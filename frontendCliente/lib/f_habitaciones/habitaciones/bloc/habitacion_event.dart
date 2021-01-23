@@ -6,11 +6,9 @@ abstract class HabitacionEvent extends Equatable{
 }
 
 class ActualizarListarHabitaciones extends HabitacionEvent{
-
   @override
   // TODO: implement props
   List<Object> get props => [];
-
 }
 
 class EliminarHabitacion extends HabitacionEvent{
