@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class Device extends Equatable{
 
@@ -27,6 +28,7 @@ class Device extends Equatable{
   @override
   // TODO: implement props
   List<Object> get props => [id, tipo, habitacionAsignada, estado];
+
 
   Device.fromJson(Map<String, dynamic> parsedJSON)
       : id = parsedJSON['id'],

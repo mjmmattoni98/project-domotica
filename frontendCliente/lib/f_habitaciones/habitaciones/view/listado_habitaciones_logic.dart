@@ -35,6 +35,12 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
               ..showSnackBar(
                 SnackBar(content: Text(state.mensaje)),
               );
+          }else if(state is ErrorHabitacionExistente){
+            Scaffold.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(content: Text(state.mensaje)),
+              );
           }
         },
       child: GestureDetector(

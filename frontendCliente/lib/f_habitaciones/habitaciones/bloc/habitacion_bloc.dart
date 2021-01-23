@@ -34,7 +34,6 @@ class HabitacionBloc
       final HabitacionState estadoGenerado = await crearHabitacion(list, event.nombre);
       yield estadoGenerado;
     } else if(event is EliminarHabitacion){
-      print("Eliminar Habitacion evento");
       yield HabitacionCargando();
       final List<Room> list = await roomRepository.getRoomListAct();
       final HabitacionState estadoGenerado = await eliminarHabitacion(list, event.habitacion, event.confirmacion);
@@ -67,7 +66,7 @@ class HabitacionBloc
         .length; i++) { // Comprobamos si la habitacion que queremos crear
       if (habitaciones[i].nombre.toLowerCase() ==
           nombre.toLowerCase()) { // ya existe
-        return ListaError("Esta habitación ya existe");
+        return ErrorHabitacionExistente("Esta habitación ya existe");
       }
     }
     await roomRepository.createRoom(nombre);

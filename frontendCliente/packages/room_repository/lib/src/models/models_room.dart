@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
+import 'package:room_repository/device_repository.dart';
 import 'package:room_repository/src/models/models_device.dart';
 
 class Room extends Equatable{
@@ -23,6 +24,10 @@ class Room extends Equatable{
   @override
   // TODO: implement props
   List<Object> get props => [id, nombre, dispositivos];
+
+
+
+
 
   Room.fromJson(Map<String, dynamic> parsedJSON)
       : nombre = parsedJSON['nombre'],

@@ -14,7 +14,6 @@ class DispositivosAsignadosLogic extends StatefulWidget{
   const DispositivosAsignadosLogic(this.habitacionActual);
   @override
   State<StatefulWidget> createState() {
-
     return _DispositivosAsignadosLogicState(habitacionActual);
   }
 }
@@ -63,7 +62,7 @@ class _DispositivosAsignadosLogicState extends State<DispositivosAsignadosLogic>
                        ],
 
                        child: ListTile(
-                         title: Text(state.dispositivos[index].id, textAlign: TextAlign.center,
+                         title: Text(state.dispositivos[index].nombre, textAlign: TextAlign.center,
                          style: TextStyle(
                              fontWeight: FontWeight.w500, fontSize: 20.0, fontFamily: "Raleway"),
                          ),

@@ -82,6 +82,14 @@ class ListaError extends HabitacionState{
 
 }
 
+class ErrorHabitacionExistente extends HabitacionState{
+  final String mensaje;
+  const ErrorHabitacionExistente(this.mensaje);
+  @override
+  // TODO: implement props
+  List<Object> get props => [mensaje];
+}
+
 class HabitacionConDispositivos extends HabitacionState{
   HabitacionConDispositivos();
   @override
