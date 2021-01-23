@@ -124,7 +124,9 @@ class AuthenticationRepository {
       'photoUrl': user.photoURL,
       'displayName': user.displayName,
       'lastSeen': DateTime.now()
-    }, SetOptions(merge: true));
+    }, SetOptions(merge: true))
+    .then((value) => print("User updated"))
+    .catchError((error) => print("Failed while updating user: $error"));
   }
 }
 

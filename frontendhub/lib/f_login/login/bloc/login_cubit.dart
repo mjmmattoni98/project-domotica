@@ -2,7 +2,6 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:frontendhub/f_login/authentication/authentication.dart';
-import 'package:frontendhub/f_login/login/login.dart';
 import 'package:formz/formz.dart';
 
 part 'login_state.dart';

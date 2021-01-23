@@ -5,7 +5,7 @@ enum TipoDispositivo{SENSOR_DE_APERTURA, DETECTOR_DE_MOVIMIENTO, ALARMA}
 
 enum Estado{ACTIVE, INACTIVE, DISCONNECTED}
 
-extension on TipoDispositivo{
+extension TipoEstado on TipoDispositivo{
   static const dispositivosMap = {
     TipoDispositivo.ALARMA: "alarma",
     TipoDispositivo.DETECTOR_DE_MOVIMIENTO: "movimiento",
@@ -57,38 +57,28 @@ extension on TipoDispositivo{
 /// {@endtemplate}
 class Device extends Equatable {
   /// {@macro device}
-  Device({
-    @required this.idDevice,
-    @required this.uid,
+  const Device({
     @required this.name,
     @required this.tipo,
-    this.estado = Estado.INACTIVE
-  })  : assert(idDevice != null),
-        assert(uid != null);
-
-  /// The current user's id.
-  final String uid;
-
-  /// The current device's id.
-  final String idDevice;
+    this.estado = Estado.INACTIVE,
+    this.id = "id desconocido",
+  })  : assert(name != null);
 
   /// Device's type.
   final TipoDispositivo tipo;
 
+  /// Device's type.
+  final String id;
+
   /// The current device's name.
-  String name;
+  final String name;
 
   /// The current device's state.
-  Estado estado;
+  final Estado estado;
 
   String get estadoActual => tipo.getEstado(estado);
 
   String get nombreTipo => tipo.nombre;
-
-  Device withState(Estado estado){
-    this.estado = estado;
-    return this;
-  }
 
   static TipoDispositivo stringToTipo(String tipo){
     var tipoDispositivo;
@@ -132,13 +122,14 @@ class Device extends Equatable {
     return tipoEstado;
   }
 
-  Device.fromJson(Map<String, dynamic> parsedJson, String id)
-    : uid = parsedJson['uid'],
-      idDevice = id,
-      name = parsedJson['name'],
+  static const empty = Device(name: "", tipo: null, estado: null);
+
+  Device.fromJson(Map<String, dynamic> parsedJson)
+    : name = parsedJson['nombre'],
+      id = parsedJson['id'],
       tipo = stringToTipo(parsedJson['tipo'].toLowerCase()),
       estado = stringToEstado(parsedJson['estado'].toLowerCase());
 
   @override
-  List<Object> get props => [uid, idDevice, name, estado, tipo];
+  List<Object> get props => [name, estado, tipo, id];
 }

@@ -29,12 +29,14 @@ class AuthenticationRepository {
   AuthenticationRepository({
     FirebaseAuth firebaseAuth,
     GoogleSignIn googleSignIn,
+    FirebaseFirestore firestore,
   })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
+        _db = firestore ?? FirebaseFirestore.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
 
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore _db;
 
   /// Stream of [Hub] which will emit the current user when
   /// the authentication state changes.
@@ -118,7 +120,7 @@ class AuthenticationRepository {
   }
 
   Future<void> updateStateHub(String uid){
-    DocumentReference ref = _db.collection('hub').doc(uid);
+    DocumentReference ref = _db.collection('hubs').doc(uid);
 
     return ref.update({
       'estado': "pong"
@@ -128,9 +130,9 @@ class AuthenticationRepository {
   }
 
   void updateHubData(User user) async{
-    DocumentReference ref = _db.collection('hub').doc(user.uid);
+    DocumentReference ref = _db.collection('hubs').doc(user.uid);
 
-    return ref.set({
+    await ref.set({
       'uid': user.uid,
       'email': user.email,
       'consultas': 0,
