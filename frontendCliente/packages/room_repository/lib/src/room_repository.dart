@@ -1,7 +1,9 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../device_repository.dart';
 import '../room_repository.dart';
 
 class RoomRepository{
@@ -15,13 +17,6 @@ class RoomRepository{
   }) : _firestore = firestore ?? FirebaseFirestore.instance,
       _user = user ?? FirebaseAuth.instance.currentUser;
 
-
-
-
-  //Stream<List<Room>> get rooms{
-    /*_firestore.collection('room').snapshots()
-    return _firestore.collection("room").snapshots().map((snapshot) => return snapshot.docs.map((doc) => Room.fromSnapshot))
-    _firestore.collection('rooms').doc(currUser.uid);*/
   Stream<List<Room>> getRoomList() {
     return _firestore.collection('habitaciones')
         .snapshots()
@@ -36,19 +31,20 @@ class RoomRepository{
     });
   }
 
+
   Future<List<Room>> getRoomListAct() async {
-    return await _firestore.collection('habitaciones')
+    Stream<List<Room>> s = _firestore.collection('habitaciones')
         .snapshots()
         .map((snapShot) => snapShot.docs
         .map((document) => Room.fromJson(document.data()))
-        .toList()).first;
+        .toList());
+    return s.first;
   }
   
   Future<void> createRoom(String nombre){
     return _firestore.collection('habitaciones').add({
       "nombre": nombre,
       "uid": _user.uid,
-      "dispositivos": "",
       "id": "",
     }).then((value) => value.update({
       "id": value.id,

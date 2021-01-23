@@ -23,10 +23,18 @@ class ListaHabitacionesLogic extends StatefulWidget{
 class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
   bool showBottomMenu = false;
   TextEditingController controladorNombre = TextEditingController();
+
+
+  @override
+  void dispose(){
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    var threshold = 25;
+    var threshold = 50;
     return BlocListener<HabitacionBloc, HabitacionState>(
         listener: (context, state){
           if(state is ListaError){

@@ -56,7 +56,7 @@ class _DispositivosAsignadosLogicState extends State<DispositivosAsignadosLogic>
                                ),
                              ),
                              onPressed: () {
-
+                                context.bloc<DispositivoBloc>().add(DesasignarDispositivo(state.dispositivos[index]));
                              }
                          )
                        ],

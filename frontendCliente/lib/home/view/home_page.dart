@@ -112,7 +112,7 @@ class _ListarHabitacionWidget extends StatelessWidget{
               decoration: BoxDecoration(
                   image: DecorationImage(
                       fit: BoxFit.fitWidth,
-                      image: NetworkImage("https://media.discordapp.net/attachments/502530393740673025/796006411527913482/hagomasquealex.jpg?width=524&height=468")
+                      image: AssetImage("assets/fotos/imagenListarHabitaciones.png")
                     //https://i.pinimg.com/736x/d1/2c/93/d12c9376d6fe2a9d33f2d1840ffae02c.jpg
                     // https://image.flaticon.com/icons/png/512/1375/1375683.png
                   )
@@ -176,12 +176,11 @@ class _DispositivosInactivosWidget extends StatelessWidget{
             decoration: BoxDecoration(
                 image: DecorationImage(
                     fit: BoxFit.fitHeight,
-                    image: NetworkImage("https://cdn.discordapp.com/attachments/502530393740673025/796319599842033674/fotoefectos.com_.jpg") //https://i.pinimg.com/736x/d1/2c/93/d12c9376d6fe2a9d33f2d1840ffae02c.jpg
+                    image: AssetImage("assets/fotos/imagenListarHabitaciones.png") //https://i.pinimg.com/736x/d1/2c/93/d12c9376d6fe2a9d33f2d1840ffae02c.jpg
                   //https://cdn.discordapp.com/attachments/502530393740673025/796319599842033674/fotoefectos.com_.jpg
                   // https://image.flaticon.com/icons/png/512/1375/1375683.png
                 )
             ),
-
             child: Container(
               alignment: Alignment.center,
               padding: const EdgeInsets.all(15.0),
@@ -205,7 +204,10 @@ class _DispositivosInactivosWidget extends StatelessWidget{
           ),
         ),
         onTap: (){
-
+          Navigator.push(
+              context,
+              MaterialPageRoute<void>(builder: (context) => ListaHabitacionesPage())
+          );
         },
       ),
     );

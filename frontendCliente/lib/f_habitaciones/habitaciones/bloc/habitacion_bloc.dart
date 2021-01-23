@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:room_repository/device_repository.dart';
 import 'package:room_repository/room_repository.dart';
 
 import 'habitacion_event.dart';
@@ -11,8 +12,9 @@ class HabitacionBloc
     extends Bloc<HabitacionEvent, HabitacionState> {
 
   final RoomRepository roomRepository;
+  final DeviceRepository deviceRepository;
 
-  HabitacionBloc(this.roomRepository) : super(HabitacionesInitial());
+  HabitacionBloc(this.roomRepository, this.deviceRepository) : super(HabitacionesInitial());
 
   HabitacionState get initialState => HabitacionesInitial();
 
@@ -76,8 +78,6 @@ class HabitacionBloc
   Future<HabitacionState> eliminarHabitacion(List<Room> habitaciones,
       Room habitacion, bool confirmacion) async{
     print(habitacion.nombre);
-    print(habitacion.dispositivos);
-
     bool existe = false;
     for (var i = 0; i < habitaciones.length; i++) { // Comprobamos si la habitacion que queremos crear
       if(habitaciones[i].nombre.toLowerCase() == habitacion.nombre.toLowerCase()){
@@ -85,15 +85,20 @@ class HabitacionBloc
       }
     }
 
+    List<Device> dispositivos = await deviceRepository.getDevicesInRoom(habitacion).first;
+
+
+
+
     if(existe){ // la habitacion existe
-      if(habitacion.dispositivos != "" && confirmacion) { // tiene dispositivos y se confirma su eliminacion
+      if(dispositivos.length > 0 && confirmacion) { // tiene dispositivos y se confirma su eliminacion
         await roomRepository.deleteRoom(habitacion);
         print("ta guapo eh");
         return HabitacionEliminada("Habitación borrada correctamente");
-      }else if(habitacion.dispositivos != "" && !confirmacion) { // tiene dispositivos pero aun no se ha
+      }else if(dispositivos.length > 0 && !confirmacion) { // tiene dispositivos pero aun no se ha
         print("Que pasa prim");// confirmado su eliminacion
         return HabitacionConDispositivos();
-      }else if(habitacion.dispositivos == "" || habitacion.dispositivos == null) { // la habitacion no tiene dispositivos
+      }else if(dispositivos.length == 0) { // la habitacion no tiene dispositivos
         print("Ta guapo no?");
         await roomRepository.deleteRoom(habitacion);
         return HabitacionEliminada("La habitación se ha borrado correctamente");

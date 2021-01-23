@@ -17,14 +17,17 @@ class DeviceRepository {
 
   Stream<List<Device>> getListDeviceUnused(){}
 
-  Future<void> desasignacionDispositivos(String nuevoDispositivos, Room habitacion, String idDispositivo) async {
-      await _firestore.collection('habitaciones').doc(habitacion.id).update({
-      "dispositivos": nuevoDispositivos
-    }); // primero eliminamos el dispositivo de la habitacion
+  Future<void> desasignacionDispositivos(String idDispositivo) async {
       return _firestore.collection('dispositivos').doc(idDispositivo).update(
           {
             "habitacion" : ""
-          }); // despues eliminamos la habitacion del dispositivo
+          }); // eliminamos la habitacion del dispositivo
+  }
+
+  Future<void> asingacionDispositivos(String idDispositivo, String idHabitacion){
+    return _firestore.collection('dispositivos').doc(idDispositivo).update({
+      "habitacion" : idHabitacion
+    });
   }
 
   Stream<List<Device>> getDevicesInRoom(Room habitacion){
@@ -32,7 +35,6 @@ class DeviceRepository {
         .where("habitacion", isEqualTo: habitacion.id)
         .snapshots()
         .map((snapShot) => snapShot.docs
-        .map((document) => Device.fromJson(document.data()))
-        .toList());
+        .map((document) => Device.fromJson(document.data())).toList());
   }
 }

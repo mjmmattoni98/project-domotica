@@ -15,6 +15,7 @@ import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_bloc
 import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_event.dart';
 import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_state.dart';
 import 'package:frontendCliente/f_habitaciones/habitaciones/view/listado_habitaciones_logic.dart';
+import 'package:room_repository/device_repository.dart';
 import 'package:room_repository/room_repository.dart';
 
 class ListaHabitacionesPage extends StatefulWidget{
@@ -58,7 +59,7 @@ class _ListaHabitacionesPageState extends State<ListaHabitacionesPage>{
             )
         ),
         child: BlocProvider(
-          create: (_) => HabitacionBloc(RoomRepository()),
+          create: (_) => HabitacionBloc(RoomRepository(), DeviceRepository()),
           child: ListaHabitacionesLogic(),
         ),
       ),
