@@ -71,26 +71,20 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                   if(state is HabitacionCargando){
                     return buildCargando();
                   }else if(state is HabitacionesCargadas){
-                    print("Cargada");
                     return buildListado(context, state.habitaciones);
-                  }
-                  else if(state is HabitacionesInitial){
-                    print("INITIAL");
+                  }else if(state is HabitacionesInitial){
                     listadoInicial(context);
                   }else if(state is HabitacionModificada){
                     listadoInicial(context);
                   }else if(state is ListaError){
-                    print("ERROR PRIM");
                     listadoInicial(context);
                   }else if(state is HabitacionAnadida){
-                    print("LEGGO");
                     listadoInicial(context);
                   }else if(state is EsperandoConfirmacion){
                     createConfirmDialog(context, state.habitacion);
                   }else if(state is HabitacionEliminada){
                     listadoInicial(context);
                   }
-                  print("Liada loko");
                   return buildCargando();
                 }
             ),
@@ -159,7 +153,8 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                           ),
                         ),
                         onTap: (){
-                          },
+
+                        },
                       ),
                     ),
                   ),
@@ -187,7 +182,8 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
 
   createConfirmDialog(BuildContext context, Room habitacion){
     return showDialog(
-      context: context, builder: (_){
+      context: context,
+        builder: (_){
       return ConfirmationAlert(
         callback: (bool confirmacion){
           eliminarHabitacion(context, habitacion, confirmacion);

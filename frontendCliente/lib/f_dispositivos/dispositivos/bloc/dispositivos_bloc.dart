@@ -25,9 +25,6 @@ class DispositivoBloc extends Bloc<DispositivoEvent, DispositivoState>{
     if(event is DesasignarDispositivo){
       desasignarDispositivo(event.dispositivo);
     }
-    if(event is AsignarDispositivo){
-
-    }
   }
 
   Future<DispositivoState> desasignarDispositivo(Device dispositivo) async{
