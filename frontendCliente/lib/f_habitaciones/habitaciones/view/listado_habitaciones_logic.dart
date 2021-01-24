@@ -177,7 +177,6 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                         child: FocusedMenuHolder(
                           blurBackgroundColor: Colors.white38,
                           blurSize: 2.0,
-
                           animateMenuItems: true,
                           onPressed: (){
                             Navigator.push(
@@ -205,13 +204,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                             tileColor: habitaciones[index].id == idHabitacion ? Colors.red : null,
                           ),
                         ),
-<<<<<<< HEAD
                         onTap: (){},
-=======
-                        onTap: (){
-
-                        },
->>>>>>> 8a046f49354d7e9aff7bea5fe99f8ecc4b1d299b
                       ),
                     ),
                   ),
