@@ -21,9 +21,10 @@ class DispositivoBloc extends Bloc<DispositivoEvent, DispositivoState>{
     }
     if(event is DispositivosListados){
       if(event.dispositivos.length == 0)
-        yield DispositivosError();
+        yield DispositivosListaError();
       yield DispositivosActuales(event.dispositivos);
     }
+
     if(event is DesasignarDispositivo){
       yield await desasignarDispositivo(event.dispositivo);
     }

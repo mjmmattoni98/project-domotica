@@ -25,8 +25,6 @@ void main() {
 
     blocTest('E1. Valido - Listado de habitaciones',
         build: () {
-          when(mockRoomRepository.getRoomList())
-              .thenAnswer((_) => Stream.value([cocina, comedor]));
 
           when(mockRoomRepository.getRoomListAct())
               .thenAnswer((_) => Future.value([cocina, comedor]));
@@ -41,8 +39,6 @@ void main() {
 
     blocTest('E2. Válido/Invalido - No hay habitaciones',
         build: () {
-          when(mockRoomRepository.getRoomList())
-              .thenAnswer((_) => Stream.value([]));
 
           when(mockRoomRepository.getRoomListAct())
               .thenAnswer((_) => Future.value([]));
@@ -51,7 +47,7 @@ void main() {
         act: (bloc) => bloc.add(ActualizarListarHabitaciones()),
         expect: [
           HabitacionCargando(),
-          HabitacionesCargadas([])
+          ListaError("NO HAY HABITACIONES")
         ]
     );
   });

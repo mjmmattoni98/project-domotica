@@ -4,6 +4,10 @@ import 'package:room_repository/room_repository.dart';
 
 abstract class HabitacionState extends Equatable {
   const HabitacionState();
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [];
 }
 
 
@@ -34,9 +38,7 @@ class HabitacionesCargadas extends HabitacionState{
 }
 
 class HabitacionCargando extends HabitacionState{
-  @override
-  // TODO: implement props
-  List<Object> get props => [];
+
 
 }
 
@@ -81,6 +83,18 @@ class ListaError extends HabitacionState{
 
 }
 
+class HabitacionRepetida extends HabitacionState{
+
+}
+
+class HabitacionSinNombre extends HabitacionState {
+
+}
+
+class HabitacionInexistente extends HabitacionState {
+
+}
+
 class ErrorHabitacionExistente extends HabitacionState{
   final String mensaje;
   const ErrorHabitacionExistente(this.mensaje);
@@ -91,7 +105,5 @@ class ErrorHabitacionExistente extends HabitacionState{
 
 class HabitacionConDispositivos extends HabitacionState{
   HabitacionConDispositivos();
-  @override
-  // TODO: implement props
-  List<Object> get props => [];
+
 }

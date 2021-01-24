@@ -105,7 +105,7 @@ class _DispositivosInactivosLogicState extends State<DispositivosInactivosLogic>
                     itemBuilder: (_, index2){
                       return ListTile(
                         onTap: (){
-                          context.bloc<InactivoBloc>().add(AsignarHabitacion(dispositivo, habitaciones[index2]));
+                          context.bloc<InactivoBloc>().add(AsignarHabitacion(dispositivo.id, habitaciones[index2].id));
                           Navigator.pop(context);
                         },
                         title: Text(habitaciones[index2].nombre, style: TextStyle(

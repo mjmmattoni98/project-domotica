@@ -47,7 +47,7 @@ class HabitacionBloc
       String nuevoNombre, Room habitacion) async {
     for (var i = 0; i < habitaciones.length; i++) {
       if (habitaciones[i].nombre.toLowerCase() == nuevoNombre.toLowerCase()) {
-        return ListaError("REPEATED_ELEMENT");
+        return HabitacionRepetida();
       }
     }
     await roomRepository.changeName(habitacion, nuevoNombre);
@@ -64,7 +64,7 @@ class HabitacionBloc
   Future<HabitacionState> crearHabitacion(List<Room> habitaciones,
       String nombre) async {
     if(nombre == ""){
-      return ListaError("Debe haber un nombre para la habitación");
+      return HabitacionSinNombre();
     }
     for (var i = 0; i < habitaciones
         .length; i++) { // Comprobamos si la habitacion que queremos crear
@@ -95,18 +95,15 @@ class HabitacionBloc
     if(existe){ // la habitacion existe
       if(dispositivos.length > 0 && confirmacion) { // tiene dispositivos y se confirma su eliminacion
         await roomRepository.deleteRoom(habitacion);
-        print("ta guapo eh");
-        return HabitacionEliminada("Habitación borrada correctamente");
-      }else if(dispositivos.length > 0 && !confirmacion) { // tiene dispositivos pero aun no se ha
-        print("Que pasa prim");// confirmado su eliminacion
+        return HabitacionEliminada("La habitación se ha borrado correctamente");
+      }else if(dispositivos.length > 0 && !confirmacion) { // tiene dispositivos pero aun no se ha confirmado su eliminacion
         return HabitacionConDispositivos();
       }else if(dispositivos.length == 0) { // la habitacion no tiene dispositivos
-        print("Ta guapo no?");
         await roomRepository.deleteRoom(habitacion);
         return HabitacionEliminada("La habitación se ha borrado correctamente");
       }
     }else { // no existe esa habitacion
-      return ListaError("HABITACION_NO_EXISTENTE");
+      return HabitacionInexistente();
     }
   }
 }

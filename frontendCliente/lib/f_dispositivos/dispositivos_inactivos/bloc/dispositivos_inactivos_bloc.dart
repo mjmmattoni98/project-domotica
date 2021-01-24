@@ -24,16 +24,23 @@ class InactivoBloc extends Bloc<InactivoEvent, InactivoState> {
     }
     if (event is InactivosListados) {
       if(event.dispositivos.length == 0)
-        yield InactivoError();
+        yield ListaInactivoError();
       List<Room> habitaciones = await _roomRepository.getRoomListAct();
+      if(habitaciones.length == 0)
+        yield InactivoHabitacionesError();
       yield InactivosActuales(event.dispositivos, habitaciones);
     }
     if(event is AsignarHabitacion){
-      bool exito = await _deviceRepository.asignacionDispositivos(event.dispositivo.id, event.habitacion.id);
-      if(exito)
-        yield InactivoAsignado();
-      else
-        yield InactivoError();
+      if(event.idHabitacion == "")
+        yield InactivoHabitacionSinNombreError();
+      else {
+        bool exito = await _deviceRepository.asignacionDispositivos(
+            event.idDispositivo, event.idHabitacion);
+        if (exito)
+          yield InactivoAsignado();
+        else
+          yield InactivoHabitacionAsignada();
+      }
     }
   }
 }

@@ -26,3 +26,10 @@ class InactivoAsignado extends InactivoState{}
 
 class InactivoError extends InactivoState{}
 
+class InactivoHabitacionAsignada extends InactivoState{}
+
+class ListaInactivoError extends InactivoState{}
+
+class InactivoHabitacionSinNombreError extends InactivoState{}
+
+class InactivoHabitacionesError extends InactivoState{}

@@ -22,11 +22,12 @@ class InactivosStarted extends InactivoEvent{
 
 }
 
-class AsignarHabitacion extends InactivoEvent{
-  final Room habitacion;
-  final Device dispositivo;
 
-  AsignarHabitacion(this.dispositivo, this.habitacion);
+class AsignarHabitacion extends InactivoEvent{
+  final String idDispositivo;
+  final String idHabitacion;
+
+  AsignarHabitacion(this.idDispositivo, this.idHabitacion);
   @override
-  List<Object> get props => [dispositivo, habitacion];
+  List<Object> get props => [idDispositivo, idHabitacion];
 }

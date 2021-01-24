@@ -23,3 +23,6 @@ class DispositivosActuales extends DispositivoState{
 class DispositivosModificados extends DispositivoState{}
 
 class DispositivosError extends DispositivoState{}
+
+class DispositivosListaError extends DispositivoState{}
+
