@@ -30,7 +30,6 @@
 .pub-cache/
 .pub/
 /build/
-*.lock
 
 google-services.json
 
