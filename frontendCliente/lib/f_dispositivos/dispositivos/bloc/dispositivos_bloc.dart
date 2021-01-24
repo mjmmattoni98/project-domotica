@@ -20,6 +20,8 @@ class DispositivoBloc extends Bloc<DispositivoEvent, DispositivoState>{
       _subscription = _deviceRepository.getDevicesInRoom(event.habitacion).listen((event) {add(DispositivosListados(event));});
     }
     if(event is DispositivosListados){
+      if(event.dispositivos.length == 0)
+        yield DispositivosError();
       yield DispositivosActuales(event.dispositivos);
     }
     if(event is DesasignarDispositivo){
@@ -28,7 +30,9 @@ class DispositivoBloc extends Bloc<DispositivoEvent, DispositivoState>{
   }
 
   Future<DispositivoState> desasignarDispositivo(Device dispositivo) async{
-    await _deviceRepository.desasignacionDispositivos(dispositivo.id);
-    return  DispositivosModificados();
+    bool exito = await _deviceRepository.desasignacionDispositivos(dispositivo.id);
+    if(exito)
+      return  DispositivosModificados();
+    return DispositivosError();
   }
 }

@@ -22,7 +22,7 @@ class InactivosActuales extends InactivoState{
   List<Object> get props => [dispositivos, habitaciones];
 }
 
-class InactivoAsignado extends InactivoState{
+class InactivoAsignado extends InactivoState{}
 
-}
+class InactivoError extends InactivoState{}
 

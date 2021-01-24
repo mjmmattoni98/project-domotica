@@ -12,23 +12,28 @@ class InactivoBloc extends Bloc<InactivoEvent, InactivoState> {
   StreamSubscription _subscription;
 
   InactivoBloc(this._deviceRepository, this._roomRepository)
-      : super(InactivoInitial()); // TODO: CUIDAOOOO
+      : super(InactivoInitial());
 
   @override
   Stream<InactivoState> mapEventToState(InactivoEvent event) async* {
     if (event is InactivosStarted) {
       _subscription?.cancel();
-      _subscription = _deviceRepository.getDevicesInactive().listen((event) {
-        add(InactivosListados(event));
+      _subscription = _deviceRepository.getDevicesInactive().listen((inactiveDevices) {
+        add(InactivosListados(inactiveDevices));
       });
     }
     if (event is InactivosListados) {
+      if(event.dispositivos.length == 0)
+        yield InactivoError();
       List<Room> habitaciones = await _roomRepository.getRoomListAct();
       yield InactivosActuales(event.dispositivos, habitaciones);
     }
     if(event is AsignarHabitacion){
-      await _deviceRepository.asingacionDispositivos(event.dispositivo.id, event.habitacion.id);
-      yield InactivoAsignado();
+      bool exito = await _deviceRepository.asignacionDispositivos(event.dispositivo.id, event.habitacion.id);
+      if(exito)
+        yield InactivoAsignado();
+      else
+        yield InactivoError();
     }
   }
 }

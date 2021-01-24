@@ -76,7 +76,7 @@ class _DispositivosInactivosLogicState extends State<DispositivosInactivosLogic>
                 );
               },
             );
-          }if(state is InactivoInitial){
+          }else if(state is InactivoInitial){
             context.bloc<InactivoBloc>().add(InactivosStarted());
           }
           return Center(child: CircularProgressIndicator(),);

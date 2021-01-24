@@ -17,19 +17,36 @@ class DeviceRepository {
 
   Stream<List<Device>> getListDeviceUnused(){}
 
-  Future<void> desasignacionDispositivos(String idDispositivo) async {
-      return _firestore.collection('dispositivos').doc(idDispositivo).update(
-          {
-            "habitacion" : ""
-          }); // eliminamos la habitacion del dispositivo
+  Future<bool> desasignacionDispositivos(String idDispositivo) async {
+    bool desasignado = false;
+    await _firestore.collection('dispositivos').doc(idDispositivo)
+    .get()
+    .then((document) {
+      if (document.exists && document.get("habitacion") != ""){
+        document.reference.update({
+          "habitacion": "",
+        });
+        desasignado = true;
+      }
+    })
+    .catchError((err) => print("Error desagsinando habitacion del dispositivo: $err"));
+    return desasignado;
   }
 
-
-
-  Future<void> asingacionDispositivos(String idDispositivo, String idHabitacion){
-    return _firestore.collection('dispositivos').doc(idDispositivo).update({
-      "habitacion" : idHabitacion
-    });
+  Future<bool> asignacionDispositivos(String idDispositivo, String idHabitacion) async{
+    bool asignado = false;
+    await _firestore.collection('dispositivos').doc(idDispositivo)
+        .get()
+        .then((document) {
+          if (document.exists && document.get("habitacion") == ""){
+            document.reference.update({
+              "habitacion": idHabitacion,
+            });
+            asignado = true;
+      }
+    })
+        .catchError((err) => print("Error desagsinando habitacion del dispositivo: $err"));
+    return asignado;
   }
 
   Stream<List<Device>> getDevicesInactive(){

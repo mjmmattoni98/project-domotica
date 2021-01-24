@@ -35,5 +35,6 @@ module.exports = {
     "brace-style": ["off"],
     "quote-props": ["off"],
     "arrow-parens": ["off"],
+    "linebreak-style": ["off"],
   },
 }

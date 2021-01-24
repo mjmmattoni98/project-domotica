@@ -56,6 +56,8 @@ class HabitacionBloc
 
   Future<HabitacionState> listarHabitaciones() async {
     List<Room> lista = await roomRepository.getRoomListAct();
+    if(lista.length == 0)
+      return ListaError("NO HAY HABITACIONES");
     return HabitacionesCargadas(lista);
   }
 

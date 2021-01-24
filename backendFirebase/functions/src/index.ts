@@ -42,8 +42,12 @@ export const devicesStates = functions.firestore
           payload = {
             notification: {
               title: "DISPOSITIVO DESCONECTADO!!!!!!!",
-              body: `Se ha desconectado el dispositivo de tipo ${after.tipo} de la habitacion ${dataHabitacion.nombre}`,
+              body: `Se ha desconectado el dispositivo ${after.nombre} de la habitacion ${dataHabitacion.nombre}`,
               click_action: 'FLUTTER_NOTIFICATION_CLICK'
+            },
+            data: {
+              idDispositivo: after.id,
+              idHabitacion: ""
             }
           }
         }
@@ -56,7 +60,7 @@ export const devicesStates = functions.firestore
           payload = {
             notification: {
               title: "Se ha activado un dispositivo",
-              body: `Se ha activado el dispositivo de tipo ${after.tipo} de la habitacion ${dataHabitacion.nombre}`,
+              body: `Se ha activado el dispositivo ${after.nombre} de la habitacion ${dataHabitacion.nombre}`,
               click_action: 'FLUTTER_NOTIFICATION_CLICK'
             },
             data: {
@@ -118,7 +122,7 @@ async function getTokens(uid: string): Promise<string[]>{
   return tokens
 }
 
-export const constrolarConexionHub = functions.pubsub.schedule('every 2 min').onRun(async (context) => {
+export const constrolarConexionHub = functions.pubsub.schedule('every 2 minutes').timeZone('Europe/madrid').onRun(async (context) => {
   await db.collection('hub').get()
     .then((snapshot) => {
       if(snapshot.empty){
