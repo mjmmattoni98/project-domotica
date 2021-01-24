@@ -60,7 +60,7 @@ void main() {
         act: (bloc) => bloc.add(EliminarHabitacion(cocina, true)),
         expect: [
           HabitacionCargando(),
-          ListaError("HABITACION_NO_EXISTENTE")
+          HabitacionInexistente()
         ]
     );
 

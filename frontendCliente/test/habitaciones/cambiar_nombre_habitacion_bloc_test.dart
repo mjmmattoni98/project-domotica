@@ -50,7 +50,7 @@ void main(){
         act: (bloc) => bloc.add(CambiarNombreHabitacion(comedor, 'cocina')),
         expect: [
           HabitacionCargando(),
-          ListaError('REPEATED_ELEMENT')
+          HabitacionRepetida()
         ]
     );
 });

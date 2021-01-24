@@ -27,19 +27,19 @@ void main(){
   });
 
   group('H03/H04. Asignar habitacion a un dispositivo', () {
-    final cocina = Room(id: '01', nombre: 'cocina');
-    final dispositivo = Device(estado: "apagado", tipo: "movimiento", habitacionAsignada: "cocina", id: "01", nombre: "dispositivo");
-    final dispositivo_sin_habitacion = Device(estado: "apagado", tipo: "movimiento", habitacionAsignada: "cocina", id: "02", nombre: "dispositivo");
+    final habitacion = Room(id: '01', nombre: 'cocina');
+    final dispositivo_sin_habitacion = Device(estado: "apagado", tipo: "movimiento", habitacionAsignada: "", id: "01", nombre: "dispositivo");
+    final dispositivo_con_habitacion = Device(estado: "apagado", tipo: "movimiento", habitacionAsignada: "cocina", id: "01", nombre: "dispositivo");
 
-    blocTest('E1. Valido - Habitacion desasignada del dispositivo',
+    blocTest('E1. Valido - Habitacion asignada al dispositivo',
         build: () {
 
-          when(mockDeviceRepository.asignacionDispositivos('01','01'))
+          when(mockDeviceRepository.asignacionDispositivos(dispositivo_sin_habitacion.id,habitacion.id))
               .thenAnswer((_) => Future.value(true));
 
           return InactivoBloc(mockDeviceRepository, mockRoomRepository);
         },
-        act: (bloc) => bloc.add(AsignarHabitacion('01', '01')),
+        act: (bloc) => bloc.add(AsignarHabitacion(dispositivo_sin_habitacion.id, habitacion.id)),
         expect: [
           InactivoAsignado()
         ]
@@ -49,9 +49,21 @@ void main(){
         build: () {
           return InactivoBloc(mockDeviceRepository, mockRoomRepository);
         },
-        act: (bloc) => bloc.add(AsignarHabitacion('01', "")),
+        act: (bloc) => bloc.add(AsignarHabitacion(dispositivo_sin_habitacion.id, "")),
         expect: [
           InactivoHabitacionSinNombreError()
+        ]
+    );
+
+    blocTest('E3. Inválido - Ya tiene una habitacion asignada',
+        build: () {
+          when(mockDeviceRepository.asignacionDispositivos(dispositivo_con_habitacion.id, habitacion.id))
+              .thenAnswer((_) => Future.value(false));
+          return InactivoBloc(mockDeviceRepository, mockRoomRepository);
+        },
+        act: (bloc) => bloc.add(AsignarHabitacion(dispositivo_con_habitacion.id, habitacion.id)),
+        expect: [
+          InactivoHabitacionAsignada()
         ]
     );
   });

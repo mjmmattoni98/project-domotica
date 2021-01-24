@@ -27,43 +27,36 @@ void main(){
     mockDeviceRepository = MockDeviceRepository();
   });
 
-  group('H09. Listar dispositivos sin habitacion asignada', () {
+  group('H09. Listar dispositivos con habitacion asignada', () {
 
     final cocina = Room(id: '01', nombre: 'cocina');
     final dispositivo = Device(estado: "apagado", tipo: "movimiento", habitacionAsignada: "", id: "01", nombre: "movimiento1");
-    final dispositivo2 = Device(estado: "apagado", tipo: "movimiento", habitacionAsignada: "", id: "02", nombre: "movimiento2");
+    final dispositivo2 = Device(estado: "apagado", tipo: "movimiento", habitacionAsignada: "", id: "01", nombre: "movimiento2");
 
-    blocTest('E1. Valido - Lista dispositivos sin habitacion',
+    blocTest('E1. Valido - Lista dispositivos con habitacion',
         build: () {
-          when(mockRoomRepository.getRoomListAct())
-          .thenAnswer((realInvocation) => Future.value([cocina]));
-
-          when(mockDeviceRepository.getDevicesInactive())
+          when(mockDeviceRepository.getDevicesInRoom(cocina))
               .thenAnswer((_) => Stream.value([dispositivo, dispositivo2]));
 
-          return InactivoBloc(mockDeviceRepository, mockRoomRepository);
+          return DispositivoBloc(mockDeviceRepository);
         },
-        //Evento listar dispositivos
-        act: (bloc) => bloc.add(InactivosListados([dispositivo, dispositivo2])),
+        act: (bloc) => bloc.add(DispositivosListados([dispositivo, dispositivo2])),
         expect: [
-          InactivosActuales([dispositivo, dispositivo2], [cocina])
+          DispositivosActuales([dispositivo, dispositivo2])
         ]
     );
 
-    blocTest('E2. Inválido - No hay dispositivos inactivos',
+    blocTest('E2. Inválido - No hay dispositivos con habitaciones asignadas',
         build: () {
-          when(mockRoomRepository.getRoomListAct())
-              .thenAnswer((realInvocation) => Future.value([cocina]));
-
-          when(mockDeviceRepository.getDevicesInactive())
+          when(mockDeviceRepository.getDevicesInRoom(cocina))
               .thenAnswer((_) => Stream.value([]));
 
-          return InactivoBloc(mockDeviceRepository, mockRoomRepository);
+          return DispositivoBloc(mockDeviceRepository);
         },
-        act: (bloc) => bloc.add(InactivosListados([])),
+        act: (bloc) => bloc.add(DispositivosListados([])),
         expect: [
-          ListaInactivoError(),
-          InactivosActuales([], [cocina])
+          DispositivosListaError(),
+          DispositivosActuales([])
         ]
     );
   });

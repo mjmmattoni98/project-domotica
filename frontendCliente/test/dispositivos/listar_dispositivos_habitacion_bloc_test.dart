@@ -55,7 +55,7 @@ void main(){
         },
         act: (bloc) => bloc.add(DispositivosListados([])),
         expect: [
-          DispositivosError(),
+          DispositivosListaError(),
           DispositivosActuales([])
         ]
     );
