@@ -23,7 +23,7 @@ class DispositivoBloc extends Bloc<DispositivoEvent, DispositivoState>{
       yield DispositivosActuales(event.dispositivos);
     }
     if(event is DesasignarDispositivo){
-      desasignarDispositivo(event.dispositivo);
+      yield await desasignarDispositivo(event.dispositivo);
     }
   }
 
