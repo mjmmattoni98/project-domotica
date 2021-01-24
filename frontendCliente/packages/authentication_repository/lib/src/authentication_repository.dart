@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'models/models.dart';
 
@@ -28,12 +30,20 @@ class AuthenticationRepository {
   AuthenticationRepository({
     firebase_auth.FirebaseAuth firebaseAuth,
     GoogleSignIn googleSignIn,
+    FirebaseMessaging firebaseMessaging,
   })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
+        _googleSignIn = googleSignIn ?? GoogleSignIn.standard(),
+        _fcm = firebaseMessaging ?? FirebaseMessaging(),
+        super(){
+          _tokenSubscription = _fcm.onTokenRefresh.listen(_saveDeviceToken);
+        }
 
   final firebase_auth.FirebaseAuth _firebaseAuth;
+  final FirebaseMessaging _fcm;
   final GoogleSignIn _googleSignIn;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  StreamSubscription _tokenSubscription;
+
 
   /// Stream of [User] which will emit the current user when
   /// the authentication state changes.
@@ -117,6 +127,7 @@ class AuthenticationRepository {
 
   void updateUserData(firebase_auth.User user) async{
     DocumentReference ref = _db.collection('users').doc(user.uid);
+    String fcmToken = await _fcm.getToken();
 
     return ref.set({
       'uid': user.uid,
@@ -125,8 +136,25 @@ class AuthenticationRepository {
       'displayName': user.displayName,
       'lastSeen': DateTime.now()
     }, SetOptions(merge: true))
-    .then((value) => print("User updated"))
+    .then((value) => _saveDeviceToken(fcmToken))
     .catchError((error) => print("Failed while updating user: $error"));
+  }
+
+  Future<void> _saveDeviceToken(String token) async {
+    // Get the current user
+    String uid = _firebaseAuth.currentUser.uid;
+
+    CollectionReference tokens = _db.collection('users').doc(uid).collection('tokens');
+
+    // Save it to Firestore
+    if (token != null) {
+      return tokens.doc(token).set({
+        'token': token,
+        'createdAt': FieldValue.serverTimestamp(), // optional
+        'platform': Platform.operatingSystem // optional
+      }).then((value) => print("Token added"))
+          .catchError((error) => print("Failed to add token: $error"));
+    }
   }
 }
 

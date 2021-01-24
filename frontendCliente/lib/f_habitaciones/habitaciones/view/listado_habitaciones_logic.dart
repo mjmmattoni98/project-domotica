@@ -10,31 +10,79 @@ import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_even
 import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_state.dart';
 import 'package:room_repository/room_repository.dart';
 import 'package:frontendCliente/Widgets/menu_widget.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class ListaHabitacionesLogic extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _ListaHabitacionesLogicState();
   }
-
 }
 
 class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
   bool showBottomMenu = false;
   TextEditingController controladorNombre = TextEditingController();
-
+  final FirebaseMessaging _fcm = FirebaseMessaging();
+  String idHabitacion = "";
 
   @override
   void dispose(){
     super.dispose();
   }
 
+  @override
+  void initState(){
+    super.initState();
+    _fcm.configure(
+      //app in the foreground
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: ListTile(
+              title: Text(message['notification']['title']),
+              subtitle: Text(message['notification']['body']),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Ok'),
+                onPressed: () => setState((){
+                  idHabitacion = message['data']['idHabitacion'];
+                  Navigator.of(context).pop();
+                }),
+              ),
+            ],
+          ),
+        );
+        listadoInicial(context);
+      },
+      //
+      // onBackgroundMessage: myBackgroundMessageHandler,
+      //app in the background
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+        setState(() {
+          idHabitacion = message['data']['idHabitacion'];
+        });
+        listadoInicial(context);
+      },
+      //app terminated
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+        setState(() {
+          idHabitacion = message['data']['idHabitacion'];
+        });
+        listadoInicial(context);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     var threshold = 50;
+
     return BlocListener<HabitacionBloc, HabitacionState>(
         listener: (context, state){
           if(state is ListaError){
@@ -111,8 +159,6 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
     );
   }
 
-
-
   Widget buildCargando(){
     return Center(child: CircularProgressIndicator());
   }
@@ -135,7 +181,6 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                       elevation: 5,
                       child: InkWell(
                         child: FocusedMenuHolder(
-
                           blurBackgroundColor: Colors.white38,
                           blurSize: 2.0,
 
@@ -155,11 +200,18 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                             }, trailingIcon: Icon(Icons.delete), backgroundColor: Colors.redAccent)
                           ],
                           child: ListTile(
-                            title: Text(habitaciones[index].nombre, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20.0, fontFamily: "Raleway"),),
+                            title: Text(habitaciones[index].nombre,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20.0,
+                                  fontFamily: "Raleway"
+                              ),
+                            ),
+                            tileColor: habitaciones[index].id == idHabitacion ? Colors.red : null,
                           ),
                         ),
-                        onTap: (){
-                          },
+                        onTap: (){},
                       ),
                     ),
                   ),
@@ -173,6 +225,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
   void listadoInicial(BuildContext context){
     context.bloc<HabitacionBloc>().add(ActualizarListarHabitaciones());
   }
+
   void modificarHabitacion(BuildContext context, Room habitacion){
     context.bloc<HabitacionBloc>().add(CambiarNombreHabitacion(habitacion, controladorNombre.text));
   }

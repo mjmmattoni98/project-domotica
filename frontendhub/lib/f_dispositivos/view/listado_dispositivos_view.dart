@@ -17,7 +17,7 @@ class ListadoDispositivosView extends StatefulWidget{
 
 class _ListadoDispositivosViewState extends State<ListadoDispositivosView> {
   bool showBottomMenu = false;
-  // bool encendido = true;
+  bool encendido = true;
 
   @override
   Widget build(BuildContext context) {
@@ -48,29 +48,29 @@ class _ListadoDispositivosViewState extends State<ListadoDispositivosView> {
         },
         child: Stack(
           children: <Widget>[
-            // Container(
-            //   // alignment: Alignment.center,
-            //   padding: const EdgeInsets.all(4.0),
-            //   margin: const EdgeInsets.all(4.0),
-            //   color: Colors.lightBlue,
-            //   child: SwitchListTile(
-            //     title: Text("HUB",
-            //       textAlign: TextAlign.center,
-            //       style: TextStyle(
-            //         fontWeight: FontWeight.w500,
-            //         fontSize: 20.0,
-            //         fontFamily: "Raleway",
-            //       ),
-            //     ),
-            //     value: encendido,
-            //     onChanged: (bool value){
-            //       encendido = value;
-            //       Estado nuevoEstado = value ? Estado.INACTIVE : Estado.DISCONNECTED;
-            //       cambiarEstadoHub(context, nuevoEstado);
-            //     },
-            //     secondary: estadoHub(encendido),
-            //   ),
-            // ),
+            Container(
+              // alignment: Alignment.center,
+              padding: const EdgeInsets.all(4.0),
+              margin: const EdgeInsets.all(4.0),
+              color: Colors.lightBlue,
+              child: SwitchListTile(
+                title: Text("HUB",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20.0,
+                    fontFamily: "Raleway",
+                  ),
+                ),
+                value: encendido,
+                onChanged: (bool value){
+                  encendido = value;
+                  Estado nuevoEstado = value ? Estado.INACTIVE : Estado.DISCONNECTED;
+                  cambiarEstadoHub(context, nuevoEstado);
+                },
+                secondary: estadoHub(encendido),
+              ),
+            ),
             BlocBuilder<DispositivosBloc, DispositivosState>(
                 buildWhen: (previous, current) => previous != current,
                 builder: (context, state){

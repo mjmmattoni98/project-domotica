@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 
 class MessageHandler extends StatefulWidget {
   @override
@@ -15,12 +14,12 @@ class _MessageHandlerState extends State<MessageHandler> {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseMessaging _fcm = FirebaseMessaging();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFunctions _functions = FirebaseFunctions.instance;
 
   @override
   void initState() {
     
-    _saveDeviceToken();
+    _saveDeviceToken("");
+    _fcm.onTokenRefresh.listen(_saveDeviceToken);
     _fcm.configure(
       //app in the foreground
       onMessage: (Map<String, dynamic> message) async {
@@ -52,6 +51,27 @@ class _MessageHandlerState extends State<MessageHandler> {
         print("onResume: $message");
       },
     );
+
+    // // Get any messages which caused the application to open from
+    // // a terminated state.
+    // RemoteMessage initialMessage =
+    //     await FirebaseMessaging.instance.getInitialMessage();
+    //
+    // // If the message also contains a data property with a "type" of "chat",
+    // // navigate to a chat screen
+    // if (initialMessage?.data['type'] == 'chat') {
+    //   Navigator.pushNamed(context, '/chat',
+    //       arguments: ChatArguments(initialMessage));
+    // }
+    //
+    // // Also handle any interaction when the app is in the background via a
+    // // Stream listener
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   if (message.data['type'] == 'chat') {
+    //     Navigator.pushNamed(context, '/chat',
+    //         arguments: ChatArguments(message));
+    //   }
+    // });
   }
 
   Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
@@ -72,7 +92,7 @@ class _MessageHandlerState extends State<MessageHandler> {
   }
 
   // Get the token, save it to the database for current user
-  Future<void> _saveDeviceToken() async {
+  Future<void> _saveDeviceToken(String token) async {
     // Get the current user
     User user = _auth.currentUser;
     String uid = user.uid;
@@ -92,7 +112,6 @@ class _MessageHandlerState extends State<MessageHandler> {
           .catchError((error) => print("Failed to add token: $error"));
     }
   }
-
 }
 
 

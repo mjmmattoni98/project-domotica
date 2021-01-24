@@ -50,13 +50,18 @@ export const devicesStates = functions.firestore
         else {
           if(after.tipo.toLowerCase() !== "alarma"){
             const idHabitacion = after.habitacion
-            activaAlarmaSiHay(idHabitacion)
+            const uidDispositivo = after.uid
+            activaAlarmaSiHay(idHabitacion, uidDispositivo)
           }
           payload = {
             notification: {
               title: "Se ha activado un dispositivo",
               body: `Se ha activado el dispositivo de tipo ${after.tipo} de la habitacion ${dataHabitacion.nombre}`,
               click_action: 'FLUTTER_NOTIFICATION_CLICK'
+            },
+            data: {
+              idDispositivo: after.id,
+              idHabitacion: after.habitacion
             }
           }
         }
@@ -73,13 +78,16 @@ export const devicesStates = functions.firestore
       return null
     })
 
-async function activaAlarmaSiHay(idHabitacion: string): Promise<void> {
+async function activaAlarmaSiHay(idHabitacion: string, uidDispositivo: string): Promise<void> {
   const refHabitacion = await db.collection('habitacion').doc(idHabitacion).get()
   const dataHabitacion = refHabitacion.data()
 
   if(dataHabitacion !== undefined){
-    const dispositivos = dataHabitacion.dispositivos.split(":")
-    await db.collection('dispositivo').where(admin.firestore.FieldPath.documentId(), 'in', dispositivos).where('tipo', '==', 'alarma').get()
+    await db.collection('dispositivo')
+      .where('uid', '==', uidDispositivo)
+      .where('habitacion', '==', idHabitacion)
+      .where('tipo', '==', 'alarma')
+      .get()
       .then((snapshot) => {
         if(snapshot.empty){
           console.log("No hay alarmas para activar en la habitacion")
@@ -88,7 +96,7 @@ async function activaAlarmaSiHay(idHabitacion: string): Promise<void> {
         snapshot.forEach((doc) => {
           const data = doc.data()
           if(data.estado.toLowerCase() === "off"){
-            doc.ref.update({estado: "ON"})
+            doc.ref.update({estado: "on"})
             console.log("Alarma activada")
           }
         })
