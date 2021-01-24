@@ -24,10 +24,20 @@ class DeviceRepository {
           }); // eliminamos la habitacion del dispositivo
   }
 
+
+
   Future<void> asingacionDispositivos(String idDispositivo, String idHabitacion){
     return _firestore.collection('dispositivos').doc(idDispositivo).update({
       "habitacion" : idHabitacion
     });
+  }
+
+  Stream<List<Device>> getDevicesInactive(){
+    return _firestore.collection('dispositivos').where("uid", isEqualTo: _user.uid)
+        .where("habitacion", isEqualTo: "")
+        .snapshots()
+        .map((snapShot) => snapShot.docs
+        .map((document) => Device.fromJson(document.data())).toList());
   }
 
   Stream<List<Device>> getDevicesInRoom(Room habitacion){

@@ -30,6 +30,8 @@ class _DispositivosAsignadosLogicState extends State<DispositivosAsignadosLogic>
         builder: (context, state){
          if(state is DispositivosActuales) {
            return ListView.builder(
+             addAutomaticKeepAlives: true,
+             physics: BouncingScrollPhysics( parent: AlwaysScrollableScrollPhysics() ),
              itemCount: state.dispositivos.length,
              itemBuilder: (_, int index) {
                return Padding(
@@ -38,7 +40,8 @@ class _DispositivosAsignadosLogicState extends State<DispositivosAsignadosLogic>
                    child: Card(
                      elevation: 10.0,
                      shape: RoundedRectangleBorder(
-                         borderRadius: BorderRadius.circular(10.0)),
+                         borderRadius: BorderRadius.circular(10.0)
+                     ),
                      child: FocusedMenuHolder(
                        blurBackgroundColor: Colors.white38,
                        blurSize: 2.0,

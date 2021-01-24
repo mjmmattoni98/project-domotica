@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontendCliente/f_dispositivos/dispositivos_inactivos/view/dispositivos_inactivos_logic.dart';
+import 'package:frontendCliente/f_dispositivos/dispositivos_inactivos/view/dispositivos_inactivos_page.dart';
 import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_bloc.dart';
 import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_event.dart';
 import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_state.dart';
@@ -206,7 +208,7 @@ class _DispositivosInactivosWidget extends StatelessWidget{
         onTap: (){
           Navigator.push(
               context,
-              MaterialPageRoute<void>(builder: (context) => ListaHabitacionesPage())
+              MaterialPageRoute<void>(builder: (context) => DispositivosInactivosPage())
           );
         },
       ),
