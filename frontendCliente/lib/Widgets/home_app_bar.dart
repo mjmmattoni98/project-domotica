@@ -37,13 +37,14 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget{
         ),
         child: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(5.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Icon(Icons.menu, size: 37.0, color: Colors.white70,),
+                  SizedBox(width: 50,),
                   Text(
                     title,
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: "Raleway",
                       shadows: <Shadow>[

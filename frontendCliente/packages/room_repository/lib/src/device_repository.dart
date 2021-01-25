@@ -63,7 +63,7 @@ class DeviceRepository {
   Stream<List<Device>> getDevicesInactive(){
     return _firestore.collection('dispositivos')
         .where("uid", isEqualTo: _userUid)
-        .where("habitacion", isEqualTo: "")
+        .where("habitacion", isEqualTo: "").orderBy('estado')
         .where("estado", isNotEqualTo: "disconnected")
         .snapshots()
         .map((snapShot) => snapShot.docs
