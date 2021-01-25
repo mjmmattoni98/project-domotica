@@ -40,52 +40,54 @@ class _DispositivosAsignadosLogicState extends State<DispositivosAsignadosLogic>
                      shape: RoundedRectangleBorder(
                          borderRadius: BorderRadius.circular(10.0)
                      ),
-                     child: FocusedMenuHolder(
-                       blurBackgroundColor: Colors.white38,
-                       blurSize: 2.0,
-                       animateMenuItems: true,
-                       openWithTap: true,
-                       onPressed: () {},
-                       menuItems: <FocusedMenuItem>[
-                         FocusedMenuItem(
-                             trailingIcon: Icon(
-                               Icons.assignment_return_outlined,
-                             ),
-                             title: Text(
-                               "Desasignar dispositivo",
-                               style: TextStyle(
-                                   fontFamily: "Raleway"
+                     child: InkWell(
+                       child: FocusedMenuHolder(
+                         blurBackgroundColor: Colors.white38,
+                         blurSize: 2.0,
+                         animateMenuItems: true,
+                         openWithTap: true,
+                         onPressed: () {},
+                         menuItems: <FocusedMenuItem>[
+                           FocusedMenuItem(
+                               trailingIcon: Icon(
+                                 Icons.assignment_return_outlined,
                                ),
+                               title: Text(
+                                 "Desasignar dispositivo",
+                                 style: TextStyle(
+                                     fontFamily: "Raleway"
+                                 ),
+                               ),
+                               onPressed: () {
+                                 context.bloc<DispositivoBloc>().add(DesasignarDispositivo(state.dispositivos[index]));
+                               }
+                           )
+                         ],
+                         child: SwitchListTile(
+                           title: Text(state.dispositivos[index].nombre,
+                             textAlign: TextAlign.center,
+                             style: TextStyle(
+                               fontWeight: FontWeight.w500,
+                               fontSize: 20.0,
+                               fontFamily: "Raleway",
                              ),
-                             onPressed: () {
-                                context.bloc<DispositivoBloc>().add(DesasignarDispositivo(state.dispositivos[index]));
-                             }
-                         )
-                       ],
-                       child: SwitchListTile(
-                         title: Text(state.dispositivos[index].nombre,
-                           textAlign: TextAlign.center,
-                           style: TextStyle(
-                             fontWeight: FontWeight.w500,
-                             fontSize: 20.0,
-                             fontFamily: "Raleway",
                            ),
+                           value: state.dispositivos[index].estado == Estado.ACTIVE ? true : false,
+                           onChanged: state.dispositivos[index].estado == Estado.DISCONNECTED ? null : (bool value){
+                             Estado nuevoEstado = value ? Estado.ACTIVE : Estado.INACTIVE;
+                             modificarEstadoDispositivo(context, state.dispositivos[index], nuevoEstado);
+                           },
+                           secondary: estadoDispositivo(state.dispositivos[index]),
                          ),
-                         value: state.dispositivos[index].estado == Estado.ACTIVE ? true : false,
-                         onChanged: state.dispositivos[index].estado == Estado.DISCONNECTED ? null : (bool value){
-                           Estado nuevoEstado = value ? Estado.ACTIVE : Estado.INACTIVE;
-                           modificarEstadoDispositivo(context, state.dispositivos[index], nuevoEstado);
-                         },
-                         secondary: estadoDispositivo(state.dispositivos[index]),
+                         // ListTile(
+                         //   title: Text(state.dispositivos[index].nombre, textAlign: TextAlign.center,
+                         //   style: TextStyle(
+                         //       fontWeight: FontWeight.w500, fontSize: 20.0, fontFamily: "Raleway"),
+                         //   ),
+                         //   )
                        ),
-                       // ListTile(
-                       //   title: Text(state.dispositivos[index].nombre, textAlign: TextAlign.center,
-                       //   style: TextStyle(
-                       //       fontWeight: FontWeight.w500, fontSize: 20.0, fontFamily: "Raleway"),
-                       //   ),
-                       //   )
-                       ),
-
+                       onTap: (){},
+                     ),
                      ),
                    ),
                  );

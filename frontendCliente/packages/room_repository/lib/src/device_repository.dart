@@ -35,6 +35,15 @@ class DeviceRepository {
     return desasignado;
   }
 
+  Future<void> desasignarHabitacionDispositivos(String idHabitacion) async{
+    await _firestore.collection('dispositivos')
+        .where("habitacion", isEqualTo: "")
+        .get()
+        .then((value) {
+
+        });
+  }
+
   Future<bool> asignacionDispositivos(String idDispositivo, String idHabitacion) async{
     bool asignado = false;
     await _firestore.collection('dispositivos').doc(idDispositivo)
@@ -55,8 +64,8 @@ class DeviceRepository {
     await _firestore.collection('dispositivos').doc(idDispositivo).update({
       'estado': estado.toLowerCase(),
     })
-        .then((value) => print("Cambiado el nombre del dispositivo"))
-        .catchError((error) => print("Error cambiando el nombre del dispositivo: $error"));
+        .then((value) => print("Cambiado el estado del dispositivo"))
+        .catchError((error) => print("Error cambiando el estado del dispositivo: $error"));
   }
 
   /// Returns a stream of devices without a room

@@ -82,7 +82,7 @@ class HabitacionBloc
       Room habitacion, bool confirmacion) async{
     print(habitacion.nombre);
     bool existe = false;
-    for (var i = 0; i < habitaciones.length; i++) { // Comprobamos si la habitacion que queremos crear
+    for (var i = 0; i < habitaciones.length; i++) { // Comprobamos si la habitacion que queremos crear existe
       if(habitaciones[i].nombre.toLowerCase() == habitacion.nombre.toLowerCase()){
         existe = true;
       }
