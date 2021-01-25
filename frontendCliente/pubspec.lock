@@ -252,11 +252,7 @@ packages:
       name: file
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "6.0.0-nullsafety.2"
-=======
-    version: "6.0.0-nullsafety.4"
->>>>>>> 4770642ede83572b96fdb98e638c01016f3122e6
   firebase_analytics:
     dependency: "direct main"
     description:
@@ -477,7 +473,6 @@ packages:
       name: js
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "0.6.3-nullsafety.2"
   json_rpc_2:
     dependency: transitive
@@ -486,19 +481,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.2"
-=======
-    version: "0.6.3-nullsafety.3"
-<<<<<<< HEAD
->>>>>>> 9dd1ab7e249fe1c4dfd3820ec009260659730efc
-=======
-  json_rpc_2:
-    dependency: transitive
-    description:
-      name: json_rpc_2
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.2"
->>>>>>> 4770642ede83572b96fdb98e638c01016f3122e6
   logging:
     dependency: transitive
     description:
@@ -624,11 +606,7 @@ packages:
       name: platform
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "3.0.0-nullsafety.2"
-=======
-    version: "3.0.0-nullsafety.4"
->>>>>>> 4770642ede83572b96fdb98e638c01016f3122e6
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -649,11 +627,7 @@ packages:
       name: process
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "4.0.0-nullsafety.2"
-=======
-    version: "4.0.0-nullsafety.4"
->>>>>>> 4770642ede83572b96fdb98e638c01016f3122e6
   provider:
     dependency: transitive
     description:
@@ -861,18 +835,7 @@ packages:
       name: vm_service
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "5.5.0"
-  vm_service_client:
-    dependency: transitive
-    description:
-      name: vm_service_client
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.6+2"
-=======
-    version: "5.2.0"
->>>>>>> 4770642ede83572b96fdb98e638c01016f3122e6
   watcher:
     dependency: transitive
     description:
