@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,6 +19,9 @@ class LogInWithGoogleFailure implements Exception {}
 
 /// Thrown during the logout process if a failure occurs.
 class LogOutFailure implements Exception {}
+
+/// Thrown during the delete account process if a failure occurs.
+class DeleteAccountFailure implements Exception {}
 
 /// {@template authentication_repository}
 /// Repository which manages user authentication.
@@ -63,6 +65,7 @@ class AuthenticationRepository {
       )).user;
       updateHubData(user);
     } on Exception catch (e){
+      print("Error sign up: $e");
       throw SignUpFailure();
     }
   }
@@ -81,6 +84,7 @@ class AuthenticationRepository {
       User user = (await _firebaseAuth.signInWithCredential(credential)).user;
       updateHubData(user);
     } on Exception catch (e){
+      print("Error log in with google: $e");
       throw LogInWithGoogleFailure();
     }
   }
@@ -100,12 +104,13 @@ class AuthenticationRepository {
       )).user;
       updateHubData(user);
     } on Exception catch (e){
+      print("Error error log in with email and password: $e");
       throw LogInWithEmailAndPasswordFailure();
     }
   }
 
   /// Signs out the current user which will emit
-  /// [User.empty] from the [user] Stream.
+  /// [Hub.empty] from the [hub] Stream.
   ///
   /// Throws a [LogOutFailure] if an exception occurs.
   Future<void> logOut() async {
@@ -119,32 +124,75 @@ class AuthenticationRepository {
     }
   }
 
+  /// Deletes the current user account which will emit
+  /// [Hub.empty] from the [hub] Stream.
+  ///
+  /// Throws a [DeleteAccountFailure] if an exception occurs.
+  Future<void> deleteAccount() async {
+    try {
+      String uid = _firebaseAuth.currentUser.uid;
+      await Future.wait([
+        _firebaseAuth.currentUser.delete(),
+        _deleteAllInformation(uid),
+        ]);
+    } on Exception catch (e){
+      if(e is FirebaseAuthException && e.code == "requires-recent-login")
+        print("El usuario tiene que reautenticarse para eliminar la cuenta");
+      throw DeleteAccountFailure();
+    }
+  }
+
+  /// Elimina toda la informacion del usuario de la base de datos
+  Future<void> _deleteAllInformation(String uid) async{
+    //Eliminamos al usuario de la coleccion de users
+    await _db.collection('users').doc(uid).delete();
+
+    //Eliminamos al usuario de la coleccion de hubs
+    await _db.collection('hubs').doc(uid).delete();
+
+    //Eliminamos todas las habitaciones del usuario
+    await _db.collection('habitaciones')
+        .where('uid', isEqualTo: uid)
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+          querySnapshot.docs.forEach((doc) => doc.reference.delete())
+        });
+
+    //Eliminamos todos los dispositivos del usuario
+    await _db.collection('dispositivos')
+        .where('uid', isEqualTo: uid)
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+          querySnapshot.docs.forEach((doc) => doc.reference.delete())
+        });
+  }
+
   Future<void> updateStateHub(String uid){
     DocumentReference ref = _db.collection('hubs').doc(uid);
 
     return ref.update({
       'estado': "pong"
-    }).then((value) => print("Actualizado el estado del hub"))
-        .catchError((error) => print("Error al intentar actualizar el estado del hub: $error"));
-        
+    })
+    .then((value) => print("Actualizado el estado del hub"))
+    .catchError((error) => print("Error al intentar actualizar el estado del hub: $error"));
   }
 
-  void updateHubData(User user) async{
+  Future<void> updateHubData(User user){
     DocumentReference ref = _db.collection('hubs').doc(user.uid);
 
-    await ref.set({
+    return ref.set({
       'uid': user.uid,
       'email': user.email,
       'consultas': 0,
       'estado': "pong"
     }, SetOptions(merge: true))
-    .then((value) => print("Hub updated"))
-    .catchError((error) => print("Failed while updating hub: $error"));
+    .then((value) => print("Hub actualizado con exito"))
+    .catchError((error) => print("Error actualizando hub: $error"));
   }
 }
 
 extension on User {
   Hub get toHub {
-    return Hub(id: uid, email: email, name: displayName, consultas: 0, estado : "pong", photo: photoURL);
+    return Hub(uid: uid, email: email, name: displayName, consultas: 0, estado : "pong", photo: photoURL);
   }
 }

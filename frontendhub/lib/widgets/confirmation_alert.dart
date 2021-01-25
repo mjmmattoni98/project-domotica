@@ -31,7 +31,7 @@ class ConfirmationAlert extends StatelessWidget{
             callback(false);
             Navigator.pop(context);
           },
-          child: Icon(Icons.cancel),
+          child: Icon(Icons.clear_rounded),
         )
       ],
     );

@@ -35,12 +35,3 @@ class DesasignarDispositivo extends DispositivoEvent{
   @override
   List<Object> get props => [dispositivo];
 }
-
-class AsignarDispositivo extends DispositivoEvent{
-  final Room habitacion;
-  final Room dispositivo;
-
-  AsignarDispositivo(this.habitacion, this.dispositivo);
-  @override
-  List<Object> get props => [dispositivo, habitacion];
-}

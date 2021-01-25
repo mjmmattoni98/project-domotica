@@ -1,13 +1,16 @@
 import * as functions from "firebase-functions"
 import * as admin from "firebase-admin"
+// const serviceAccount = require("C:\\Users\\javie\\Documents\\project-domotica\\backendFirebase\\service-account-key.json")
 
-admin.initializeApp()
+admin.initializeApp({
+  credential: admin.credential.applicationDefault(),
+})
 
 const db = admin.firestore()
 const fcm = admin.messaging()
 
-export const devicesStates = functions.firestore
-    .document('dispositivo/{did}')
+export const devicesStates = functions.region('europe-west1').firestore
+    .document('dispositivos/{did}')
     .onUpdate(async (change, context) => {
       const before = change.before.data()
       const after = change.after.data()
@@ -26,7 +29,7 @@ export const devicesStates = functions.firestore
         const tokens = await getTokens(after.uid)
 
         const refHabitacion = await db
-          .collection('habitacion')
+          .collection('habitaciones')
           .doc(after.habitacion)
           .get()
 
@@ -83,11 +86,11 @@ export const devicesStates = functions.firestore
     })
 
 async function activaAlarmaSiHay(idHabitacion: string, uidDispositivo: string): Promise<void> {
-  const refHabitacion = await db.collection('habitacion').doc(idHabitacion).get()
+  const refHabitacion = await db.collection('habitaciones').doc(idHabitacion).get()
   const dataHabitacion = refHabitacion.data()
 
   if(dataHabitacion !== undefined){
-    await db.collection('dispositivo')
+    await db.collection('dispositivos')
       .where('uid', '==', uidDispositivo)
       .where('habitacion', '==', idHabitacion)
       .where('tipo', '==', 'alarma')
@@ -121,65 +124,3 @@ async function getTokens(uid: string): Promise<string[]>{
   
   return tokens
 }
-
-export const constrolarConexionHub = functions.pubsub.schedule('every 2 minutes').timeZone('Europe/madrid').onRun(async (context) => {
-  await db.collection('hub').get()
-    .then((snapshot) => {
-      if(snapshot.empty){
-        console.log("Error accediendo a los hub")
-        return
-      }
-      snapshot.forEach(async (doc) => {
-        const data = doc.data()
-        
-        const tokens = await getTokens(data.uid)
-
-        let consultasNuevas: number = 0
-        if (data.estado.toLowerCase() === "pong"){
-          if(data.consultas > 0){
-            const payload: admin.messaging.MessagingPayload = {
-              notification: {
-                title: "Conexion HUB restablecida",
-                body: "Se ha recuperado la conexión con el HUB",
-                click_action: "FLUTTER_NOTIFICATION_CLICK"
-              }
-            }
-            fcm.sendToDevice(tokens, payload, {
-              // Required for background/quit data-only messages on iOS
-              // contentAvailable: true,
-              // Required for background/quit data-only messages on Android
-              priority: "high",
-            })
-          }
-          console.log("El hub esta en estado PONG")
-        } 
-        else{
-          if(data.consultas == 0){
-            const payload: admin.messaging.MessagingPayload = {
-              notification: {
-                title: "Conexion HUB perdida",
-                body: "Se ha perdido la conexión con el HUB",
-                click_action: "FLUTTER_NOTIFICATION_CLICK"
-              }
-            }
-            fcm.sendToDevice(tokens, payload, {
-              // Required for background/quit data-only messages on iOS
-              // contentAvailable: true,
-              // Required for background/quit data-only messages on Android
-              priority: "high",
-            })
-          }
-          consultasNuevas = data.consultas + 1
-          console.log("El hub esta en estado PING")
-        }
-        await doc.ref.update({estado: "PING", consultas: consultasNuevas})
-        .then(() => console.log("Actualizado el estado del hub"))
-        .catch(err => console.log("Error al intentar actualizar el estado del hub: ", err))
-      })
-    })
-    .catch((err) => {
-      console.log("Ha habido un error al comprobar la conexion del hub ", err)
-    })
-})
-
-

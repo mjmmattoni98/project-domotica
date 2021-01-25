@@ -13,7 +13,7 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defaultURL = "https://drive.google.com/uc?id=19hiUSohFDHZTi0k6QZeipLbzNHC0juLX";
+    final defaultURL = "https://drive.google.com/uc?id=1CHpt2mxANOKcmx-3ojtdUbeEN2ZIiap6";
     final hub = context.select((AuthenticationBloc bloc) => bloc.state.hub);
 
     return Scaffold(
@@ -47,9 +47,12 @@ class ProfilePage extends StatelessWidget {
           _AyudaYComentariosButton(),
           const SizedBox(height: 8.0),
           _AcercaDeButton(),
+          const SizedBox(height: 15.0),
+          _EliminarCuenta(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        // Boton para cerrar sesión
         onPressed: () => context
             .read<AuthenticationBloc>()
             .add(AuthenticationLogoutRequested()),
@@ -76,6 +79,62 @@ class _AcercaDeButton extends StatelessWidget{
     return FlatButton(
       child: const Text("Acerca de"),
       onPressed: null,
+    );
+  }
+}
+
+class _EliminarCuenta extends StatelessWidget{
+  final String textTitle = "Para eliminar la cuenta, primero tienes que cerrar sesión y volver a entrar en la aplicación.";
+  final String textContent = "Si ya has hecho este paso, apreta en el botón de aceptar. "
+      "Si no lo has hecho, por favor apreta en cancelar y realiza el proceso";
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+      child: const Text("Eliminar cuenta",
+      style: TextStyle(
+          fontFamily: "Raleway",
+          color: Colors.red,
+        ),
+      ),
+      onPressed: () => showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            elevation: 10.0,
+            title: Text(textTitle,
+              style: TextStyle(
+                fontFamily: "Raleway",
+                fontSize: 20.0,
+              ),
+            ),
+            content: Text(textContent,
+              style: TextStyle(
+                fontFamily: "Raleway",
+                fontSize: 15.0,
+              ),
+            ),
+            actions: <Widget>[
+              MaterialButton(
+                elevation: 10.0,
+                onPressed: () {
+                  context.read<AuthenticationBloc>()
+                      .add(AuthenticationDeleteAccountRequested());
+                  Navigator.pop(context);
+                },
+                child: Icon(Icons.check),
+              ),
+              MaterialButton(
+                elevation: 10.0,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(Icons.clear_rounded),
+              )
+            ],
+          );
+        }
+      ),
     );
   }
 }

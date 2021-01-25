@@ -19,8 +19,6 @@ class DispositivosBloc
 
   final DeviceRepository _deviceRepository;
 
-  DispositivosState get initialState => DispositivosInitial();
-
   @override
   Stream<DispositivosState> mapEventToState(DispositivosEvent event) async*{
     if (event is ActualizarListaDispositivos){
@@ -31,13 +29,13 @@ class DispositivosBloc
     else if (event is CambiarNombreDispositivo){
       yield DispositivosCargando();
       final List<Device> devices = await _deviceRepository.getDevicesAct();
-      final DispositivosState estadoGenerado = await cambiarNombreDispositivo(devices, event.nuevoNombre, event.device.name);
+      final DispositivosState estadoGenerado = await cambiarNombreDispositivo(devices, event.nuevoNombre, event.device.id);
       yield estadoGenerado;
     }
     else if (event is CambiarEstadoDispositivo){
       yield DispositivosCargando();
       String nuevoEstado = event.device.tipo.getEstado(event.nuevoEstado);
-      await _deviceRepository.updateDeviceState(event.device.name, nuevoEstado);
+      await _deviceRepository.updateDeviceState(event.device.id, nuevoEstado);
       yield DispositivoModificado("Dispositivo modificado con éxito");
     }
     else if (event is CambiarEstadoHub){
@@ -55,36 +53,39 @@ class DispositivosBloc
     else if(event is RemoveDispositivo){
       yield DispositivosCargando();
       final List<Device> list = await _deviceRepository.getDevicesAct();
-      final DispositivosState estadoGenerado = await eliminarHabitacion(list, event.nombre, event.confirmacion);
+      final DispositivosState estadoGenerado = await eliminarHabitacion(list, event.idDispositivo);
       yield estadoGenerado;
     }
     else if(event is CrearDispositivosDefault){
       yield DispositivosCargando();
       await _deviceRepository.createDefaultDevices();
+      yield DispositivoModificado("Dispositivos defaults creados");
     }
   }
 
   Future<void> cambiarEstadoDispositivos(List<Device> dispositivos, Estado estado) async{
     dispositivos.forEach((device) async{
       String nuevoEstado = device.tipo.getEstado(estado);
-      await _deviceRepository.updateDeviceState(device.name, nuevoEstado);
+      await _deviceRepository.updateDeviceState(device.id, nuevoEstado);
     });
   }
 
-  Future<DispositivosState> cambiarNombreDispositivo(List<Device> dispositivos, String nuevoNombre, String antiguoNombre) async {
+  Future<DispositivosState> cambiarNombreDispositivo(List<Device> dispositivos, String nuevoNombre, String idDispositivo) async {
     for(var i = 0; i < dispositivos.length; i++){
+      print(dispositivos[i].name);
       if(dispositivos[i].name.toLowerCase() == nuevoNombre.toLowerCase()){
-        return DispositivosError("Ya hay un dispositivo con ese nombre");
+        return DispositivoNombreRepetido();
       }
     }
-    await _deviceRepository.updateDeviceName(antiguoNombre, nuevoNombre);
+    await _deviceRepository.updateDeviceName(idDispositivo, nuevoNombre);
     return DispositivoModificado("Dispositivo modificado con éxito");
   }
 
   Future<DispositivosState> crearDispositivo(List<Device> dispositivos, String name, TipoDispositivo tipo) async{
     for(var i = 0; i < dispositivos.length; i++){
+      print(dispositivos[i].name);
       if(dispositivos[i].name.toLowerCase() == name.toLowerCase()){
-        return DispositivosError("Ya hay un dispositivo con ese nombre");
+        return DispositivoNombreRepetido();
       }
     }
     Device device = Device(name: name, tipo: tipo);
@@ -92,20 +93,19 @@ class DispositivosBloc
     return DispositivoAnyadido("Dispositivo añadido correctamente");
   }
 
-  Future<DispositivosState> eliminarHabitacion(List<Device> dispositivos, String name, bool confirmacion) async{
+  Future<DispositivosState> eliminarHabitacion(List<Device> dispositivos, String idDispositivo) async{
     bool existe = false;
     for (var i = 0; i < dispositivos.length; i++) {
-      if(dispositivos[i].name.toLowerCase() == name.toLowerCase()){
+      if(dispositivos[i].id == idDispositivo){
         existe = true;
       }
     }
 
-    if(existe && confirmacion){ // el dispositivo existe
-      await _deviceRepository.deleteDevice(name);
-      print("ta guapo eh");
+    if(existe){ // el dispositivo existe
+      await _deviceRepository.deleteDevice(idDispositivo);
       return DispositivoBorrado("Dispositivo borrado correctamente");
     }else { // no existe ese dispositivo
-      return DispositivosError("DISPOSITIVO_NO_EXISTENTE");
+      return DispositivoInexistente();
     }
   }
 }

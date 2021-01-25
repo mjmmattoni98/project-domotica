@@ -9,9 +9,7 @@ import 'package:pedantic/pedantic.dart';
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 
-class AuthenticationBloc
-    extends Bloc<AuthenticationEvent, AuthenticationState> {
-
+class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationBloc({
     @required AuthenticationRepository authenticationRepository,
   })  : assert(authenticationRepository != null),
@@ -23,14 +21,18 @@ class AuthenticationBloc
         }
 
   final AuthenticationRepository _authenticationRepository;
+  // Nos subscribimos ante cualquier cambio de estado del usuario
   StreamSubscription<Hub> _hubSubscription;
 
   @override
   Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async* {
     if (event is AuthenticationUserChanged) {
+      // Comprobamos en que ha cambiado el estado del usuario, y actuamos en consecuencia
       yield _mapAuthenticationUserChangedToState(event);
     } else if (event is AuthenticationLogoutRequested) {
       unawaited(_authenticationRepository.logOut());
+    } else if (event is AuthenticationDeleteAccountRequested) {
+      unawaited(_authenticationRepository.deleteAccount());
     }
   }
 

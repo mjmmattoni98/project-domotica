@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defaultURL = "https://drive.google.com/uc?id=19hiUSohFDHZTi0k6QZeipLbzNHC0juLX";
+    final defaultURL = "https://drive.google.com/uc?id=1CHpt2mxANOKcmx-3ojtdUbeEN2ZIiap6";
     final hub = context.select((AuthenticationBloc bloc) => bloc.state.hub);
     return Scaffold(
       appBar: AppBar(

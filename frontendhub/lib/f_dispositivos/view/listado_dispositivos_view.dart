@@ -17,7 +17,7 @@ class ListadoDispositivosView extends StatefulWidget{
 
 class _ListadoDispositivosViewState extends State<ListadoDispositivosView> {
   bool showBottomMenu = false;
-  bool encendido = true;
+  // bool encendido = true;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +30,18 @@ class _ListadoDispositivosViewState extends State<ListadoDispositivosView> {
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(content: Text(state.mensaje)),
+            );
+        }else if (state is DispositivoInexistente) {
+          Scaffold.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(content: Text("El dispositivo que se intenta eliminar no existe.")),
+            );
+        }else if (state is DispositivoNombreRepetido) {
+          Scaffold.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(content: Text("El nombre del dispositivo ya existe")),
             );
         }
       },
@@ -48,29 +60,29 @@ class _ListadoDispositivosViewState extends State<ListadoDispositivosView> {
         },
         child: Stack(
           children: <Widget>[
-            Container(
-              // alignment: Alignment.center,
-              padding: const EdgeInsets.all(4.0),
-              margin: const EdgeInsets.all(4.0),
-              color: Colors.lightBlue,
-              child: SwitchListTile(
-                title: Text("HUB",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20.0,
-                    fontFamily: "Raleway",
-                  ),
-                ),
-                value: encendido,
-                onChanged: (bool value){
-                  encendido = value;
-                  Estado nuevoEstado = value ? Estado.INACTIVE : Estado.DISCONNECTED;
-                  cambiarEstadoHub(context, nuevoEstado);
-                },
-                secondary: estadoHub(encendido),
-              ),
-            ),
+            // Container(
+            //   // alignment: Alignment.center,
+            //   padding: const EdgeInsets.all(4.0),
+            //   margin: const EdgeInsets.all(4.0),
+            //   color: Colors.lightBlue,
+            //   child: SwitchListTile(
+            //     title: Text("HUB",
+            //       textAlign: TextAlign.center,
+            //       style: TextStyle(
+            //         fontWeight: FontWeight.w500,
+            //         fontSize: 20.0,
+            //         fontFamily: "Raleway",
+            //       ),
+            //     ),
+            //     value: encendido,
+            //     onChanged: (bool value){
+            //       encendido = value;
+            //       Estado nuevoEstado = value ? Estado.INACTIVE : Estado.DISCONNECTED;
+            //       cambiarEstadoHub(context, nuevoEstado);
+            //     },
+            //     secondary: estadoHub(encendido),
+            //   ),
+            // ),
             BlocBuilder<DispositivosBloc, DispositivosState>(
                 buildWhen: (previous, current) => previous != current,
                 builder: (context, state){
@@ -80,7 +92,7 @@ class _ListadoDispositivosViewState extends State<ListadoDispositivosView> {
                     if(state.devices.isEmpty)
                       return NoHayDispositivos();
                     return BuildListado(state.devices);
-                  }else if(state is DispositivosError){
+                  }else if (state is DispositivosError){
                     return ErrorListarDispositivos(state.mensaje);
                   }
                   actualizarListaDispositivos(context);
@@ -148,11 +160,39 @@ class _ListadoDispositivosViewState extends State<ListadoDispositivosView> {
 }
 
 class NoHayDispositivos extends StatelessWidget{
-  final String mensajeCrearDefault = "¿Quieres crear dispositivos default?";
+  final String mensajeCrearDefault = "¿Quieres crear dispositivos default? Se creará un dispositivo de cada tipo";
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: createConfirmDialogCreateDefault(context, mensajeCrearDefault),
+    return Column(
+      children: <Widget>[
+        Container(
+          child: Text(mensajeCrearDefault,
+            style: TextStyle(
+              fontFamily: "Raleway",
+              fontSize: 15.0,
+            ),
+          ),
+          padding: EdgeInsets.all(20.0),
+          margin: EdgeInsets.all(20.0),
+        ),
+        yesButton(context, "SI"),
+      ],
+    );
+  }
+
+  Widget yesButton(BuildContext context, String mensaje){
+    return RaisedButton(
+      child: Text(mensaje,
+        style: TextStyle(
+          fontFamily: "Raleway",
+          color: Colors.green,
+          fontSize: 15.0,
+        ),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      onPressed: () => context.read<DispositivosBloc>().add(CrearDispositivosDefault()),
     );
   }
 
@@ -225,7 +265,7 @@ class BuildListado extends StatelessWidget{
 
   final List<Device> devices;
   final TextEditingController controladorNombre = TextEditingController();
-  final String mensajeEliminar = "¿Estás seguro de que deseas eliminar la habitación?";
+  final String mensajeEliminar = "¿Estás seguro de que deseas eliminar el dispositivo?";
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -398,15 +438,16 @@ class BuildListado extends StatelessWidget{
     context.bloc<DispositivosBloc>().add(CambiarNombreDispositivo(dispositivo, controladorNombre.text));
   }
 
-  void eliminarDispositivo(BuildContext context, Device dispositivo, bool confirmacion){
-    context.bloc<DispositivosBloc>().add(RemoveDispositivo(dispositivo.name, confirmacion));
+  void eliminarDispositivo(BuildContext context, Device dispositivo){
+    context.bloc<DispositivosBloc>().add(RemoveDispositivo(dispositivo.id));
   }
 
   createConfirmDialogDelete(BuildContext context, Device dispositivo, String mensaje){
     return showDialog(context: context, builder: (_){
       return ConfirmationAlert(
         callback: (bool confirmacion){
-          eliminarDispositivo(context, dispositivo, confirmacion);
+          if(confirmacion)
+            eliminarDispositivo(context, dispositivo);
         },
         mensaje: mensaje,
       );

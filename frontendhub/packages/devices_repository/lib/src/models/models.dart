@@ -12,8 +12,9 @@ extension TipoEstado on TipoDispositivo{
     TipoDispositivo.SENSOR_DE_APERTURA: "apertura",
   };
 
-  String get nombre => dispositivosMap[this];
+  String get nombre => dispositivosMap[this]; // Devuelve un string del tipo del dispositivo
 
+  // Devuelve un string dependiendo del estado en el que se encuentra y del tipo de dispositivo que lo ha llamado
   String getEstado(Estado estado){
     String nombreEstado = "";
     switch(estado){
@@ -67,7 +68,7 @@ class Device extends Equatable {
   /// Device's type.
   final TipoDispositivo tipo;
 
-  /// Device's type.
+  /// Device's id.
   final String id;
 
   /// The current device's name.
@@ -76,13 +77,15 @@ class Device extends Equatable {
   /// The current device's state.
   final Estado estado;
 
+  /// Devuelve un string del estado actual dependiendo del tipo del dispositivo
   String get estadoActual => tipo.getEstado(estado);
 
+  /// Devuelve un string del tipo del dispositivo
   String get nombreTipo => tipo.nombre;
 
   static TipoDispositivo stringToTipo(String tipo){
     var tipoDispositivo;
-    switch(tipo){
+    switch(tipo.toLowerCase()){
       case "alarma":
         tipoDispositivo = TipoDispositivo.ALARMA;
         break;
@@ -101,7 +104,7 @@ class Device extends Equatable {
 
   static Estado stringToEstado(String estado){
     var tipoEstado;
-    switch(estado){
+    switch(estado.toLowerCase()){
       case "open":
       case "motion_detected":
       case "on":

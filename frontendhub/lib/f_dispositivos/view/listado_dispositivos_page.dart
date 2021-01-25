@@ -9,6 +9,7 @@ class ListadoDispositivosPage extends StatefulWidget{
     return _ListadoDispositivosPageState();
   }
 }
+
 class _ListadoDispositivosPageState extends State<ListadoDispositivosPage>{
   @override
   Widget build(BuildContext context) {

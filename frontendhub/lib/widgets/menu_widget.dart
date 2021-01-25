@@ -11,7 +11,6 @@ class  MenuWidget extends StatefulWidget {
 
   @override
   _MenuWidget createState() => _MenuWidget();
-
 }
 
 class  _MenuWidget extends State<MenuWidget> {
@@ -20,11 +19,14 @@ class  _MenuWidget extends State<MenuWidget> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController controladorAnadir = TextEditingController();
+    TextEditingController textController = TextEditingController();
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return ClipRRect(
-      borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+      borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30.0),
+          topRight: Radius.circular(30.0),
+      ),
       child: Container(
         color: Colors.black87,
         width: width,
@@ -46,7 +48,6 @@ class  _MenuWidget extends State<MenuWidget> {
             SizedBox(
               height: 20,
             ),
-
             Container(
               padding: EdgeInsets.only(left: width/9, right: width/9, top: height/19),
               child: Column(
@@ -54,7 +55,8 @@ class  _MenuWidget extends State<MenuWidget> {
                   Container(
                     color: Colors.white,
                     child: TextField(
-                      controller: controladorAnadir,
+                      // Para introducir el nuevo nombre del dispositivo
+                      controller: textController,
                       cursorColor: Colors.black87,
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -63,21 +65,33 @@ class  _MenuWidget extends State<MenuWidget> {
                       ),
                       decoration: InputDecoration(
                         labelText: 'Nombre',
-                        // helperText: 'Pon un nombre para tu nuevo dispositivo',
                       ),
                     ),
                   ),
                   Container(
-                    //color: Colors.white,
                     child: ToggleButtons(
+                      // Botones para seleccionar el estado del dispositivo,
+                      // por default esta seleccionado Alarma
                       children: <Widget>[
-                        Text("Alarma"),
-                        Text("Movimiento"),
-                        Text("Apertura"),
+                        Text("Alarma",
+                          style: TextStyle(
+                              fontFamily: "Raleway",
+                          ),
+                        ),
+                        Text("Movimiento",
+                          style: TextStyle(
+                            fontFamily: "Raleway",
+                          ),
+                        ),
+                        Text("Apertura",
+                          style: TextStyle(
+                              fontFamily: "Raleway",
+                          ),
+                        ),
                       ],
                       onPressed: (int index) {
                         setState(() {
-                          print("Indice apretado: $index");
+                          // Nos guardamos el indice del ultimo boton seleccionado
                           lastSelected = index;
                           for (int buttonIndex = 0; buttonIndex < isSelected.length; buttonIndex++) {
                             if (buttonIndex == index) {
@@ -86,7 +100,6 @@ class  _MenuWidget extends State<MenuWidget> {
                               isSelected[buttonIndex] = false;
                             }
                           }
-                          print(isSelected);
                         });
                       },
                       isSelected: isSelected,
@@ -100,6 +113,9 @@ class  _MenuWidget extends State<MenuWidget> {
                   ),
                   MaterialButton(
                     onPressed: (){
+                      // Cuando apretamos en Añadir, vemos cual es la ultima
+                      // opcion que se ha elegido del tipo del dispositivo
+                      // y vemos el nombre introducido
                       TipoDispositivo tipo;
                       switch(lastSelected){
                         case 0:
@@ -112,10 +128,9 @@ class  _MenuWidget extends State<MenuWidget> {
                           tipo = TipoDispositivo.SENSOR_DE_APERTURA;
                           break;
                       }
-                      String name = controladorAnadir.value.text;
-                      print(name);
+                      String name = textController.value.text;
                       widget.callback(name, tipo);
-                      controladorAnadir.clear();
+                      textController.clear();
                     },
                     elevation: 10.0,
                     color: Colors.black54,

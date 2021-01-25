@@ -15,7 +15,9 @@ void main() async {
   await Firebase.initializeApp();
   EquatableConfig.stringify = kDebugMode;
   final getIt = GetIt.instance;
+  // Registramos un singleton del AuthenticationRepository
   getIt.registerSingleton<AuthenticationRepository>(AuthenticationRepository());
+  // Registramos un singleton del DeviceRepository
   getIt.registerLazySingleton<DeviceRepository>(() => DeviceRepository());
   Bloc.observer = SimpleBlocObserver();
   runApp(App(authenticationRepository: getIt<AuthenticationRepository>()));

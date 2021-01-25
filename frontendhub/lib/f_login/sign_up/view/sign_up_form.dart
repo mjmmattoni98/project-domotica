@@ -11,7 +11,7 @@ class SignUpForm extends StatelessWidget {
         if (state.status.isSubmissionFailure) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(const SnackBar(content: Text('Sign Up Failure')));
+            ..showSnackBar(const SnackBar(content: Text("Sign Up Failure")));
         }
       },
       child: Align(
@@ -41,12 +41,13 @@ class _EmailInput extends StatelessWidget {
       builder: (context, state) {
         return TextField(
           key: const Key('signUpForm_emailInput_textField'),
+          style: TextStyle(fontFamily: "Raleway"),
           onChanged: (email) => context.read<SignUpCubit>().emailChanged(email),
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             labelText: 'email',
             helperText: '',
-            errorText: state.email.invalid ? 'invalid email' : null,
+            errorText: state.email.invalid ? 'email inválido' : null,
           ),
         );
       },
@@ -62,11 +63,12 @@ class _PasswordInput extends StatelessWidget {
       builder: (context, state) {
         return TextField(
           key: const Key('signUpForm_passwordInput_textField'),
+          style: TextStyle(fontFamily: "Raleway"),
           onChanged: (password) => context.read<SignUpCubit>().passwordChanged(password),
           obscureText: true,
           decoration: InputDecoration(
-            labelText: 'password',
-            helperText: '',
+            labelText: 'contraseña',
+            helperText: 'La contraseña ha de ser alfanumérica y con al menos 8 dígitos',
             errorText: state.password.invalid ? 'invalid password' : null,
           ),
         );
@@ -90,10 +92,10 @@ class _ConfirmPasswordInput extends StatelessWidget {
               .confirmedPasswordChanged(confirmPassword),
           obscureText: true,
           decoration: InputDecoration(
-            labelText: 'confirm password',
+            labelText: 'confirma contraseña',
             helperText: '',
             errorText: state.confirmedPassword.invalid
-                ? 'passwords do not match'
+                ? 'las contraseñas no son iguales'
                 : null,
           ),
         );
@@ -112,7 +114,9 @@ class _SignUpButton extends StatelessWidget {
             ? const CircularProgressIndicator()
             : RaisedButton(
           key: const Key('signUpForm_continue_raisedButton'),
-          child: const Text('SIGN UP'),
+          child: const Text('SIGN UP',
+            style: TextStyle(fontFamily: "Raleway"),
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
           ),

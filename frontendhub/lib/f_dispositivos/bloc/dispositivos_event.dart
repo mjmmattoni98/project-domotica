@@ -10,13 +10,12 @@ class ActualizarListaDispositivos extends DispositivosEvent{
 }
 
 class RemoveDispositivo extends DispositivosEvent{
-  final String nombre;
-  final bool confirmacion;
+  final String idDispositivo;
 
-  const RemoveDispositivo(this.nombre, this.confirmacion);
+  const RemoveDispositivo(this.idDispositivo);
 
   @override
-  List<Object> get props => [nombre, confirmacion];
+  List<Object> get props => [idDispositivo];
 }
 
 class AddDispositivo extends DispositivosEvent{

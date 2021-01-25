@@ -9,15 +9,9 @@ abstract class DispositivosState extends Equatable {
 
 class DispositivosInitial extends DispositivosState{
   const DispositivosInitial();
-  @override
-  List<Object> get props => [];
 }
 
-class SinDispositivos extends DispositivosState{
-  const SinDispositivos();
-  @override
-  List<Object> get props => [];
-}
+class SinDispositivos extends DispositivosState{}
 
 class EsperandoConfirmacion extends DispositivosState{
   final Device device;
@@ -37,11 +31,7 @@ class DispositivosModificados extends DispositivosState{
   List<Object> get props => [devices];
 }
 
-class DispositivosCargando extends DispositivosState{
-  const DispositivosCargando();
-  @override
-  List<Object> get props => [];
-}
+class DispositivosCargando extends DispositivosState{}
 
 class DispositivoBorrado extends DispositivosState{
   final String mensaje;
@@ -78,3 +68,7 @@ class DispositivosError extends DispositivosState{
   @override
   List<Object> get props => [mensaje];
 }
+
+class DispositivoNombreRepetido extends DispositivosState{}
+
+class DispositivoInexistente extends DispositivosState{}
