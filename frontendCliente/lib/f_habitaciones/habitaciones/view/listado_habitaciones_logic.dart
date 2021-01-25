@@ -296,7 +296,6 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                   style: TextStyle(fontFamily: "Raleway"),
                 ),
                 onPressed: (){
-                  eliminarHabitacion(context, habitacion, false);
                   Navigator.pop(context);
                 },
               )
