@@ -31,11 +31,10 @@ class _ListaHabitacionesPageState extends State<ListaHabitacionesPage>{
 
   @override
   Widget build(BuildContext context) {
-    final User user = context.select((AuthenticationBloc bloc) => bloc.state.user);
+    // final User user = context.select((AuthenticationBloc bloc) => bloc.state.user);
 
     return Scaffold(
       appBar: HomeAppBar(
-        user: user,
         title: "HABITACIONES",
         gradientBegin: Colors.black87,
         gradientEnd: Colors.black87,

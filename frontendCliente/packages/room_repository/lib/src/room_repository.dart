@@ -14,7 +14,7 @@ class RoomRepository{
     FirebaseFirestore firestore,
     FirebaseAuth auth
   }) : _firestore = firestore ?? FirebaseFirestore.instance,
-        _auth = auth ?? FirebaseAuth.instance.currentUser;
+        _auth = auth ?? FirebaseAuth.instance;
 
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;

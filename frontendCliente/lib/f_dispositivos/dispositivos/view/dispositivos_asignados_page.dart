@@ -20,12 +20,11 @@ class DispositivosAsignadosPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final User user = context.select((AuthenticationBloc bloc) => bloc.state.user);
+    // final User user = context.select((AuthenticationBloc bloc) => bloc.state.user);
 
     return Scaffold(
       appBar: HomeAppBar(
         title: "ESTADO",
-        user: user,
         gradientBegin: Colors.black87,
         gradientEnd: Colors.black87,
         gradientMid: Colors.black54,

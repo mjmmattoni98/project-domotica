@@ -23,8 +23,35 @@ export const devicesStates = functions.region('europe-west1').firestore
         console.log("El dispositivo no se encuentra en ninguna habitacion")
         return null
       }
-
+      
       const states = ["open", "motion_detected", "on"]
+      
+      if(states.includes(after.estado.toLowerCase())){
+        const refHabitacion = await db
+          .collection('habitaciones')
+          .doc(after.habitacion)
+          .get()
+
+        const dataHabitacion = refHabitacion.data()
+
+        if(dataHabitacion === undefined) {
+          console.log("La habitacion no existe")
+          return null
+        }
+        
+        if(!dataHabitacion.activo){
+          refHabitacion.ref.update({
+            activo: true
+          })
+        }
+        else if(after.estado.toLowerCase() !== "disconnected"){
+          await db.collection('dispositivos')
+            .where('uid', '==', after.uid)
+            .where('habitacion', '==', after.habitacion)
+            .where('tipo', '==', 'alarma')
+        }
+      }
+
       if (after.estado.toLowerCase() === "disconnected" || states.includes(after.estado.toLowerCase())) {
         const tokens = await getTokens(after.uid)
 

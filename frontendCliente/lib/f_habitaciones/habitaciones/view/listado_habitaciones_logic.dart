@@ -50,7 +50,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                   //   listadoInicial(context);
                   //   Navigator.of(context).pop();
                   // });
-                  listadoInicial(context);
+                  // listadoInicial(context);
                   Navigator.of(context).pop();
                 },
               ),
@@ -66,7 +66,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
         // setState(() {
         //   idHabitacion = message['data']['idHabitacion'];
         // });
-        listadoInicial(context);
+        // listadoInicial(context);
       },
       //app terminated
       onResume: (Map<String, dynamic> message) async {
@@ -74,7 +74,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
         // setState(() {
         //   idHabitacion = message['data']['idHabitacion'];
         // });
-        listadoInicial(context);
+        // listadoInicial(context);
       },
     );
   }
@@ -185,13 +185,11 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
           child: ListView.builder(
               addAutomaticKeepAlives: true,
               physics: BouncingScrollPhysics( parent: AlwaysScrollableScrollPhysics() ),
-
               itemCount: habitaciones.length,
               itemBuilder: (_, int index) {
                 return Padding(
                   padding: EdgeInsets.all(5.0),
                   child: Container(
-
                     child: Card(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                       elevation: 5,

@@ -19,9 +19,9 @@ void main() async {
   // Registramos un singleton del AuthenticationRepository
   getIt.registerSingleton<AuthenticationRepository>(AuthenticationRepository());
   // Registramos un singleton del DeviceRepository
-  getIt.registerLazySingleton<DeviceRepository>(() => DeviceRepository());
+  getIt.registerSingleton<DeviceRepository>(DeviceRepository());
   // Registramos un singleton del RoomRepository
-  getIt.registerLazySingleton<RoomRepository>(() => RoomRepository());
+  getIt.registerSingleton<RoomRepository>(RoomRepository());
   Bloc.observer = SimpleBlocObserver();
   runApp(App(authenticationRepository: getIt<AuthenticationRepository>()));
 }

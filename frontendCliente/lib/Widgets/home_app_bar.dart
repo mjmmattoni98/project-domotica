@@ -2,25 +2,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontendCliente/home/home.dart';
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:get_it/get_it.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget{
 
   final double _prefferedHeight = 125.0;
   final String title;
   final Color gradientBegin, gradientEnd, gradientMid;
-  final User user;
+  // final User user;
   final defaultURL = "https://drive.google.com/uc?id=1CHpt2mxANOKcmx-3ojtdUbeEN2ZIiap6";
 
-  HomeAppBar({this.title, this.user, this.gradientBegin, this.gradientEnd, this.gradientMid}) :
+  HomeAppBar({this.title, this.gradientBegin, this.gradientEnd, this.gradientMid}) :
       assert(title != null),
-      assert(user != null),
+      // assert(user != null),
       assert(gradientEnd != null),
       assert(gradientBegin != null),
       assert(gradientMid != null);
 
   @override
   Widget build(BuildContext context) {
-    // final User user = context.select((AuthenticationBloc bloc) => bloc.state.user);
+    final User user = GetIt.I<AuthenticationRepository>().singleUser;
 
     return Container(
           height: _prefferedHeight,
@@ -77,6 +78,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget{
         )
       );
   }
+
   @override
   Size get preferredSize => Size.fromHeight(_prefferedHeight);
 }
