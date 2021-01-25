@@ -93,10 +93,11 @@ class HabitacionBloc
     if(existe){ // la habitacion existe
       if(dispositivos.length > 0 && confirmacion) { // tiene dispositivos y se confirma su eliminacion
         await roomRepository.deleteRoom(habitacion);
+        await deviceRepository.desasignarHabitacionDispositivos(habitacion.id);
         return HabitacionEliminada("La habitación se ha borrado correctamente");
       }else if(dispositivos.length > 0 && !confirmacion) { // tiene dispositivos pero aun no se ha confirmado su eliminacion
         return HabitacionConDispositivos(habitacion);
-      }else if(dispositivos.length == 0) { // la habitacion no tiene dispositivos
+      }else { // la habitacion no tiene dispositivos if(dispositivos.length == 0)
         await roomRepository.deleteRoom(habitacion);
         return HabitacionEliminada("La habitación se ha borrado correctamente");
       }

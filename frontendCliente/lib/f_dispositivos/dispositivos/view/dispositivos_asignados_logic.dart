@@ -60,10 +60,10 @@ class _DispositivosAsignadosLogicState extends State<DispositivosAsignadosLogic>
                                ),
                                onPressed: () {
                                  context.bloc<DispositivoBloc>().add(DesasignarDispositivo(state.dispositivos[index]));
-                               }
+                               },
                            )
                          ],
-                         child: SwitchListTile(
+                         child: ListTile(
                            title: Text(state.dispositivos[index].nombre,
                              textAlign: TextAlign.center,
                              style: TextStyle(
@@ -72,12 +72,7 @@ class _DispositivosAsignadosLogicState extends State<DispositivosAsignadosLogic>
                                fontFamily: "Raleway",
                              ),
                            ),
-                           value: state.dispositivos[index].estado == Estado.ACTIVE ? true : false,
-                           onChanged: state.dispositivos[index].estado == Estado.DISCONNECTED ? null : (bool value){
-                             Estado nuevoEstado = value ? Estado.ACTIVE : Estado.INACTIVE;
-                             modificarEstadoDispositivo(context, state.dispositivos[index], nuevoEstado);
-                           },
-                           secondary: estadoDispositivo(state.dispositivos[index]),
+                           leading: estadoDispositivo(state.dispositivos[index]),
                          ),
                          // ListTile(
                          //   title: Text(state.dispositivos[index].nombre, textAlign: TextAlign.center,
@@ -86,7 +81,7 @@ class _DispositivosAsignadosLogicState extends State<DispositivosAsignadosLogic>
                          //   ),
                          //   )
                        ),
-                       onTap: (){},
+                       // onTap: (){},
                      ),
                      ),
                    ),

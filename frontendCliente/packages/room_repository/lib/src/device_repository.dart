@@ -37,10 +37,14 @@ class DeviceRepository {
 
   Future<void> desasignarHabitacionDispositivos(String idHabitacion) async{
     await _firestore.collection('dispositivos')
-        .where("habitacion", isEqualTo: "")
+        .where("habitacion", isEqualTo: idHabitacion)
         .get()
-        .then((value) {
-
+        .then((QuerySnapshot querySnapshot) {
+          querySnapshot.docs.forEach((doc) {
+            doc.reference.update({
+              "habitacion": "",
+            });
+          });
         });
   }
 

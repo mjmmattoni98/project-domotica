@@ -44,11 +44,39 @@ export const devicesStates = functions.region('europe-west1').firestore
             activo: true
           })
         }
-        else if(after.estado.toLowerCase() !== "disconnected"){
-          await db.collection('dispositivos')
-            .where('uid', '==', after.uid)
-            .where('habitacion', '==', after.habitacion)
-            .where('tipo', '==', 'alarma')
+      }else{
+        let ultimo: boolean = false
+        await db.collection('dispositivos')
+          .where('uid', '==', after.uid)
+          .where('habitacion', '==', after.habitacion)
+          .where('tipo', '==', 'alarma')
+          .get()
+          .then((snapshot) => {
+            if(snapshot.size == 1){
+              ultimo = true
+            }
+          }).catch(err => {
+            console.log("Algo ha salido mal viendo los dispositivos en una habitacion ", err)
+          })
+        
+        if(ultimo){
+          const refHabitacion = await db
+            .collection('habitaciones')
+            .doc(after.habitacion)
+            .get()
+
+          const dataHabitacion = refHabitacion.data()
+
+          if(dataHabitacion === undefined) {
+            console.log("La habitacion no existe")
+            return null
+          }
+          
+          if(dataHabitacion.activo){
+            refHabitacion.ref.update({
+              activo: false
+            })
+          }
         }
       }
 

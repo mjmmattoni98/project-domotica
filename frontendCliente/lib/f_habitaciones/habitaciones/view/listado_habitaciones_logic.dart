@@ -153,6 +153,8 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                     listadoInicial(context);
                   }else if(state is HabitacionRepetida){
                     listadoInicial(context);
+                  }else if(state is ErrorHabitacionExistente){
+                    listadoInicial(context);
                   }
                   return buildCargando();
                 }
