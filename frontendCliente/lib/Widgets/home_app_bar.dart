@@ -41,7 +41,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget{
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  SizedBox(width: 50,),
+                  SizedBox(width: 80,),
                   Text(
                     title,
                     textAlign: TextAlign.center,
