@@ -43,6 +43,7 @@ class  MenuWidget extends StatelessWidget {
                   Container(
                     color: Colors.white,
                     child: TextField(
+                      // Para introducir el nuevo nombre de la habitacion
                       controller: controladorAnadir,
                       cursorColor: Colors.black87,
                       textAlign: TextAlign.center,
@@ -57,11 +58,11 @@ class  MenuWidget extends StatelessWidget {
                   ),
                   MaterialButton(
                     onPressed: (){
+                      // Cuando apretamos en Añadir, cogemos el nombre introducido
                       callback(controladorAnadir.value.text);
                       controladorAnadir.clear();
                     },
                     elevation: 10.0,
-
                     color: Colors.black54,
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -77,10 +78,6 @@ class  MenuWidget extends StatelessWidget {
                 ],
               ),
             ),
-
-
-
-
           ],
         ),
       ),

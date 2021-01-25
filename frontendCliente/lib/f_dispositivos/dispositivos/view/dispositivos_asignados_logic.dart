@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
-import 'package:frontendCliente/f_dispositivos/dispositivos/bloc/dispositivos_bloc.dart';
-import 'package:frontendCliente/f_dispositivos/dispositivos/bloc/dispositivos_event.dart';
-import 'package:frontendCliente/f_dispositivos/dispositivos/bloc/dispositivos_state.dart';
+import 'package:frontendCliente/f_dispositivos/dispositivos/dispositivos.dart';
 import 'package:room_repository/room_repository.dart';
+import 'package:room_repository/device_repository.dart';
 
 class DispositivosAsignadosLogic extends StatefulWidget{
   final Room habitacionActual;
@@ -17,7 +16,6 @@ class DispositivosAsignadosLogic extends StatefulWidget{
     return _DispositivosAsignadosLogicState(habitacionActual);
   }
 }
-
 
 class _DispositivosAsignadosLogicState extends State<DispositivosAsignadosLogic>{
   final Room habitacionActual;
@@ -51,7 +49,8 @@ class _DispositivosAsignadosLogicState extends State<DispositivosAsignadosLogic>
                        menuItems: <FocusedMenuItem>[
                          FocusedMenuItem(
                              trailingIcon: Icon(
-                                 Icons.assignment_return_outlined),
+                               Icons.assignment_return_outlined,
+                             ),
                              title: Text(
                                "Desasignar dispositivo",
                                style: TextStyle(
@@ -63,13 +62,28 @@ class _DispositivosAsignadosLogicState extends State<DispositivosAsignadosLogic>
                              }
                          )
                        ],
-
-                       child: ListTile(
-                         title: Text(state.dispositivos[index].nombre, textAlign: TextAlign.center,
-                         style: TextStyle(
-                             fontWeight: FontWeight.w500, fontSize: 20.0, fontFamily: "Raleway"),
+                       child: SwitchListTile(
+                         title: Text(state.dispositivos[index].nombre,
+                           textAlign: TextAlign.center,
+                           style: TextStyle(
+                             fontWeight: FontWeight.w500,
+                             fontSize: 20.0,
+                             fontFamily: "Raleway",
+                           ),
                          ),
-                         )
+                         value: state.dispositivos[index].estado == Estado.ACTIVE ? true : false,
+                         onChanged: state.dispositivos[index].estado == Estado.DISCONNECTED ? null : (bool value){
+                           Estado nuevoEstado = value ? Estado.ACTIVE : Estado.INACTIVE;
+                           modificarEstadoDispositivo(context, state.dispositivos[index], nuevoEstado);
+                         },
+                         secondary: estadoDispositivo(state.dispositivos[index]),
+                       ),
+                       // ListTile(
+                       //   title: Text(state.dispositivos[index].nombre, textAlign: TextAlign.center,
+                       //   style: TextStyle(
+                       //       fontWeight: FontWeight.w500, fontSize: 20.0, fontFamily: "Raleway"),
+                       //   ),
+                       //   )
                        ),
 
                      ),
@@ -89,6 +103,51 @@ class _DispositivosAsignadosLogicState extends State<DispositivosAsignadosLogic>
     );
   }
 
+  Widget estadoDispositivo(Device device){
+    Text text = Text("No se ha podido establecer el estado del dispositivo");
+    switch(device.estado) {
+      case Estado.ACTIVE:
+        text = Text(
+          device.estadoActual,
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 20.0,
+            fontFamily: "Raleway",
+            color: Colors.green,
+          ),
+        );
+        break;
+      case Estado.INACTIVE:
+        text = Text(
+          device.estadoActual,
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 20.0,
+            fontFamily: "Raleway",
+            color: Colors.black38,
+          ),
+        );
+        break;
+      case Estado.DISCONNECTED:
+        text = Text(
+          device.estadoActual,
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 20.0,
+            fontFamily: "Raleway",
+            color: Colors.grey,
+          ),
+        );
+        break;
+    }
+    return text;
+  }
 
+  void modificarEstadoDispositivo(BuildContext context, Device dispositivo, Estado estado){
+    context.bloc<DispositivoBloc>().add(CambiarEstadoDispositivo(dispositivo, estado));
+  }
 
 }

@@ -3,11 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
-import 'package:frontendCliente/Widgets/confirmacion_alert.dart';
 import 'package:frontendCliente/f_dispositivos/dispositivos/view/dispositivos_asignados_page.dart';
-import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_bloc.dart';
-import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_event.dart';
-import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_state.dart';
+import 'package:frontendCliente/f_habitaciones/habitaciones/listado_habitaciones.dart';
 import 'package:room_repository/room_repository.dart';
 import 'package:frontendCliente/Widgets/menu_widget.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -23,7 +20,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
   bool showBottomMenu = false;
   TextEditingController controladorNombre = TextEditingController();
   final FirebaseMessaging _fcm = FirebaseMessaging();
-  String idHabitacion = "";
+  // String idHabitacion = "";
 
   @override
   void dispose(){
@@ -47,32 +44,36 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
             actions: <Widget>[
               TextButton(
                 child: Text('Ok'),
-                onPressed: () => setState((){
-                  idHabitacion = message['data']['idHabitacion'];
+                onPressed: () {
+                  // setState((){
+                  //   idHabitacion = message['data']['idHabitacion'];
+                  //   listadoInicial(context);
+                  //   Navigator.of(context).pop();
+                  // });
+                  listadoInicial(context);
                   Navigator.of(context).pop();
-                }),
+                },
               ),
             ],
           ),
         );
-        listadoInicial(context);
       },
       //
       // onBackgroundMessage: myBackgroundMessageHandler,
       //app in the background
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
-        setState(() {
-          idHabitacion = message['data']['idHabitacion'];
-        });
+        // setState(() {
+        //   idHabitacion = message['data']['idHabitacion'];
+        // });
         listadoInicial(context);
       },
       //app terminated
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
-        setState(() {
-          idHabitacion = message['data']['idHabitacion'];
-        });
+        // setState(() {
+        //   idHabitacion = message['data']['idHabitacion'];
+        // });
         listadoInicial(context);
       },
     );
@@ -80,19 +81,12 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
 
   @override
   Widget build(BuildContext context) {
-    bool confimacion = false;
     double height = MediaQuery.of(context).size.height;
-    var threshold = 50;
+    const int threshold = 50;
 
     return BlocListener<HabitacionBloc, HabitacionState>(
         listener: (context, state){
-          /*if(state is ListaError){
-            Scaffold.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(content: Text(state.mensaje)),
-              );
-          }else*/ if(state is ErrorHabitacionExistente){
+          if(state is ErrorHabitacionExistente){
             Scaffold.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
@@ -141,9 +135,14 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                   }else if(state is HabitacionModificada){
                     listadoInicial(context);
                   }else if(state is ListaError){
-                    return Center(child: Text("No existe ninguna habitación actualmente", style: TextStyle(
-                      fontFamily: "Raleway"
-                    ), textAlign: TextAlign.center,));
+                    return Center(
+                        child: Text("No existe ninguna habitación actualmente",
+                          style: TextStyle(
+                            fontFamily: "Raleway"
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                    );
                   }else if(state is HabitacionAnadida){
                     listadoInicial(context);
                   }else if(state is HabitacionConDispositivos){
@@ -167,7 +166,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                 },
               ),
               left: 0.0,
-              bottom: (showBottomMenu)?0:-(height/3),
+              bottom: (showBottomMenu) ? 0 : -(height/3),
             ),
           ],
         ),
@@ -178,6 +177,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
   Widget buildCargando(){
     return Center(child: CircularProgressIndicator());
   }
+
   Widget buildListado(BuildContext context, List<Room> habitaciones){
     return Column(
       children: [
@@ -205,14 +205,31 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                                 context,
                                 MaterialPageRoute<void>(builder: (context) => DispositivosAsignadosPage(habitaciones[index]))
                             );
+                            // Navigator.of(context).push<void>(DispositivosAsignadosPage.route(habitaciones[index]));
                           },
                           menuItems: <FocusedMenuItem>[
-                            FocusedMenuItem(title: Text("Cambiar nombre", style: TextStyle(fontFamily: "Raleway"),), onPressed: (){
-                              createAlertDialog(context, habitaciones[index], controladorNombre);
-                            }, trailingIcon: Icon(Icons.update)),
-                            FocusedMenuItem(title: Text("Eliminar", style: TextStyle(color: Colors.white, fontFamily: "Raleway"),), onPressed: (){
-                              eliminarHabitacion(context, habitaciones[index], false);
-                            }, trailingIcon: Icon(Icons.delete), backgroundColor: Colors.redAccent)
+                            FocusedMenuItem(
+                                title: Text("Cambiar nombre",
+                                  style: TextStyle(fontFamily: "Raleway"),
+                                ),
+                                onPressed: (){
+                                  createAlertDialog(context, habitaciones[index], controladorNombre);
+                                },
+                                trailingIcon: Icon(Icons.update),
+                            ),
+                            FocusedMenuItem(
+                                title: Text("Eliminar",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: "Raleway",
+                                  ),
+                                ),
+                                onPressed: (){
+                                  eliminarHabitacion(context, habitaciones[index], false);
+                                },
+                                trailingIcon: Icon(Icons.delete),
+                                backgroundColor: Colors.redAccent,
+                            ),
                           ],
                           child: ListTile(
                             title: Text(habitaciones[index].nombre,
@@ -223,7 +240,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                                   fontFamily: "Raleway"
                               ),
                             ),
-                            tileColor: habitaciones[index].id == idHabitacion ? Colors.red : null,
+                            tileColor: habitaciones[index].activo ? Colors.red : null,
                           ),
                         ),
                         onTap: (){},
@@ -237,6 +254,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
       ],
     );
   }
+
   void listadoInicial(BuildContext context){
     context.bloc<HabitacionBloc>().add(ActualizarListarHabitaciones());
   }
@@ -259,14 +277,16 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
         builder: (_){
           return AlertDialog(
             elevation: 10.0,
-            title: Text("Nuevo nombre para esta habitación",
+            title: Text("¿Estas seguro de que quieres eliminar la habitación?",
               style: TextStyle(fontFamily: "Raleway"),
               textAlign: TextAlign.center,
             ),
             actions: <Widget>[
               MaterialButton(
                 elevation: 10.0,
-                child: Text("Confirmar"),
+                child: Text("Confirmar",
+                  style: TextStyle(fontFamily: "Raleway"),
+                ),
                 onPressed: (){
                   eliminarHabitacion(context, habitacion, true);
                   Navigator.pop(context);
@@ -274,7 +294,9 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
               ),
               MaterialButton(
                 elevation: 10.0,
-                child: Text("Cancelar"),
+                child: Text("Cancelar",
+                  style: TextStyle(fontFamily: "Raleway"),
+                ),
                 onPressed: (){
                   eliminarHabitacion(context, habitacion, false);
                   Navigator.pop(context);
@@ -304,7 +326,9 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
         actions: <Widget>[
           MaterialButton(
             elevation: 10.0,
-            child: Text("Cambiar"),
+            child: Text("Cambiar",
+              style: TextStyle(fontFamily: "Raleway"),
+            ),
             onPressed: (){
               modificarHabitacion(context, habitacion);
               controller.clear();

@@ -1,21 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../device_repository.dart';
 import '../room_repository.dart';
 
+/// {@template device_repository}
+/// Repository which manages user devices.
+/// {@endtemplate}
 class DeviceRepository {
-  final FirebaseFirestore _firestore; // = FirebaseFirestore.instance;
-  final User _user;
-
+  /// {@macro device_repository}
   DeviceRepository({
     FirebaseFirestore firestore,
-    User user
+    FirebaseAuth auth,
   }) : _firestore = firestore ?? FirebaseFirestore.instance,
-      _user = user ?? FirebaseAuth.instance.currentUser;
-  
+        _auth = auth ?? FirebaseAuth.instance;
 
-  Stream<List<Device>> getListDeviceUnused(){}
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
+
+  String get _userUid => _auth.currentUser.uid;
 
   Future<bool> desasignacionDispositivos(String idDispositivo) async {
     bool desasignado = false;
@@ -29,7 +31,7 @@ class DeviceRepository {
         desasignado = true;
       }
     })
-    .catchError((err) => print("Error desagsinando habitacion del dispositivo: $err"));
+    .catchError((err) => print("Error desasignando habitacion del dispositivo: $err"));
     return desasignado;
   }
 
@@ -45,21 +47,35 @@ class DeviceRepository {
             asignado = true;
       }
     })
-        .catchError((err) => print("Error desagsinando habitacion del dispositivo: $err"));
+        .catchError((err) => print("Error asignando habitacion del dispositivo: $err"));
     return asignado;
   }
 
+  Future<void> updateDeviceState(String idDispositivo, String estado) async{
+    await _firestore.collection('dispositivos').doc(idDispositivo).update({
+      'estado': estado.toLowerCase(),
+    })
+        .then((value) => print("Cambiado el nombre del dispositivo"))
+        .catchError((error) => print("Error cambiando el nombre del dispositivo: $error"));
+  }
+
+  /// Returns a stream of devices without a room
   Stream<List<Device>> getDevicesInactive(){
-    return _firestore.collection('dispositivos').where("uid", isEqualTo: _user.uid)
+    return _firestore.collection('dispositivos')
+        .where("uid", isEqualTo: _userUid)
         .where("habitacion", isEqualTo: "")
+        .where("estado", isNotEqualTo: "disconnected")
         .snapshots()
         .map((snapShot) => snapShot.docs
         .map((document) => Device.fromJson(document.data())).toList());
   }
 
+  /// Returns a stream of devices within an specific room
   Stream<List<Device>> getDevicesInRoom(Room habitacion){
-    return _firestore.collection('dispositivos').where("uid", isEqualTo: _user.uid)
+    return _firestore.collection('dispositivos')
+        .where("uid", isEqualTo: _userUid)
         .where("habitacion", isEqualTo: habitacion.id)
+        .where("estado", isNotEqualTo: "disconnected")
         .snapshots()
         .map((snapShot) => snapShot.docs
         .map((document) => Device.fromJson(document.data())).toList());

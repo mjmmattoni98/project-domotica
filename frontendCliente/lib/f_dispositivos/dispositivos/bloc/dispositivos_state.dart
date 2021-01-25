@@ -1,5 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:room_repository/device_repository.dart';
+part of 'dispositivos_bloc.dart';
 
 abstract class DispositivoState extends Equatable{
   const DispositivoState();
@@ -7,7 +6,6 @@ abstract class DispositivoState extends Equatable{
   @override
   List<Object> get props => [];
 }
-
 
 class DispositivosInitial extends DispositivoState{}
 

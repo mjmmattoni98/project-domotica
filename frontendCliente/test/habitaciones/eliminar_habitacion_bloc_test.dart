@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_bloc.dart';
-import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_event.dart';
-import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_state.dart';
+import 'package:frontendCliente/f_habitaciones/habitaciones/listado_habitaciones.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:room_repository/device_repository.dart';
@@ -22,7 +20,7 @@ void main() {
   });
 
   group('H02. Eliminar habitacion', () {
-    final cocina = Room(id: '01', nombre: 'cocina');
+    final cocina = Room(id: '01', nombre: 'cocina', activo: false);
 
     blocTest('E1. Valido - Habitación eliminada',
         build: () {
@@ -66,7 +64,7 @@ void main() {
 
     blocTest('E3. Válido/Invalido - Habitación con dispositivos asignados',
         build: () {
-          final dispositivo = Device(id: "01", estado: "apagado", habitacionAsignada: "cocina", nombre: "dispositivo", tipo: "movimiento");
+          final dispositivo = Device(id: "01", estado: Estado.INACTIVE, habitacionAsignada: "cocina", nombre: "dispositivo", tipo: TipoDispositivo.DETECTOR_DE_MOVIMIENTO);
 
           when(mockRoomRepository.deleteRoom(cocina))
               .thenAnswer((_) async => sleep(Duration(milliseconds: 1)));

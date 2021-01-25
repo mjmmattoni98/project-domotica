@@ -26,7 +26,7 @@ class LoginForm extends StatelessWidget {
             children: [
               Image.asset(
                 'assets/fotoefectos.com_.jpg',
-                height: 120,
+                height: 160,
               ),
               Text("Powered by Los Acabaos Industries",
                 style: TextStyle(fontFamily: "Raleway"),
@@ -63,7 +63,7 @@ class _EmailInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'Email',
             helperText: '',
-            errorText: state.email.invalid ? 'invalid email' : null,
+            errorText: state.email.invalid ? 'email invalido' : null,
           ),
         );
       },

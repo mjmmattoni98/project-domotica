@@ -25,8 +25,11 @@ class LoginForm extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(
-                'assets/bloc_logo_small.png',
-                height: 120,
+                'assets/trio_de_la_muerte.jpg',
+                height: 160,
+              ),
+              Text("Powered by Los Acabaos Industries",
+                style: TextStyle(fontFamily: "Raleway"),
               ),
               const SizedBox(height: 16.0),
               _EmailInput(),
@@ -56,10 +59,11 @@ class _EmailInput extends StatelessWidget {
           key: const Key('loginForm_emailInput_textField'),
           onChanged: (email) => context.read<LoginCubit>().emailChanged(email),
           keyboardType: TextInputType.emailAddress,
+          style: TextStyle(fontFamily: "Raleway"),
           decoration: InputDecoration(
             labelText: 'Email',
             helperText: '',
-            errorText: state.email.invalid ? 'invalid email' : null,
+            errorText: state.email.invalid ? 'email inválido' : null,
           ),
         );
       },
@@ -77,11 +81,12 @@ class _PasswordInput extends StatelessWidget {
           key: const Key('loginForm_passwordInput_textField'),
           onChanged: (password) =>
               context.read<LoginCubit>().passwordChanged(password),
+          style: TextStyle(fontFamily: "Raleway"),
           obscureText: true,
           decoration: InputDecoration(
             labelText: 'Password',
             helperText: '',
-            errorText: state.password.invalid ? 'invalid password' : null,
+            errorText: state.password.invalid ? 'contraseña incorrecta' : null,
           ),
         );
       },
@@ -99,7 +104,9 @@ class _LoginButton extends StatelessWidget {
             ? const CircularProgressIndicator()
             : RaisedButton(
           key: const Key('loginForm_continue_raisedButton'),
-          child: const Text('LOGIN'),
+          child: const Text('LOGIN',
+            style: TextStyle(fontFamily: "Raleway"),
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
           ),
@@ -121,7 +128,10 @@ class _GoogleLoginButton extends StatelessWidget {
       key: const Key('loginForm_googleLogin_raisedButton'),
       label: const Text(
         'SIGN IN WITH GOOGLE',
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(
+          color: Colors.white,
+          fontFamily: "Raleway",
+        ),
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
       icon: const Icon(FontAwesomeIcons.google, color: Colors.white),
@@ -139,7 +149,10 @@ class _SignUpButton extends StatelessWidget {
       key: const Key('loginForm_createAccount_flatButton'),
       child: Text(
         'CREATE ACCOUNT',
-        style: TextStyle(color: theme.primaryColor),
+        style: TextStyle(
+            color: theme.primaryColor,
+            fontFamily: "Raleway",
+        ),
       ),
       onPressed: () => Navigator.of(context).push<void>(SignUpPage.route()),
     );

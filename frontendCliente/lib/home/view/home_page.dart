@@ -1,17 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontendCliente/f_dispositivos/dispositivos_inactivos/view/dispositivos_inactivos_logic.dart';
-import 'package:frontendCliente/f_dispositivos/dispositivos_inactivos/view/dispositivos_inactivos_page.dart';
-import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_bloc.dart';
-import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_event.dart';
-import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_state.dart';
-import 'package:frontendCliente/f_habitaciones/habitaciones/view/listado_habitaciones_page.dart';
-import 'package:frontendCliente/f_login/authentication/authentication.dart';
-import 'package:frontendCliente/home/home.dart';
+import 'package:frontendCliente/f_dispositivos/dispositivos_inactivos/dispositivos_inactivos.dart';
+import 'package:frontendCliente/f_habitaciones/habitaciones/listado_habitaciones.dart';
 import 'package:frontendCliente/Widgets/home_app_bar.dart';
-import 'package:room_repository/room_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:authentication_repository/authentication_repository.dart';
+import 'package:frontendCliente/f_login/authentication/authentication.dart';
 
 class HomePage extends StatelessWidget {
   static Route route() {
@@ -21,24 +14,18 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HomePageView();
-     /*RepositoryProvider.value(
-      value: roomRepository,
-      child: HomePageView().build(context),*/
-      // child: BlocProvider(
-      //   create: (_) => AuthenticationBloc(
-      //     authenticationRepository: authenticationRepository,
-      //   ),
-      //   child: AppView(),
-      // ),
   }
 }
 class HomePageView extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    final User user = context.select((AuthenticationBloc bloc) => bloc.state.user);
+
     return Scaffold(
       appBar: HomeAppBar(
         title: "HOME",
+        user: user,
         gradientBegin: Colors.black87,
         gradientEnd: Colors.black87,
         gradientMid: Colors.black54,
@@ -69,27 +56,7 @@ class HomePageView extends StatelessWidget{
       )
     );
   }
-
-
 }
-
-/*ListView.builder(itemCount: ,
-        )*/
-/*Align(
-        alignment: const Alignment(0, -1 / 3),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            CircleAvatar(
-              backgroundImage: NetworkImage(user.photo),
-            ),
-            const SizedBox(height: 4.0),
-            Text(user.email, style: textTheme.headline6),
-            const SizedBox(height: 4.0),
-            Text(user.name ?? '', style: textTheme.headline5),
-          ],
-        ),*/
-
 
 class _ListarHabitacionWidget extends StatelessWidget{
   @override
@@ -115,8 +82,6 @@ class _ListarHabitacionWidget extends StatelessWidget{
                   image: DecorationImage(
                       fit: BoxFit.fitWidth,
                       image: AssetImage("assets/fotos/imagenListarHabitaciones.png")
-                    //https://i.pinimg.com/736x/d1/2c/93/d12c9376d6fe2a9d33f2d1840ffae02c.jpg
-                    // https://image.flaticon.com/icons/png/512/1375/1375683.png
                   )
               ),
               child: Container(
@@ -146,11 +111,11 @@ class _ListarHabitacionWidget extends StatelessWidget{
               context,
               MaterialPageRoute<void>(builder: (context) => ListaHabitacionesPage())
             );
+            // Navigator.of(context).push<void>(ListaHabitacionesPage.route());
           },
         ),
       );
   }
-
 }
 
 class _DispositivosInactivosWidget extends StatelessWidget{
@@ -159,7 +124,6 @@ class _DispositivosInactivosWidget extends StatelessWidget{
     return Card(
       elevation: 10,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      //shadowColor: Colors.black87,
 
       child: InkWell(
         child: ClipRRect(
@@ -178,9 +142,7 @@ class _DispositivosInactivosWidget extends StatelessWidget{
             decoration: BoxDecoration(
                 image: DecorationImage(
                     fit: BoxFit.fitHeight,
-                    image: AssetImage("assets/fotos/imagenListarHabitaciones.png") //https://i.pinimg.com/736x/d1/2c/93/d12c9376d6fe2a9d33f2d1840ffae02c.jpg
-                  //https://cdn.discordapp.com/attachments/502530393740673025/796319599842033674/fotoefectos.com_.jpg
-                  // https://image.flaticon.com/icons/png/512/1375/1375683.png
+                    image: AssetImage("assets/fotos/imagenListarHabitaciones.png"),
                 )
             ),
             child: Container(
@@ -210,11 +172,9 @@ class _DispositivosInactivosWidget extends StatelessWidget{
               context,
               MaterialPageRoute<void>(builder: (context) => DispositivosInactivosPage())
           );
+          // Navigator.of(context).push<void>(DispositivosInactivosPage.route());
         },
       ),
     );
   }
-
-
-
 }

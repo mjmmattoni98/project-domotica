@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:room_repository/device_repository.dart';
 import 'package:room_repository/room_repository.dart';
-import 'dispositivos_inactivos_event.dart';
-import 'dispositivos_inactivos_state.dart';
+
+part 'dispositivos_inactivos_event.dart';
+part 'dispositivos_inactivos_state.dart';
 
 class InactivoBloc extends Bloc<InactivoEvent, InactivoState> {
   final DeviceRepository _deviceRepository;

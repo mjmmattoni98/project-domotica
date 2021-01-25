@@ -1,23 +1,21 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-
 
 typedef ConfirmationCallback = void Function(bool confirmacion);
 
 class ConfirmationAlert extends StatelessWidget{
-  const ConfirmationAlert({this.callback});
+  const ConfirmationAlert({this.callback, this.mensaje});
+  final String mensaje;
+  final String defualtMensaje = "Esta habitación tiene dispositivos asignados.\n"
+      "¿Quieres borrarla igualmente?";
   final ConfirmationCallback callback;
-
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       elevation: 10.0,
       title: Text(
-        "Esta habitación tiene dispositivos asignados.\n"
-            "¿Quieres borrarla igualmente?",
+        mensaje,
         textAlign: TextAlign.center,
         style: TextStyle(fontFamily: "Raleway"),
       ),
@@ -29,7 +27,7 @@ class ConfirmationAlert extends StatelessWidget{
             callback(true);
           },
           child: Icon(
-              Icons.add
+              Icons.check
           ),
         ),
         MaterialButton(
@@ -39,7 +37,7 @@ class ConfirmationAlert extends StatelessWidget{
             callback(false);
           },
           child: Icon(
-              Icons.cancel
+              Icons.clear_rounded
           ),
         )
       ],

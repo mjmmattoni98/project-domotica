@@ -1,31 +1,28 @@
-import 'package:authentication_repository/authentication_repository.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:frontendCliente/home/home.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget{
 
   final double _prefferedHeight = 125.0;
   final String title;
   final Color gradientBegin, gradientEnd, gradientMid;
+  final User user;
+  final defaultURL = "https://drive.google.com/uc?id=1CHpt2mxANOKcmx-3ojtdUbeEN2ZIiap6";
 
-  HomeAppBar({this.title, this.gradientBegin, this.gradientEnd, this.gradientMid}) :
+  HomeAppBar({this.title, this.user, this.gradientBegin, this.gradientEnd, this.gradientMid}) :
       assert(title != null),
+      assert(user != null),
       assert(gradientEnd != null),
       assert(gradientBegin != null),
       assert(gradientMid != null);
 
   @override
   Widget build(BuildContext context) {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final user = auth.currentUser;
+    // final User user = context.select((AuthenticationBloc bloc) => bloc.state.user);
 
-    //final User user = firebase_auth.User as User;
-
-    //final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
-      return Container(
+    return Container(
           height: _prefferedHeight,
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -60,17 +57,20 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget{
                       fontWeight: FontWeight.w500
                     ),
                   ),
-                  CircleAvatar(
-                    radius: 22.0,
-                    child: ClipOval(
-                        child: new SizedBox(
-                          width: 100.0,
-                          height: 100.0,
-                          child: new Image.network(user.photoURL, fit: BoxFit.fill),
+                  FlatButton(
+                    key: const Key('homePage_avatar_profile_user'),
+                    child: CircleAvatar(
+                        radius: 22.0,
+                        child: ClipOval(
+                            child: new SizedBox(
+                              width: 100.0,
+                              height: 100.0,
+                              child: Image.network(user.photo ?? defaultURL, fit: BoxFit.fill),
+                            )
                         )
-                    )
-                    //backgroundImage: NetworkImage(user.photo),
-                  )
+                    ),
+                    onPressed: () => Navigator.of(context).push<void>(ProfilePage.route()),
+                  ),
                 ]
               )
             )
@@ -78,7 +78,5 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget{
       );
   }
   @override
-  // TODO: implement preferredSize
   Size get preferredSize => Size.fromHeight(_prefferedHeight);
-
 }

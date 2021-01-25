@@ -52,7 +52,7 @@ extension TipoEstado on TipoDispositivo{
   }
 }
 
-/// {@template user}
+/// {@template device}
 /// Device model
 ///
 /// {@endtemplate}

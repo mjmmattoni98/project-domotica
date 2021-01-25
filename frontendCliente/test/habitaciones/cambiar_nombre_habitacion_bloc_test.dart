@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_bloc.dart';
-import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_event.dart';
-import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_state.dart';
+import 'package:flutter/animation.dart';
+import 'package:frontendCliente/f_habitaciones/habitaciones/listado_habitaciones.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:room_repository/device_repository.dart';
@@ -23,8 +22,8 @@ void main(){
 
   group('H05. Cambiar nombre habitacion', () {
 
-    final cocina = Room(id: '01', nombre: 'cocina');
-    final comedor = Room(id: '02', nombre: 'comedor');
+    final cocina = Room(id: '01', nombre: 'cocina', activo: false);
+    final comedor = Room(id: '02', nombre: 'comedor', activo: false);
 
     blocTest('E1. Valido - Nombre habitación cambiado',
         build: () {

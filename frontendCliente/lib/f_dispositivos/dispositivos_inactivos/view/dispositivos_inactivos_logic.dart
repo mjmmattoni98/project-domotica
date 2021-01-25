@@ -1,24 +1,19 @@
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
-import 'package:frontendCliente/f_dispositivos/dispositivos_inactivos/bloc/dispositivos_inactivos_bloc.dart';
-import 'package:frontendCliente/f_dispositivos/dispositivos_inactivos/bloc/dispositivos_inactivos_event.dart';
-import 'package:frontendCliente/f_dispositivos/dispositivos_inactivos/bloc/dispositivos_inactivos_state.dart';
+import 'package:frontendCliente/f_dispositivos/dispositivos_inactivos/dispositivos_inactivos.dart';
 import 'package:room_repository/device_repository.dart';
 import 'package:room_repository/room_repository.dart';
 
 class DispositivosInactivosLogic extends StatefulWidget{
-
   @override
   State<StatefulWidget> createState() {
     return _DispositivosInactivosLogicState();
   }
 }
-
 
 class _DispositivosInactivosLogicState extends State<DispositivosInactivosLogic> {
 
@@ -63,9 +58,13 @@ class _DispositivosInactivosLogicState extends State<DispositivosInactivosLogic>
                           ],
 
                           child: ListTile(
-                            title: Text(state.dispositivos[index].nombre, textAlign: TextAlign.center,
+                            title: Text(state.dispositivos[index].nombre,
+                              textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 20.0, fontFamily: "Raleway"),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 20.0,
+                                fontFamily: "Raleway",
+                              ),
                             ),
                           )
                       ),
@@ -77,14 +76,16 @@ class _DispositivosInactivosLogicState extends State<DispositivosInactivosLogic>
           }else if(state is InactivoInitial){
             context.bloc<InactivoBloc>().add(InactivosStarted());
           }else if(state is ListaInactivoError){
-            return Center(child: Text("No hay dispositivos existentes inactivos", textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: "Raleway"
-            ),),);
+            return Center(
+              child: Text("No hay dispositivos existentes inactivos",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontFamily: "Raleway"),
+              ),
+            );
           }
           return Center(child: CircularProgressIndicator(),);
-
-        });
+        }
+        );
   }
 
 

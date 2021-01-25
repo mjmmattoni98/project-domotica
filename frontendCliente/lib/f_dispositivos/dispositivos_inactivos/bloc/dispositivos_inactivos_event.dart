@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:room_repository/device_repository.dart';
-import 'package:room_repository/room_repository.dart';
+part of "dispositivos_inactivos_bloc.dart";
 
 abstract class InactivoEvent extends Equatable{
   const InactivoEvent();
@@ -18,10 +16,7 @@ class InactivosListados extends InactivoEvent{
   List<Object> get props => [dispositivos];
 }
 
-class InactivosStarted extends InactivoEvent{
-
-}
-
+class InactivosStarted extends InactivoEvent{}
 
 class AsignarHabitacion extends InactivoEvent{
   final String idDispositivo;

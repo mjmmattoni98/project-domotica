@@ -2,12 +2,12 @@ part of 'dispositivos_bloc.dart';
 
 abstract class DispositivosEvent extends Equatable{
   const DispositivosEvent();
-}
 
-class ActualizarListaDispositivos extends DispositivosEvent{
   @override
   List<Object> get props => [];
 }
+
+class ActualizarListaDispositivos extends DispositivosEvent{}
 
 class RemoveDispositivo extends DispositivosEvent{
   final String idDispositivo;
@@ -48,10 +48,7 @@ class CambiarEstadoDispositivo extends DispositivosEvent{
   List<Object> get props => [device, nuevoEstado];
 }
 
-class CrearDispositivosDefault extends DispositivosEvent{
-  @override
-  List<Object> get props => [];
-}
+class CrearDispositivosDefault extends DispositivosEvent{}
 
 class CambiarEstadoHub extends DispositivosEvent{
   final Estado nuevoEstado;

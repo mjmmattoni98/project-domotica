@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontendhub/f_dispositivos/bloc/dispositivos_bloc.dart';
-import 'package:frontendhub/f_home/view/profile_page.dart';
+import 'package:frontendhub/f_home/home.dart';
 import 'package:frontendhub/f_login/authentication/authentication.dart';
 import 'package:devices_repository/devices_repository.dart';
 import 'package:get_it/get_it.dart';
@@ -33,7 +32,7 @@ class HomePage extends StatelessWidget {
                 )
             ),
             onPressed: () => Navigator.of(context).push<void>(ProfilePage.route()),
-          )
+          ),
         ],
       ),
       body: RepositoryProvider.value(

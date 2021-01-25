@@ -1,12 +1,10 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:room_repository/device_repository.dart';
 import 'package:room_repository/room_repository.dart';
+import 'package:equatable/equatable.dart';
 
-import 'habitacion_event.dart';
-import 'habitacion_state.dart';
-
+part 'habitacion_event.dart';
+part 'habitacion_state.dart';
 
 class HabitacionBloc
     extends Bloc<HabitacionEvent, HabitacionState> {
@@ -92,9 +90,6 @@ class HabitacionBloc
 
     List<Device> dispositivos = await deviceRepository.getDevicesInRoom(habitacion).first;
 
-
-
-
     if(existe){ // la habitacion existe
       if(dispositivos.length > 0 && confirmacion) { // tiene dispositivos y se confirma su eliminacion
         await roomRepository.deleteRoom(habitacion);
@@ -102,7 +97,6 @@ class HabitacionBloc
         for(Device d in l){
           deviceRepository.desasignacionDispositivos(d.id);
         }
-
         return HabitacionEliminada("La habitación se ha borrado correctamente");
       }else if(dispositivos.length > 0 && !confirmacion) { // tiene dispositivos pero aun no se ha confirmado su eliminacion
         return HabitacionConDispositivos(habitacion);

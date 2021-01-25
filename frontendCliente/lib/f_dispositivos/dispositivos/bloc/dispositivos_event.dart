@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:room_repository/device_repository.dart';
-import 'package:room_repository/room_repository.dart';
+part of 'dispositivos_bloc.dart';
 
 abstract class DispositivoEvent extends Equatable{
   const DispositivoEvent();
@@ -26,6 +24,16 @@ class DispositivosListados extends DispositivoEvent{
   @override
   List<Object> get props => [dispositivos];
 
+}
+
+class CambiarEstadoDispositivo extends DispositivoEvent{
+  final Device device;
+  final Estado nuevoEstado;
+
+  const CambiarEstadoDispositivo(this.device, this.nuevoEstado);
+
+  @override
+  List<Object> get props => [device, nuevoEstado];
 }
 
 class DesasignarDispositivo extends DispositivoEvent{

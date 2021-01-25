@@ -11,7 +11,7 @@ class SignUpForm extends StatelessWidget {
         if (state.status.isSubmissionFailure) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(const SnackBar(content: Text("Sign Up Failure")));
+            ..showSnackBar(const SnackBar(content: Text("Sign Up Failure", style: TextStyle(fontFamily: "Raleway"),)));
         }
       },
       child: Align(
@@ -69,7 +69,7 @@ class _PasswordInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'contraseña',
             helperText: 'La contraseña ha de ser alfanumérica y con al menos 8 dígitos',
-            errorText: state.password.invalid ? 'invalid password' : null,
+            errorText: state.password.invalid ? 'contraseña incorrecta' : null,
           ),
         );
       },
@@ -87,6 +87,7 @@ class _ConfirmPasswordInput extends StatelessWidget {
       builder: (context, state) {
         return TextField(
           key: const Key('signUpForm_confirmedPasswordInput_textField'),
+          style: TextStyle(fontFamily: "Raleway"),
           onChanged: (confirmPassword) => context
               .read<SignUpCubit>()
               .confirmedPasswordChanged(confirmPassword),

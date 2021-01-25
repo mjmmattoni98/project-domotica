@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontendhub/f_login/authentication/authentication.dart';
+import 'package:frontendCliente/f_login/authentication/authentication.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key key}) : super(key: key);
@@ -12,13 +13,13 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final defaultURL = "https://drive.google.com/uc?id=1CHpt2mxANOKcmx-3ojtdUbeEN2ZIiap6";
-    final hub = context.select((AuthenticationBloc bloc) => bloc.state.hub);
+    final User user = context.select((AuthenticationBloc bloc) => bloc.state.user);
 
     return Scaffold(
       appBar: AppBar(
         title: ListTile(
-          title: Text(hub.name ?? ""),
-          subtitle: Text(hub.email ?? ""),
+          title: Text(user.name ?? ""),
+          subtitle: Text(user.email ?? ""),
         ),
         leading: CircleAvatar(
             radius: 22.0,
@@ -26,7 +27,7 @@ class ProfilePage extends StatelessWidget {
                 child: new SizedBox(
                   width: 100.0,
                   height: 100.0,
-                  child: Image.network(hub.photo ?? defaultURL, fit: BoxFit.fill),
+                  child: Image.network(user.photo ?? defaultURL, fit: BoxFit.fill),
                 )
             )
         ),
@@ -90,48 +91,48 @@ class _EliminarCuenta extends StatelessWidget{
   Widget build(BuildContext context) {
     return FlatButton(
       child: const Text("Eliminar cuenta",
-      style: TextStyle(
+        style: TextStyle(
           fontFamily: "Raleway",
           color: Colors.red,
         ),
       ),
       onPressed: () => showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            elevation: 10.0,
-            title: Text(textTitle,
-              style: TextStyle(
-                fontFamily: "Raleway",
-                fontSize: 20.0,
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+              elevation: 10.0,
+              title: Text(textTitle,
+                style: TextStyle(
+                  fontFamily: "Raleway",
+                  fontSize: 20.0,
+                ),
               ),
-            ),
-            content: Text(textContent,
-              style: TextStyle(
-                fontFamily: "Raleway",
-                fontSize: 15.0,
+              content: Text(textContent,
+                style: TextStyle(
+                  fontFamily: "Raleway",
+                  fontSize: 15.0,
+                ),
               ),
-            ),
-            actions: <Widget>[
-              MaterialButton(
-                elevation: 10.0,
-                onPressed: () {
-                  context.read<AuthenticationBloc>()
-                      .add(AuthenticationDeleteAccountRequested());
-                  Navigator.pop(context);
-                },
-                child: Icon(Icons.check),
-              ),
-              MaterialButton(
-                elevation: 10.0,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(Icons.clear_rounded),
-              )
-            ],
-          );
-        }
+              actions: <Widget>[
+                MaterialButton(
+                  elevation: 10.0,
+                  onPressed: () {
+                    context.read<AuthenticationBloc>()
+                        .add(AuthenticationDeleteAccountRequested());
+                    Navigator.pop(context);
+                  },
+                  child: Icon(Icons.check),
+                ),
+                MaterialButton(
+                  elevation: 10.0,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(Icons.clear_rounded),
+                )
+              ],
+            );
+          }
       ),
     );
   }

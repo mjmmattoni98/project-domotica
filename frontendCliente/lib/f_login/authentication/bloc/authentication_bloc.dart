@@ -23,14 +23,18 @@ class AuthenticationBloc
         }
 
   final AuthenticationRepository _authenticationRepository;
+  // Nos subscribimos ante cualquier cambio de estado del usuario
   StreamSubscription<User> _userSubscription;
 
   @override
   Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async* {
     if (event is AuthenticationUserChanged) {
+      // Comprobamos en que ha cambiado el estado del usuario, y actuamos en consecuencia
       yield _mapAuthenticationUserChangedToState(event);
     } else if (event is AuthenticationLogoutRequested) {
       unawaited(_authenticationRepository.logOut());
+    }else if (event is AuthenticationDeleteAccountRequested) {
+      unawaited(_authenticationRepository.deleteAccount());
     }
   }
 

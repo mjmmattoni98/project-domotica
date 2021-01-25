@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_bloc.dart';
-import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_event.dart';
-import 'package:frontendCliente/f_habitaciones/habitaciones/bloc/habitacion_state.dart';
+import 'package:frontendCliente/f_habitaciones/habitaciones/listado_habitaciones.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:room_repository/device_repository.dart';
@@ -37,7 +35,7 @@ void main() {
 
     blocTest('E2. Invalido - Nombre de habitación repetido',
         build: () {
-          final cocina = Room(id: '01', nombre: 'cocina');
+          final cocina = Room(id: '01', nombre: 'cocina', activo: false);
 
           when(mockRoomRepository.createRoom('cocina'))
               .thenAnswer((_) async => sleep(Duration(milliseconds: 1)));

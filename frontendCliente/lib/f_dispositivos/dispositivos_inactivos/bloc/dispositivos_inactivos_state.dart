@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:room_repository/device_repository.dart';
-import 'package:room_repository/room_repository.dart';
+part of "dispositivos_inactivos_bloc.dart";
 
 abstract class InactivoState extends Equatable{
   const InactivoState();
@@ -8,7 +6,6 @@ abstract class InactivoState extends Equatable{
   @override
   List<Object> get props => [];
 }
-
 
 class InactivoInitial extends InactivoState{}
 

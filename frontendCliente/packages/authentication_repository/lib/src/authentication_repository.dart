@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
@@ -21,6 +20,9 @@ class LogInWithGoogleFailure implements Exception {}
 
 /// Thrown during the logout process if a failure occurs.
 class LogOutFailure implements Exception {}
+
+/// Thrown during the delete account process if a failure occurs.
+class DeleteAccountFailure implements Exception {}
 
 /// {@template authentication_repository}
 /// Repository which manages user authentication.
@@ -69,6 +71,7 @@ class AuthenticationRepository {
         password: password,
       );
     } on Exception catch (e){
+      print("Error sign up: $e");
       throw SignUpFailure();
     }
   }
@@ -87,6 +90,7 @@ class AuthenticationRepository {
       firebase_auth.User user = (await _firebaseAuth.signInWithCredential(credential)).user;
       updateUserData(user);
     } on Exception catch (e){
+      print("Error log in with google: $e");
       throw LogInWithGoogleFailure();
     }
   }
@@ -106,6 +110,7 @@ class AuthenticationRepository {
       )).user;
       updateUserData(user);
     } on Exception catch (e){
+      print("Error log in with email and password: $e");
       throw LogInWithEmailAndPasswordFailure();
     }
   }
@@ -121,8 +126,52 @@ class AuthenticationRepository {
         _googleSignIn.signOut(),
       ]);
     } on Exception catch (e){
+      print("Error log out: $e");
       throw LogOutFailure();
     }
+  }
+
+  /// Deletes the current user account which will emit
+  /// [User.empty] from the [user] Stream.
+  ///
+  /// Throws a [DeleteAccountFailure] if an exception occurs.
+  Future<void> deleteAccount() async {
+    try {
+      String uid = _firebaseAuth.currentUser.uid;
+      await Future.wait([
+        _firebaseAuth.currentUser.delete(),
+        _deleteAllInformation(uid),
+      ]);
+    } on Exception catch (e){
+      if(e is firebase_auth.FirebaseAuthException && e.code == "requires-recent-login")
+        print("El usuario tiene que reautenticarse para eliminar la cuenta");
+      throw DeleteAccountFailure();
+    }
+  }
+
+  /// Elimina toda la informacion del usuario de la base de datos
+  Future<void> _deleteAllInformation(String uid) async{
+    //Eliminamos al usuario de la coleccion de users
+    await _db.collection('users').doc(uid).delete();
+
+    //Eliminamos al usuario de la coleccion de hubs
+    await _db.collection('hubs').doc(uid).delete();
+
+    //Eliminamos todas las habitaciones del usuario
+    await _db.collection('habitaciones')
+        .where('uid', isEqualTo: uid)
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+          querySnapshot.docs.forEach((doc) => doc.reference.delete())
+        });
+
+    //Eliminamos todos los dispositivos del usuario
+    await _db.collection('dispositivos')
+        .where('uid', isEqualTo: uid)
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+          querySnapshot.docs.forEach((doc) => doc.reference.delete())
+        });
   }
 
   void updateUserData(firebase_auth.User user) async{

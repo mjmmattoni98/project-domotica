@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:frontendCliente/f_dispositivos/dispositivos/bloc/dispositivos_state.dart';
+import 'package:equatable/equatable.dart';
 import 'package:room_repository/device_repository.dart';
 import 'package:room_repository/room_repository.dart';
 
-import 'dispositivos_event.dart';
+part 'dispositivos_event.dart';
+part 'dispositivos_state.dart';
 
 class DispositivoBloc extends Bloc<DispositivoEvent, DispositivoState>{
   final DeviceRepository _deviceRepository;
@@ -19,15 +20,18 @@ class DispositivoBloc extends Bloc<DispositivoEvent, DispositivoState>{
       _subscription?.cancel();
       _subscription = _deviceRepository.getDevicesInRoom(event.habitacion).listen((event) {add(DispositivosListados(event));});
     }
-    if(event is DispositivosListados){
-      print("HOLA: " + event.dispositivos.length.toString());
+    else if(event is DispositivosListados){
       if(event.dispositivos.length == 0)
         yield DispositivosListaError();
       else
         yield DispositivosActuales(event.dispositivos);
     }
-
-    if(event is DesasignarDispositivo){
+    else if (event is CambiarEstadoDispositivo){
+      String nuevoEstado = event.device.tipo.getEstado(event.nuevoEstado);
+      await _deviceRepository.updateDeviceState(event.device.id, nuevoEstado);
+      yield DispositivosModificados();
+    }
+    else if(event is DesasignarDispositivo){
       yield await desasignarDispositivo(event.dispositivo);
     }
   }

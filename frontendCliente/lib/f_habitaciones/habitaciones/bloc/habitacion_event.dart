@@ -1,15 +1,13 @@
-import 'package:equatable/equatable.dart';
-import 'package:room_repository/room_repository.dart';
+part of "habitacion_bloc.dart";
 
 abstract class HabitacionEvent extends Equatable{
   const HabitacionEvent();
-}
 
-class ActualizarListarHabitaciones extends HabitacionEvent{
   @override
-  // TODO: implement props
   List<Object> get props => [];
 }
+
+class ActualizarListarHabitaciones extends HabitacionEvent{}
 
 class EliminarHabitacion extends HabitacionEvent{
   final Room habitacion;
@@ -19,7 +17,6 @@ class EliminarHabitacion extends HabitacionEvent{
 
   @override
   List<Object> get props => [habitacion, confirmacion];
-
 }
 
 class AnadirHabitacion extends HabitacionEvent{
@@ -28,11 +25,9 @@ class AnadirHabitacion extends HabitacionEvent{
   AnadirHabitacion(this.nombre);
 
   @override
-  // TODO: implement props
   List<Object> get props => [nombre];
 
 }
-
 
 class CambiarNombreHabitacion extends HabitacionEvent{
   final Room habitacion;

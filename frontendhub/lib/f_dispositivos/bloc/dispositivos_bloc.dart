@@ -72,7 +72,6 @@ class DispositivosBloc
 
   Future<DispositivosState> cambiarNombreDispositivo(List<Device> dispositivos, String nuevoNombre, String idDispositivo) async {
     for(var i = 0; i < dispositivos.length; i++){
-      print(dispositivos[i].name);
       if(dispositivos[i].name.toLowerCase() == nuevoNombre.toLowerCase()){
         return DispositivoNombreRepetido();
       }
@@ -83,7 +82,6 @@ class DispositivosBloc
 
   Future<DispositivosState> crearDispositivo(List<Device> dispositivos, String name, TipoDispositivo tipo) async{
     for(var i = 0; i < dispositivos.length; i++){
-      print(dispositivos[i].name);
       if(dispositivos[i].name.toLowerCase() == name.toLowerCase()){
         return DispositivoNombreRepetido();
       }

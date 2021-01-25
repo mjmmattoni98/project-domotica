@@ -10,19 +10,19 @@ class SimpleBlocObserver extends BlocObserver {
   @override
   void onEvent(Bloc bloc, Object event) {
     super.onEvent(bloc, event);
-    print('onEvent -- bloc: ${bloc.runtimeType}, event: $event');
+    // print('onEvent -- bloc: ${bloc.runtimeType}, event: $event');
   }
 
   @override
   void onChange(Cubit cubit, Change change) {
     super.onChange(cubit, change);
-    print('onChange -- cubit: ${cubit.runtimeType}, change: $change');
+    // print('onChange -- cubit: ${cubit.runtimeType}, change: $change');
   }
 
   @override
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
-    print('onTransition -- bloc: ${bloc.runtimeType}, transition: $transition');
+    // print('onTransition -- bloc: ${bloc.runtimeType}, transition: $transition');
   }
 
   @override
