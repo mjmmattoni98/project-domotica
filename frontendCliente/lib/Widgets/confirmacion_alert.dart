@@ -25,8 +25,8 @@ class ConfirmationAlert extends StatelessWidget{
         MaterialButton(
           elevation: 10.0,
           onPressed: () {
-            callback(true);
             Navigator.pop(context);
+            callback(true);
           },
           child: Icon(
               Icons.add
@@ -35,8 +35,8 @@ class ConfirmationAlert extends StatelessWidget{
         MaterialButton(
           elevation: 10.0,
           onPressed: () {
-            callback(false);
             Navigator.pop(context);
+            callback(false);
           },
           child: Icon(
               Icons.cancel

@@ -82,7 +82,7 @@ void main() {
         act: (bloc) => bloc.add(EliminarHabitacion(cocina, false)),
         expect: [
           HabitacionCargando(),
-          HabitacionConDispositivos()
+          HabitacionConDispositivos(cocina)
         ]
     );
 

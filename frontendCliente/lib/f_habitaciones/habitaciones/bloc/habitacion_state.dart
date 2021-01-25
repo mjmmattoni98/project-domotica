@@ -104,6 +104,9 @@ class ErrorHabitacionExistente extends HabitacionState{
 }
 
 class HabitacionConDispositivos extends HabitacionState{
-  HabitacionConDispositivos();
-
+  final Room habitacion;
+  HabitacionConDispositivos(this.habitacion);
+  @override
+  // TODO: implement props
+  List<Object> get props => [habitacion];
 }

@@ -85,17 +85,30 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
 
     return BlocListener<HabitacionBloc, HabitacionState>(
         listener: (context, state){
-          if(state is ListaError){
+          /*if(state is ListaError){
             Scaffold.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(content: Text(state.mensaje)),
               );
-          }else if(state is ErrorHabitacionExistente){
+          }else*/ if(state is ErrorHabitacionExistente){
             Scaffold.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(content: Text(state.mensaje)),
+              );
+          }else if(state is HabitacionRepetida){
+            Scaffold.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(content: Text("Esta habitacion ya existe")),
+              );
+          }
+          else if(state is HabitacionSinNombre){
+            Scaffold.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(content: Text("Escriba un nombre a la habitación")),
               );
           }
         },
@@ -125,12 +138,18 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                   }else if(state is HabitacionModificada){
                     listadoInicial(context);
                   }else if(state is ListaError){
-                    listadoInicial(context);
+                    return Center(child: Text("No existe ninguna habitación actualmente", style: TextStyle(
+                      fontFamily: "Raleway"
+                    ), textAlign: TextAlign.center,));
                   }else if(state is HabitacionAnadida){
                     listadoInicial(context);
-                  }else if(state is EsperandoConfirmacion){
+                  }else if(state is HabitacionConDispositivos){
                     createConfirmDialog(context, state.habitacion);
                   }else if(state is HabitacionEliminada){
+                    listadoInicial(context);
+                  }else if(state is HabitacionSinNombre){
+                    listadoInicial(context);
+                  }else if(state is HabitacionRepetida){
                     listadoInicial(context);
                   }
                   return buildCargando();
@@ -248,7 +267,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
     return showDialog(context: context, builder: (_){
       return AlertDialog(
         elevation: 10.0,
-        title: Text("Nuevo nombre para esta habitacion",
+        title: Text("Nuevo nombre para esta habitación",
           style: TextStyle(fontFamily: "Raleway"),
           textAlign: TextAlign.center,
         ),
@@ -265,6 +284,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
             child: Text("Cambiar"),
             onPressed: (){
               modificarHabitacion(context, habitacion);
+              controller.clear();
               Navigator.pop(context);
             },
           )

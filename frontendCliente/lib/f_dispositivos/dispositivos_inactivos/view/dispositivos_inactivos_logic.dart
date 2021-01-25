@@ -1,4 +1,5 @@
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,8 +57,6 @@ class _DispositivosInactivosLogicState extends State<DispositivosInactivosLogic>
                                   ),
                                 ),
                                 onPressed: () {
-                                  //context.bloc<InactivoBloc>().add(AsignarHabitacion(state.dispositivos[index]));
-
                                   buildGeneralDialog(context, state.habitaciones, state.dispositivos[index]);
                                 }
                             )
@@ -70,7 +69,6 @@ class _DispositivosInactivosLogicState extends State<DispositivosInactivosLogic>
                             ),
                           )
                       ),
-
                     ),
                   ),
                 );
@@ -78,6 +76,11 @@ class _DispositivosInactivosLogicState extends State<DispositivosInactivosLogic>
             );
           }else if(state is InactivoInitial){
             context.bloc<InactivoBloc>().add(InactivosStarted());
+          }else if(state is ListaInactivoError){
+            return Center(child: Text("No hay dispositivos existentes inactivos", textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: "Raleway"
+            ),),);
           }
           return Center(child: CircularProgressIndicator(),);
 
@@ -86,42 +89,39 @@ class _DispositivosInactivosLogicState extends State<DispositivosInactivosLogic>
 
 
   void buildGeneralDialog(BuildContext context, List<Room> habitaciones, Device dispositivo){
-    showGeneralDialog(
-        barrierColor: Colors.black38,
-        transitionDuration: const Duration(milliseconds: 300),
-        context: context,
-        pageBuilder: (_, Animation animation, Animation secondAnimation){
-          return Center(
-            child: Container(
-              width: MediaQuery.of(context).size.width - 75,
-              height: MediaQuery.of(context).size.height - 100,
-              child: Card(
-                  elevation: 10.0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                  child: ListView.builder(
-                    addAutomaticKeepAlives: true,
-                    physics: BouncingScrollPhysics( parent: AlwaysScrollableScrollPhysics() ),
-                    itemCount: habitaciones.length,
-                    itemBuilder: (_, index2){
-                      return ListTile(
-                        onTap: (){
-                          context.bloc<InactivoBloc>().add(AsignarHabitacion(dispositivo.id, habitaciones[index2].id));
-                          Navigator.pop(context);
-                        },
-                        title: Text(habitaciones[index2].nombre, style: TextStyle(
-                          fontFamily: "Raleway",
-                        ),
-                          textAlign: TextAlign.center,
-                        ),
-                      );
-                    },
-                  )
-
-              ),
-            ),
-          );
-
-        }
-    );
+    AwesomeDialog(
+        animType: AnimType.SCALE,
+        borderSide: BorderSide(color: Colors.black54, width: 5),
+      dismissOnTouchOutside: true,
+      padding: EdgeInsets.all(8.0),
+      context: context,
+      dialogType: DialogType.QUESTION,
+      dismissOnBackKeyPress: true,
+      headerAnimationLoop: false,
+      body: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width - 75,
+          height: MediaQuery.of(context).size.height - 100,
+          child: ListView.builder(
+            addAutomaticKeepAlives: true,
+            physics: BouncingScrollPhysics( parent: AlwaysScrollableScrollPhysics() ),
+            itemCount: habitaciones.length,
+            itemBuilder: (_, index2){
+              return ListTile(
+                onTap: (){
+                  context.bloc<InactivoBloc>().add(AsignarHabitacion(dispositivo.id, habitaciones[index2].id));
+                  Navigator.pop(context);
+                },
+                title: Text(habitaciones[index2].nombre, style: TextStyle(
+                  fontFamily: "Raleway",
+                ),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            },
+          ),
+        ),
+      )
+    )..show();
   }
 }

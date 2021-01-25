@@ -45,6 +45,9 @@ class HabitacionBloc
 
   Future<HabitacionState> cambiarNombreHabitacion(List<Room> habitaciones,
       String nuevoNombre, Room habitacion) async {
+    if(nuevoNombre == ""){
+      return HabitacionSinNombre();
+    }
     for (var i = 0; i < habitaciones.length; i++) {
       if (habitaciones[i].nombre.toLowerCase() == nuevoNombre.toLowerCase()) {
         return HabitacionRepetida();
@@ -97,7 +100,7 @@ class HabitacionBloc
         await roomRepository.deleteRoom(habitacion);
         return HabitacionEliminada("La habitación se ha borrado correctamente");
       }else if(dispositivos.length > 0 && !confirmacion) { // tiene dispositivos pero aun no se ha confirmado su eliminacion
-        return HabitacionConDispositivos();
+        return HabitacionConDispositivos(habitacion);
       }else if(dispositivos.length == 0) { // la habitacion no tiene dispositivos
         await roomRepository.deleteRoom(habitacion);
         return HabitacionEliminada("La habitación se ha borrado correctamente");
