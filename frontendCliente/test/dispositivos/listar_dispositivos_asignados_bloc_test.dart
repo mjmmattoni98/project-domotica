@@ -42,8 +42,7 @@ void main(){
         },
         act: (bloc) => bloc.add(DispositivosListados([])),
         expect: [
-          DispositivosListaError(),
-          DispositivosActuales([])
+          DispositivosListaError()
         ]
     );
   });
