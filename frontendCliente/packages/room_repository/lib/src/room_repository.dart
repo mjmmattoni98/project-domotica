@@ -18,7 +18,7 @@ class RoomRepository{
       _user = user ?? FirebaseAuth.instance.currentUser;
 
   Stream<List<Room>> getRoomList() {
-    return _firestore.collection('habitaciones')
+    return _firestore.collection('habitaciones').where("uid", isEqualTo: _user.uid)
         .snapshots()
         .map((snapShot) => snapShot.docs
         .map((document) => Room.fromJson(document.data()))

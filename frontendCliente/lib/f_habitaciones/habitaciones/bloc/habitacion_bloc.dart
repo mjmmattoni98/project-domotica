@@ -98,6 +98,11 @@ class HabitacionBloc
     if(existe){ // la habitacion existe
       if(dispositivos.length > 0 && confirmacion) { // tiene dispositivos y se confirma su eliminacion
         await roomRepository.deleteRoom(habitacion);
+        List<Device> l = deviceRepository.getDevicesInRoom(habitacion) as List<Device>;
+        for(Device d in l){
+          deviceRepository.desasignacionDispositivos(d.id);
+        }
+
         return HabitacionEliminada("La habitación se ha borrado correctamente");
       }else if(dispositivos.length > 0 && !confirmacion) { // tiene dispositivos pero aun no se ha confirmado su eliminacion
         return HabitacionConDispositivos(habitacion);

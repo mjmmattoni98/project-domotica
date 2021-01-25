@@ -80,6 +80,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
 
   @override
   Widget build(BuildContext context) {
+    bool confimacion = false;
     double height = MediaQuery.of(context).size.height;
     var threshold = 50;
 
@@ -110,6 +111,8 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
               ..showSnackBar(
                 SnackBar(content: Text("Escriba un nombre a la habitación")),
               );
+          } else if(state is HabitacionConDispositivos){
+            createConfirmDialog(context, state.habitacion);
           }
         },
       child: GestureDetector(
@@ -144,7 +147,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                   }else if(state is HabitacionAnadida){
                     listadoInicial(context);
                   }else if(state is HabitacionConDispositivos){
-                    createConfirmDialog(context, state.habitacion);
+                    listadoInicial(context);
                   }else if(state is HabitacionEliminada){
                     listadoInicial(context);
                   }else if(state is HabitacionSinNombre){
@@ -254,11 +257,31 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
     return showDialog(
       context: context,
         builder: (_){
-      return ConfirmationAlert(
-        callback: (bool confirmacion){
-          eliminarHabitacion(context, habitacion, confirmacion);
-        },
-      );
+          return AlertDialog(
+            elevation: 10.0,
+            title: Text("Nuevo nombre para esta habitación",
+              style: TextStyle(fontFamily: "Raleway"),
+              textAlign: TextAlign.center,
+            ),
+            actions: <Widget>[
+              MaterialButton(
+                elevation: 10.0,
+                child: Text("Confirmar"),
+                onPressed: (){
+                  eliminarHabitacion(context, habitacion, true);
+                  Navigator.pop(context);
+                },
+              ),
+              MaterialButton(
+                elevation: 10.0,
+                child: Text("Cancelar"),
+                onPressed: (){
+                  eliminarHabitacion(context, habitacion, false);
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
       }
     );
   }

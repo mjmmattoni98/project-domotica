@@ -79,6 +79,10 @@ class _DispositivosAsignadosLogicState extends State<DispositivosAsignadosLogic>
            );
          }if(state is DispositivosInitial){
            context.bloc<DispositivoBloc>().add(DispositivosStarted(habitacionActual));
+         }if(state is DispositivosListaError){
+           return Center(child: Text("No hay dispositivos asignados a esta habitación", style: TextStyle(
+             fontFamily: "Raleway"
+           ), textAlign: TextAlign.center,),);
          }
          return Center(child: CircularProgressIndicator());
         }

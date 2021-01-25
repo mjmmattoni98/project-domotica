@@ -20,9 +20,11 @@ class DispositivoBloc extends Bloc<DispositivoEvent, DispositivoState>{
       _subscription = _deviceRepository.getDevicesInRoom(event.habitacion).listen((event) {add(DispositivosListados(event));});
     }
     if(event is DispositivosListados){
+      print("HOLA: " + event.dispositivos.length.toString());
       if(event.dispositivos.length == 0)
         yield DispositivosListaError();
-      yield DispositivosActuales(event.dispositivos);
+      else
+        yield DispositivosActuales(event.dispositivos);
     }
 
     if(event is DesasignarDispositivo){
