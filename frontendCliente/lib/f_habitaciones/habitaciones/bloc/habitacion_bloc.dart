@@ -16,6 +16,15 @@ class HabitacionBloc
 
   HabitacionState get initialState => HabitacionesInitial();
 
+
+  /**
+   * Corregir ::
+   * 
+   * No es necesario generar tantos estados (sobra habitación cargando),
+   * deberíamos de utilizar otro "OBSERVER" como en los dispositivos y en el 
+   * segundo cliente (hub).
+   * 
+   */
   @override
   Stream<HabitacionState> mapEventToState(HabitacionEvent event) async* {
     if (event is CambiarNombreHabitacion){
