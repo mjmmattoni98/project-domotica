@@ -27,7 +27,7 @@ class InactivoBloc extends Bloc<InactivoEvent, InactivoState> {
     if (event is InactivosListados) {
       if(event.dispositivos.length == 0)
         yield ListaInactivoError();
-      List<Room> habitaciones = await _roomRepository.getRoomListAct();
+      List<Room> habitaciones = await roomStreamToList();
       if(habitaciones.length == 0)
         yield InactivoHabitacionesError();
       yield InactivosActuales(event.dispositivos, habitaciones);
@@ -44,5 +44,13 @@ class InactivoBloc extends Bloc<InactivoEvent, InactivoState> {
           yield InactivoHabitacionAsignada();
       }
     }
+  }
+  Future<List<Room>> roomStreamToList() {
+    Completer<List<Room>> com = Completer<List<Room>>();
+    _roomRepository.getRoomList().listen((event) {
+      if (!com.isCompleted) com.complete(event);
+    });
+
+    return com.future;
   }
 }

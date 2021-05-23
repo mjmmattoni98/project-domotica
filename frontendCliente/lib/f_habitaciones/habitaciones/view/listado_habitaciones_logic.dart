@@ -92,14 +92,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
               ..showSnackBar(
                 SnackBar(content: Text(state.mensaje)),
               );
-          }else if(state is HabitacionRepetida){
-            Scaffold.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(content: Text("Esta habitacion ya existe")),
-              );
-          }
-          else if(state is HabitacionSinNombre){
+          }else if(state is HabitacionSinNombre){
             Scaffold.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
@@ -128,10 +121,10 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                 builder: (context, state){
                   if(state is HabitacionCargando){
                     return buildCargando();
-                  }else if(state is HabitacionesCargadas){
+                  }else if(state is HabitacionesActuales){
                     return buildListado(context, state.habitaciones);
                   }else if(state is HabitacionesInitial){
-                    listadoInicial(context);
+                    context.bloc<HabitacionBloc>().add(HabitacionesStarted());
                   }else if(state is HabitacionModificada){
                     listadoInicial(context);
                   }else if(state is ListaError){
@@ -144,17 +137,15 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                         ),
                     );
                   }else if(state is HabitacionAnadida){
-                    listadoInicial(context);
+                    context.bloc<HabitacionBloc>().add(HabitacionesStarted());
                   }else if(state is HabitacionConDispositivos){
-                    listadoInicial(context);
+                    context.bloc<HabitacionBloc>().add(HabitacionesStarted());
                   }else if(state is HabitacionEliminada){
-                    listadoInicial(context);
+                    context.bloc<HabitacionBloc>().add(HabitacionesStarted());
                   }else if(state is HabitacionSinNombre){
-                    listadoInicial(context);
-                  }else if(state is HabitacionRepetida){
-                    listadoInicial(context);
-                  }else if(state is ErrorHabitacionExistente){
-                    listadoInicial(context);
+                    context.bloc<HabitacionBloc>().add(HabitacionesStarted());
+                  }else if(state is ErrorHabitacionExistente) {
+                    context.bloc<HabitacionBloc>().add(HabitacionesStarted());
                   }
                   return buildCargando();
                 }
@@ -240,7 +231,7 @@ class _ListaHabitacionesLogicState extends State<ListaHabitacionesLogic>{
                                   fontFamily: "Raleway"
                               ),
                             ),
-                            tileColor: habitaciones[index].activo ? Colors.red : null,
+                            tileColor: habitaciones[index].activo ? Colors.red : Colors.white,
                           ),
                         ),
                         onTap: (){},

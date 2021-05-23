@@ -72,6 +72,15 @@ class HabitacionRepetida extends HabitacionState{}
 
 class HabitacionSinNombre extends HabitacionState {}
 
+class HabitacionesActuales extends HabitacionState{
+  final List<Room> habitaciones;
+
+  HabitacionesActuales(this.habitaciones);
+
+  @override
+  List<Object> get props => [habitaciones];
+}
+
 class HabitacionInexistente extends HabitacionState {}
 
 class ErrorHabitacionExistente extends HabitacionState{

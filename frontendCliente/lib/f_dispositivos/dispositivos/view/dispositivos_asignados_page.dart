@@ -24,7 +24,7 @@ class DispositivosAsignadosPage extends StatelessWidget {
 
     return Scaffold(
       appBar: HomeAppBar(
-        title: "ESTADO",
+        title: this.habitacionActual.nombre,
         gradientBegin: Colors.black87,
         gradientEnd: Colors.black87,
         gradientMid: Colors.black54,

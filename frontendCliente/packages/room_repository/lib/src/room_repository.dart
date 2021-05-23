@@ -30,14 +30,14 @@ class RoomRepository{
         .toList());
   }
 
-  Future<List<Room>> getRoomListAct() async {
-    Stream<List<Room>> s = _firestore.collection('habitaciones')
-        .snapshots()
-        .map((snapShot) => snapShot.docs
-        .map((document) => Room.fromJson(document.data()))
-        .toList());
-    return s.first;
-  }
+  // Stream<List<Room>> getRoomListAct() {
+  //   return _firestore.collection('habitaciones')
+  //       .snapshots()
+  //       .map((snapShot) => snapShot.docs
+  //       .map((document) => Room.fromJson(document.data()))
+  //       .toList());
+  //
+  // }
 
   Future<void> changeName(Room habitacion, String nombreNuevo){
     return _firestore.collection('habitaciones').doc(habitacion.id).update({

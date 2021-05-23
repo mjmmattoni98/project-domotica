@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget{
 
-  final double _prefferedHeight = 125.0;
+  final double _prefferedHeight = 123.0;
   final String title;
   final Color gradientBegin, gradientEnd, gradientMid;
   // final User user;
@@ -55,7 +55,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget{
                       ],
                       color: Colors.white70,
                       letterSpacing: 3.0,
-                      fontSize: 25.0,
+                      fontSize: 20.0,
                       fontWeight: FontWeight.w500
                     ),
                   ),

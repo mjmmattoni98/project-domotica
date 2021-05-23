@@ -1,5 +1,8 @@
 part of "habitacion_bloc.dart";
 
+
+enum TipoEvento{ELIMINAR, CAMBIARNOMBRE, ANADIR, LISTAR}
+
 abstract class HabitacionEvent extends Equatable{
   const HabitacionEvent();
 
@@ -7,6 +10,17 @@ abstract class HabitacionEvent extends Equatable{
   List<Object> get props => [];
 }
 
+
+class HabitacionesStarted extends HabitacionEvent{
+
+}
+class HabitacionesListadas extends HabitacionEvent{
+  final List<Room> habitaciones;
+
+  HabitacionesListadas(this.habitaciones);
+  @override
+  List<Object> get props => [habitaciones];
+}
 class ActualizarListarHabitaciones extends HabitacionEvent{}
 
 class EliminarHabitacion extends HabitacionEvent{
