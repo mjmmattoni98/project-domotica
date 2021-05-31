@@ -18,6 +18,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
+        // leading: Switch(),
         actions: <Widget>[
           FlatButton(
             key: const Key('homePage_avatar_profile_user'),
@@ -34,6 +35,7 @@ class HomePage extends StatelessWidget {
             onPressed: () => Navigator.of(context).push<void>(ProfilePage.route()),
           ),
         ],
+        centerTitle: true,
       ),
       body: RepositoryProvider.value(
         value: GetIt.I<DeviceRepository>(), // Singleton instance of the DeviceRepository

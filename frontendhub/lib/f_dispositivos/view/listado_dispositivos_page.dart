@@ -22,12 +22,9 @@ class _ListadoDispositivosPageState extends State<ListadoDispositivosPage>{
                   Colors.white38,
                   Colors.black54
                 ]
-            )
+            ),
         ),
         child: ListadoDispositivosView(),
       );
   }
 }
-
-
-
