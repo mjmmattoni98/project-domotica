@@ -7,7 +7,7 @@ import 'package:frontendCliente/f_dispositivos/dispositivos/dispositivos.dart';
 import 'package:room_repository/room_repository.dart';
 import 'package:room_repository/device_repository.dart';
 
-class DispositivosAsignadosLogic extends StatefulWidget{
+class DispositivosAsignadosLogic extends StatefulWidget {
   final Room habitacionActual;
 
   const DispositivosAsignadosLogic(this.habitacionActual);
@@ -17,7 +17,8 @@ class DispositivosAsignadosLogic extends StatefulWidget{
   }
 }
 
-class _DispositivosAsignadosLogicState extends State<DispositivosAsignadosLogic>{
+class _DispositivosAsignadosLogicState
+    extends State<DispositivosAsignadosLogic> {
   final Room habitacionActual;
 
   _DispositivosAsignadosLogicState(this.habitacionActual);
@@ -25,84 +26,86 @@ class _DispositivosAsignadosLogicState extends State<DispositivosAsignadosLogic>
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DispositivoBloc, DispositivoState>(
-        builder: (context, state){
-         if(state is DispositivosActuales) {
-           return ListView.builder(
-             addAutomaticKeepAlives: true,
-             physics: BouncingScrollPhysics( parent: AlwaysScrollableScrollPhysics() ),
-             itemCount: state.dispositivos.length,
-             itemBuilder: (_, int index) {
-               return Padding(
-                 padding: EdgeInsets.all(5.0),
-                 child: Container(
-                   child: Card(
-                     elevation: 10.0,
-                     shape: RoundedRectangleBorder(
-                         borderRadius: BorderRadius.circular(10.0)
-                     ),
-                     child: InkWell(
-                       child: FocusedMenuHolder(
-                         blurBackgroundColor: Colors.white38,
-                         blurSize: 2.0,
-                         animateMenuItems: true,
-                         openWithTap: true,
-                         onPressed: () {},
-                         menuItems: <FocusedMenuItem>[
-                           FocusedMenuItem(
-                               trailingIcon: Icon(
-                                 Icons.assignment_return_outlined,
-                               ),
-                               title: Text(
-                                 "Desasignar dispositivo",
-                                 style: TextStyle(
-                                     fontFamily: "Raleway"
-                                 ),
-                               ),
-                               onPressed: () {
-                                 context.bloc<DispositivoBloc>().add(DesasignarDispositivo(state.dispositivos[index]));
-                               },
-                           )
-                         ],
-                         child: ListTile(
-                           title: Text(state.dispositivos[index].nombre,
-                             textAlign: TextAlign.center,
-                             style: TextStyle(
-                               fontWeight: FontWeight.w500,
-                               fontSize: 20.0,
-                               fontFamily: "Raleway",
-                             ),
-                           ),
-                           leading: estadoDispositivo(state.dispositivos[index]),
-                         ),
-                         // ListTile(
-                         //   title: Text(state.dispositivos[index].nombre, textAlign: TextAlign.center,
-                         //   style: TextStyle(
-                         //       fontWeight: FontWeight.w500, fontSize: 20.0, fontFamily: "Raleway"),
-                         //   ),
-                         //   )
-                       ),
-                       // onTap: (){},
-                     ),
-                     ),
-                   ),
-                 );
-             },
-           );
-         }if(state is DispositivosInitial){
-           context.bloc<DispositivoBloc>().add(DispositivosStarted(habitacionActual));
-         }if(state is DispositivosListaError){
-           return Center(child: Text("No hay dispositivos asignados a esta habitación", style: TextStyle(
-             fontFamily: "Raleway"
-           ), textAlign: TextAlign.center,),);
-         }
-         return Center(child: CircularProgressIndicator());
-        }
-    );
+        builder: (context, state) {
+      if (state is DispositivosActuales) {
+        return ListView.builder(
+          addAutomaticKeepAlives: true,
+          physics:
+              BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          itemCount: state.dispositivos.length,
+          itemBuilder: (_, int index) {
+            return Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Container(
+                child: Card(
+                  elevation: 10.0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0)),
+                  child: InkWell(
+                    child: FocusedMenuHolder(
+                      blurBackgroundColor: Colors.white38,
+                      blurSize: 2.0,
+                      animateMenuItems: true,
+                      openWithTap: true,
+                      onPressed: () {},
+                      menuItems: <FocusedMenuItem>[
+                        FocusedMenuItem(
+                          trailingIcon: Icon(
+                            Icons.assignment_return_outlined,
+                          ),
+                          title: Text(
+                            "Desasignar dispositivo",
+                            style: TextStyle(fontFamily: "Raleway"),
+                          ),
+                          onPressed: () {
+                            context.bloc<DispositivoBloc>().add(
+                                DesasignarDispositivo(
+                                    state.dispositivos[index]));
+                          },
+                        )
+                      ],
+                      child: ListTile(
+                        title: Text(
+                          state.dispositivos[index].nombre,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20.0,
+                            fontFamily: "Raleway",
+                          ),
+                        ),
+                        leading: estadoDispositivo(state.dispositivos[index]),
+                      ),
+                    ),
+                    // onTap: (){},
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      }
+      if (state is DispositivosInitial) {
+        context
+            .bloc<DispositivoBloc>()
+            .add(DispositivosStarted(habitacionActual));
+      }
+      if (state is DispositivosListaError) {
+        return Center(
+          child: Text(
+            "No hay dispositivos asignados a esta habitación",
+            style: TextStyle(fontFamily: "Raleway"),
+            textAlign: TextAlign.center,
+          ),
+        );
+      }
+      return Center(child: CircularProgressIndicator());
+    });
   }
 
-  Widget estadoDispositivo(Device device){
+  Widget estadoDispositivo(Device device) {
     Text text = Text("No se ha podido establecer el estado del dispositivo");
-    switch(device.estado) {
+    switch (device.estado) {
       case Estado.ACTIVE:
         text = Text(
           device.estadoActual,
@@ -143,8 +146,10 @@ class _DispositivosAsignadosLogicState extends State<DispositivosAsignadosLogic>
     return text;
   }
 
-  void modificarEstadoDispositivo(BuildContext context, Device dispositivo, Estado estado){
-    context.bloc<DispositivoBloc>().add(CambiarEstadoDispositivo(dispositivo, estado));
+  void modificarEstadoDispositivo(
+      BuildContext context, Device dispositivo, Estado estado) {
+    context
+        .bloc<DispositivoBloc>()
+        .add(CambiarEstadoDispositivo(dispositivo, estado));
   }
-
 }

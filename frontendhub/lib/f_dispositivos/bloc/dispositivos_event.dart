@@ -7,7 +7,15 @@ abstract class DispositivosEvent extends Equatable{
   List<Object> get props => [];
 }
 
-class ActualizarListaDispositivos extends DispositivosEvent{}
+class DispositivosStarted extends DispositivosEvent{}
+
+class ActualizarListaDispositivos extends DispositivosEvent{
+  final List<Device> dispositivos;
+
+  ActualizarListaDispositivos(this.dispositivos);
+  @override
+  List<Object> get props => [dispositivos];
+}
 
 class RemoveDispositivo extends DispositivosEvent{
   final String idDispositivo;

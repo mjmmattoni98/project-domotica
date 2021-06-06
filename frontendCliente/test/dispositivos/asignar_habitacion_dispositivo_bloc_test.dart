@@ -16,30 +16,34 @@ void main() {
   DeviceRepository deviceRepository;
   AuthenticationRepository authenticationRepository;
 
-  setUp(() {
+  setUpAll(() { //Solamente se llama una vez al inicio de los test
     roomRepository = RoomRepository();
     deviceRepository = DeviceRepository();
+    authenticationRepository = AuthenticationRepository();
+    authenticationRepository.signUp(email: "al365287@uji.es", password: "qwerty123");
   });
 
-  group('H03/H04. Asignar habitacion a un dispositivo', () {
-    final habitacion = Room(id: '01', nombre: 'cocina', activo: false);
-    final dispositivoSinHabitacion = Device(
-        estado: Estado.INACTIVE,
-        tipo: TipoDispositivo.DETECTOR_DE_MOVIMIENTO,
-        habitacionAsignada: "",
-        id: "01",
-        nombre: "dispositivo");
-    final dispositivoConHabitacion = Device(
-        estado: Estado.INACTIVE,
-        tipo: TipoDispositivo.DETECTOR_DE_MOVIMIENTO,
-        habitacionAsignada: "cocina",
-        id: "01",
-        nombre: "dispositivo");
+  tearDown((){
+    //Se llama siempre despues de cada test
+  });
 
-    test('E1. Valido - Habitacion asignada al dispositivo', (){
+  group('H03/H04. Asignar habitacion a un dispositivo', () async {
+    // List<Room> habitaciones;
+    // roomRepository.getRoomList().listen(
+    //         (List<Room> room) {
+    //           habitaciones = room;
+    //     },
+    //     onDone:(){
+    //       return habitaciones;
+    //     });
+
+
+    test('E1. Valido - Habitacion asignada al dispositivo', () async{
       //GIVEN
       roomRepository.createRoom('cocina_test');
-      deviceRepository.
+
+      //WHEN
+      deviceRepository.asignacionDispositivos(idDispositivo, idHabitacion)
 
     });
     blocTest('E1. Valido - Habitacion asignada al dispositivo',

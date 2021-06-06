@@ -24,11 +24,8 @@ class DeviceRepository {
     return _db.collection('dispositivos')
         .where('uid', isEqualTo: _userUid)
         .snapshots()
-        .map((snapshots) {
-          return snapshots.docs
-              .map((document) => Device.fromJson(document.data()))
-              .toList();
-    });
+        .map((snapshots) => snapshots.docs
+        .map((document) => Device.fromJson(document.data())).toList());
   }
 
   Future<List<Device>> getDevicesAct() async {

@@ -60,29 +60,6 @@ class _ListadoDispositivosViewState extends State<ListadoDispositivosView> {
         },
         child: Stack(
           children: <Widget>[
-            // Container(
-            //   // alignment: Alignment.center,
-            //   padding: const EdgeInsets.all(4.0),
-            //   margin: const EdgeInsets.all(4.0),
-            //   color: Colors.lightBlue,
-            //   child: SwitchListTile(
-            //     title: Text("HUB",
-            //       textAlign: TextAlign.center,
-            //       style: TextStyle(
-            //         fontWeight: FontWeight.w500,
-            //         fontSize: 20.0,
-            //         fontFamily: "Raleway",
-            //       ),
-            //     ),
-            //     value: encendido,
-            //     onChanged: (bool value){
-            //       encendido = value;
-            //       Estado nuevoEstado = value ? Estado.INACTIVE : Estado.DISCONNECTED;
-            //       cambiarEstadoHub(context, nuevoEstado);
-            //     },
-            //     secondary: estadoHub(encendido),
-            //   ),
-            // ),
             BlocBuilder<DispositivosBloc, DispositivosState>(
                 buildWhen: (previous, current) => previous != current,
                 builder: (context, state){
@@ -94,8 +71,12 @@ class _ListadoDispositivosViewState extends State<ListadoDispositivosView> {
                     return BuildListado(state.devices);
                   }else if (state is DispositivosError){
                     return ErrorListarDispositivos(state.mensaje);
+                  } else if (state is DispositivosInitial) {
+                    context
+                        .bloc<DispositivosBloc>()
+                        .add(DispositivosStarted());
                   }
-                  actualizarListaDispositivos(context);
+                  // actualizarListaDispositivos(context);
                   return Cargando();
                 },
             ),
@@ -150,9 +131,9 @@ class _ListadoDispositivosViewState extends State<ListadoDispositivosView> {
     context.bloc<DispositivosBloc>().add(AddDispositivo(nombre, tipo));
   }
 
-  void actualizarListaDispositivos(BuildContext context){
-    context.bloc<DispositivosBloc>().add(ActualizarListaDispositivos());
-  }
+  // void actualizarListaDispositivos(BuildContext context){
+  //   context.bloc<DispositivosBloc>().add(ActualizarListaDispositivos());
+  // }
 
   void cambiarEstadoHub(BuildContext context, Estado estado){
     context.bloc<DispositivosBloc>().add(CambiarEstadoHub(estado));
@@ -218,6 +199,7 @@ class ErrorListarDispositivos extends StatelessWidget{
   const ErrorListarDispositivos(this.mensaje);
 
   final String mensaje;
+
   @override
   Widget build(BuildContext context) {
     return createErrorDialog(context, mensaje);
@@ -238,7 +220,7 @@ class ErrorListarDispositivos extends StatelessWidget{
                 elevation: 10.0,
                 child: Text("OK"),
                 onPressed: (){
-                  actualizarListaDispositivos(context);
+                  // actualizarListaDispositivos(context);
                   Navigator.of(context).pop();
                 },
               )
@@ -248,9 +230,9 @@ class ErrorListarDispositivos extends StatelessWidget{
     );
   }
 
-  void actualizarListaDispositivos(BuildContext context){
-    context.bloc<DispositivosBloc>().add(ActualizarListaDispositivos());
-  }
+  // void actualizarListaDispositivos(BuildContext context){
+  //   context.bloc<DispositivosBloc>().add(ActualizarListaDispositivos());
+  // }
 }
 
 class Cargando extends StatelessWidget{

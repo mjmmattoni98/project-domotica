@@ -18,13 +18,16 @@ class DispositivosBloc
         super(const DispositivosInitial());
 
   final DeviceRepository _deviceRepository;
+  StreamSubscription _subscription;
 
   @override
   Stream<DispositivosState> mapEventToState(DispositivosEvent event) async*{
-    if (event is ActualizarListaDispositivos){
-      yield DispositivosCargando();
-      final List<Device> devices = await _deviceRepository.getDevicesAct();
-      yield DispositivosModificados(devices);
+    if(event is DispositivosStarted) {
+      _subscription?.cancel();
+      _subscription = _deviceRepository.getDevices().listen((event) {add(ActualizarListaDispositivos(event));});
+    }
+    else if (event is ActualizarListaDispositivos){
+      yield DispositivosModificados(event.dispositivos);
     }
     else if (event is CambiarNombreDispositivo){
       yield DispositivosCargando();
